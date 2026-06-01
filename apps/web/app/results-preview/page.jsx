@@ -59,6 +59,16 @@ export default function ResultsPreview() {
   const cl = Math.round((m.confidence_level || 0.9) * 100);
   const health = data.model_health || {};
   const tw = health.training_window || {};
+  // Derive honest health figures from the full predictive_accuracy table:
+  // holdout MAPE = national Test; out-of-sample R² = geo Test (the national
+  // 8-week-holdout R² is an unstable aggregate, so we don't headline it).
+  const pa = health.predictive_accuracy || [];
+  const paVal = (metric, gran, evalSet) => {
+    const r = pa.find((x) => x.metric === metric && x.geo_granularity === gran && x.evaluation_set === evalSet);
+    return r ? r.value : null;
+  };
+  const holdoutMape = paVal('MAPE', 'national', 'Test') ?? health.mape;
+  const holdoutR2 = paVal('R_Squared', 'geo', 'Test') ?? health.r_squared;
   const contrib = data.channel_contribution || [];
   const mroi = data.marginal_roi || [];
   const opt = data.budget_optimization || {};
@@ -101,8 +111,8 @@ export default function ResultsPreview() {
       {/* model health */}
       <div className="grid g4" style={{ marginBottom: 22 }}>
         <Tile label="Max R-hat" value={fmtNum(health.max_rhat)} sub={rhatTone === 'mint' ? 'converged' : 'check convergence'} tone={rhatTone} />
-        <Tile label="Holdout MAPE" value={health.mape == null ? '—' : Math.round(health.mape * 100) + '%'} sub={`last ${tw.holdout_weeks ?? '—'} wks held out`} />
-        <Tile label="R²" value={fmtNum(health.r_squared)} />
+        <Tile label="Holdout MAPE" value={holdoutMape == null ? '—' : (holdoutMape * 100).toFixed(1) + '%'} sub={`national · last ${tw.holdout_weeks ?? '—'} wks`} />
+        <Tile label="Holdout R² (geo)" value={fmtNum(holdoutR2)} sub="out-of-sample" />
         <Tile label="Training window" value={tw.n_weeks ? tw.n_weeks + ' wks' : '—'} sub={tw.start ? `${tw.start} → ${tw.end}` : ''} />
       </div>
 

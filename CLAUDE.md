@@ -44,7 +44,7 @@ trifecta/
   apps/
     web/                 # Next.js operator console → Vercel  (BUILT: design handoff ported)
   services/
-    meridian-runner/     # Python — Vertex AI training job    (M1: code complete; run on GPU)
+    meridian-runner/     # Python — Vertex AI training job    (M1 ✅ trained; artifacts in GCS)
     mcp-server/          # Python — MCP server → Cloud Run    (TODO: M2)
   packages/
     db/                  # Supabase schema + seed             (TODO)
@@ -58,12 +58,19 @@ trifecta/
 ## Build milestones (see `docs/phase0-build-brief.md` §7)
 
 - **M0 — Handoff & scaffold** ✅ design ported into `apps/web`, monorepo + docs in place, git initialised.
-- **M1 — meridian-runner** ✅ *code complete (not yet executed — needs a GPU + GCS).* Trains Meridian
-  on `data/sample/geo_all_channels.csv` (current API: `DataFrameInputDataBuilder`, not the brief's
-  deprecated `CsvDataLoader`; `hypothetical_geo_all_channels.csv` has no KPI column and is the
-  optimiser scenario input). Exports `model.pkl` (`save_mmm`) + `results.json` (contribution, ROI,
-  marginal ROI, response curves, budget optimisation, R-hat/MAPE — all with 90% credible intervals).
-  Dockerfile + `vertex/submit_job.py` for the Vertex AI GPU job.
+- **M1 — meridian-runner** ✅ *trained on Vertex AI; artifacts live in GCS.* Trains Meridian on
+  `geo_all_channels.csv` (current API: `DataFrameInputDataBuilder`, not the brief's deprecated
+  `CsvDataLoader`; `hypothetical_geo_all_channels.csv` has no KPI column and is the optimiser
+  scenario input). Exports `model.pkl` (`save_mmm`) + `results.json` with contribution, ROI,
+  marginal ROI, response curves, budget optimisation, and diagnostics — all with 90% credible
+  intervals. **Ran as a CPU Vertex CustomJob** (GPU is the locked production path; CPU avoids a
+  quota wait) — image built via Cloud Build (`Dockerfile.cpu`, `cloudbuild.yaml`), job specs in
+  `vertex/{smoke,real}-job.yaml`. Converged run: 8 chains · 2000 adapt · 1000 keep, **max R-hat
+  1.065**, national MAPE 3.4% (all-data) / 16.3% (holdout), geo R² 0.61 (holdout).
+  - GCP: project `trifecta-platform-498105`, region `asia-southeast1`, bucket
+    `gs://trifecta-artifacts-498105` (artifacts at `aeon/model.pkl`, `aeon/results.json`).
+  - `apps/web/app/results-preview` is a temporary viewer for the bundle (replaced by the real
+    Results screen in M4). gcloud CLI lives at `~/google-cloud-sdk/bin`.
 - **M2 — mcp-server** — FastMCP server loading the fitted model; Phase 0 tools (§8) with credible intervals; Cloud Run.
 - **M3 — web: auth, shell, Dashboard** — Supabase email/password auth; wire Login + shell + Dashboard.
 - **M4 — web: Model Studio, Training Runs, Results** — read views; `/api/results` reads `results.json` from GCS, renders real charts.

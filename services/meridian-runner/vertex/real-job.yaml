@@ -1,5 +1,7 @@
-# Vertex AI CustomJob — REAL run (reduced-but-converging CPU sampler).
-# 4 chains x (500 adapt + 200 burn-in + 500 keep). Publishable Phase 0 numbers.
+# Vertex AI CustomJob — REAL run (converging CPU sampler, ~notebook defaults).
+# 8 chains x (2000 adapt + 500 burn-in + 1000 keep). Publishable Phase 0 numbers.
+# (A first 4-chain/500-keep run under-converged at max R-hat 1.18; this is the
+# stronger sampler that pulls R-hat under 1.1 and tightens credible intervals.)
 # Submit (only after smoke passes + cost OK):
 #   gcloud ai custom-jobs create --region=asia-southeast1 \
 #     --display-name=meridian-real --config=vertex/real-job.yaml
@@ -19,13 +21,13 @@ workerPoolSpecs:
         - name: RESULTS_ARTIFACT_PATH
           value: "aeon/results.json"
         - name: N_CHAINS
-          value: "4"
+          value: "8"
         - name: N_ADAPT
-          value: "500"
+          value: "2000"
         - name: N_BURNIN
-          value: "200"
-        - name: N_KEEP
           value: "500"
+        - name: N_KEEP
+          value: "1000"
         - name: HOLDOUT_WEEKS
           value: "8"
 scheduling:
