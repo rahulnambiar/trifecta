@@ -1,0 +1,2090 @@
+{
+  "meta": {
+    "client": "Aeon Skincare",
+    "generated_at": "2026-06-01T10:30:49.157974Z",
+    "dataset": "https://raw.githubusercontent.com/google/meridian/refs/heads/main/meridian/data/simulated_data/csv/geo_all_channels.csv",
+    "library": "google-meridian",
+    "sampler": {
+      "n_chains": 8,
+      "n_adapt": 2000,
+      "n_burnin": 500,
+      "n_keep": 1000,
+      "method": "NUTS"
+    },
+    "confidence_level": 0.9,
+    "channel_display_names": {
+      "Channel0": "Meta",
+      "Channel1": "YouTube",
+      "Channel2": "TV",
+      "Channel3": "Paid Search",
+      "Channel4": "TikTok"
+    },
+    "disclaimer": "Fictional demo client. Numbers are genuine Meridian posterior outputs trained on Google's public simulated dataset.",
+    "errors": {}
+  },
+  "channel_contribution": [
+    {
+      "channel_id": "Channel0",
+      "channel": "Meta",
+      "incremental_outcome": {
+        "median": 57364570.0,
+        "ci_lo": 16044452.299999999,
+        "ci_hi": 124525102.79999994
+      },
+      "contribution_pct": 22.75,
+      "roi": {
+        "median": 1.4163480401039124,
+        "ci_lo": 0.3961422070860863,
+        "ci_hi": 3.074561262130736
+      }
+    },
+    {
+      "channel_id": "Channel1",
+      "channel": "YouTube",
+      "incremental_outcome": {
+        "median": 25271820.0,
+        "ci_lo": 7734228.15,
+        "ci_hi": 62714503.4
+      },
+      "contribution_pct": 10.02,
+      "roi": {
+        "median": 0.8068833351135254,
+        "ci_lo": 0.24693985730409623,
+        "ci_hi": 2.0023603320121763
+      }
+    },
+    {
+      "channel_id": "Channel2",
+      "channel": "TV",
+      "incremental_outcome": {
+        "median": 15442340.0,
+        "ci_lo": 5791898.2,
+        "ci_hi": 30778004.899999987
+      },
+      "contribution_pct": 6.12,
+      "roi": {
+        "median": 1.2784098982810974,
+        "ci_lo": 0.4794882133603096,
+        "ci_hi": 2.5479886412620534
+      }
+    },
+    {
+      "channel_id": "Channel3",
+      "channel": "Paid Search",
+      "incremental_outcome": {
+        "median": 65557256.0,
+        "ci_lo": 24377189.7,
+        "ci_hi": 142031910.39999998
+      },
+      "contribution_pct": 26.0,
+      "roi": {
+        "median": 0.7461535632610321,
+        "ci_lo": 0.2774540588259697,
+        "ci_hi": 1.6165657758712764
+      }
+    },
+    {
+      "channel_id": "Channel4",
+      "channel": "TikTok",
+      "incremental_outcome": {
+        "median": 88547620.0,
+        "ci_lo": 28706831.599999998,
+        "ci_hi": 182858136.0
+      },
+      "contribution_pct": 35.11,
+      "roi": {
+        "median": 1.8551493287086487,
+        "ci_lo": 0.6014329701662063,
+        "ci_hi": 3.8310362219810483
+      }
+    }
+  ],
+  "marginal_roi": [
+    {
+      "channel_id": "Channel0",
+      "channel": "Meta",
+      "median": 0.6946715414524078,
+      "mean": 0.7614772316107992,
+      "ci_lo": 0.1707291282713413,
+      "ci_hi": 1.5742952287197112
+    },
+    {
+      "channel_id": "Channel1",
+      "channel": "YouTube",
+      "median": 0.41486160457134247,
+      "mean": 0.47505445974098987,
+      "ci_lo": 0.11226527914404869,
+      "ci_hi": 1.0369260549545285
+    },
+    {
+      "channel_id": "Channel2",
+      "channel": "TV",
+      "median": 0.7174851596355438,
+      "mean": 0.7711246556707192,
+      "ci_lo": 0.2434327214956283,
+      "ci_hi": 1.4833098590373992
+    },
+    {
+      "channel_id": "Channel3",
+      "channel": "Paid Search",
+      "median": 0.36295081675052643,
+      "mean": 0.3934345448226668,
+      "ci_lo": 0.11420994661748408,
+      "ci_hi": 0.7705046951770778
+    },
+    {
+      "channel_id": "Channel4",
+      "channel": "TikTok",
+      "median": 0.9128885865211487,
+      "mean": 0.9307127322752494,
+      "ci_lo": 0.2588280409574509,
+      "ci_hi": 1.6797637701034542
+    }
+  ],
+  "response_curves": {
+    "confidence_level": 0.9,
+    "points": [
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.0,
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 0.0,
+        "incremental_outcome": 0.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 8100349.5,
+        "incremental_outcome": 21795440.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 8100349.5,
+        "incremental_outcome": 5342939.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 8100349.5,
+        "incremental_outcome": 47195684.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 6264058.0,
+        "incremental_outcome": 9895610.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 6264058.0,
+        "incremental_outcome": 2485643.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 6264058.0,
+        "incremental_outcome": 22966296.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 2415866.75,
+        "incremental_outcome": 5425581.5
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 2415866.75,
+        "incremental_outcome": 1863603.75
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 2415866.75,
+        "incremental_outcome": 10844068.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 17572054.0,
+        "incremental_outcome": 26161176.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 17572054.0,
+        "incremental_outcome": 7802176.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 17572054.0,
+        "incremental_outcome": 57086912.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 9546145.0,
+        "incremental_outcome": 35058460.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 9546145.0,
+        "incremental_outcome": 9385476.0
+      },
+      {
+        "spend_multiplier": 0.2,
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 9546145.0,
+        "incremental_outcome": 83326952.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 16200699.0,
+        "incremental_outcome": 36245080.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 16200699.0,
+        "incremental_outcome": 9200431.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 16200699.0,
+        "incremental_outcome": 74972768.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 12528116.0,
+        "incremental_outcome": 16506363.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 12528116.0,
+        "incremental_outcome": 4298907.5
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 12528116.0,
+        "incremental_outcome": 37257368.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 4831733.5,
+        "incremental_outcome": 9166645.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 4831733.5,
+        "incremental_outcome": 3212238.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 4831733.5,
+        "incremental_outcome": 17564236.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 35144108.0,
+        "incremental_outcome": 42847792.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 35144108.0,
+        "incremental_outcome": 13581640.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 35144108.0,
+        "incremental_outcome": 89517096.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 19092290.0,
+        "incremental_outcome": 56932972.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 19092290.0,
+        "incremental_outcome": 16181590.0
+      },
+      {
+        "spend_multiplier": 0.4,
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 19092290.0,
+        "incremental_outcome": 122927080.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 24301050.0,
+        "incremental_outcome": 46965252.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 24301050.0,
+        "incremental_outcome": 12112778.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 24301050.0,
+        "incremental_outcome": 95900720.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 18792174.0,
+        "incremental_outcome": 21487878.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 18792174.0,
+        "incremental_outcome": 5725985.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 18792174.0,
+        "incremental_outcome": 47549304.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 7247600.5,
+        "incremental_outcome": 12073863.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 7247600.5,
+        "incremental_outcome": 4263799.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 7247600.5,
+        "incremental_outcome": 22802570.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 52716164.0,
+        "incremental_outcome": 55054448.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 52716164.0,
+        "incremental_outcome": 18001886.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 52716164.0,
+        "incremental_outcome": 112137760.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 28638436.0,
+        "incremental_outcome": 72771208.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 28638436.0,
+        "incremental_outcome": 21392536.0
+      },
+      {
+        "spend_multiplier": 0.6,
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 28638436.0,
+        "incremental_outcome": 148244512.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 32401398.0,
+        "incremental_outcome": 55369512.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 32401398.0,
+        "incremental_outcome": 14293843.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 32401398.0,
+        "incremental_outcome": 112188512.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 25056232.0,
+        "incremental_outcome": 25454344.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 25056232.0,
+        "incremental_outcome": 6857152.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 25056232.0,
+        "incremental_outcome": 55806388.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 9663467.0,
+        "incremental_outcome": 14456740.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 9663467.0,
+        "incremental_outcome": 5061636.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 9663467.0,
+        "incremental_outcome": 27149782.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 70288216.0,
+        "incremental_outcome": 64547392.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 70288216.0,
+        "incremental_outcome": 21534340.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 70288216.0,
+        "incremental_outcome": 129329736.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 38184580.0,
+        "incremental_outcome": 85021728.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 38184580.0,
+        "incremental_outcome": 25352890.0
+      },
+      {
+        "spend_multiplier": 0.8,
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 38184580.0,
+        "incremental_outcome": 167001024.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 40501748.0,
+        "incremental_outcome": 62194272.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 40501748.0,
+        "incremental_outcome": 16044452.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 40501748.0,
+        "incremental_outcome": 124525088.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 31320290.0,
+        "incremental_outcome": 28722436.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 31320290.0,
+        "incremental_outcome": 7734228.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 31320290.0,
+        "incremental_outcome": 62714504.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 12079334.0,
+        "incremental_outcome": 16474149.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 12079334.0,
+        "incremental_outcome": 5791898.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 12079334.0,
+        "incremental_outcome": 30778002.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 87860272.0,
+        "incremental_outcome": 72214232.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 87860272.0,
+        "incremental_outcome": 24377190.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 87860272.0,
+        "incremental_outcome": 142031904.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 47730724.0,
+        "incremental_outcome": 94885408.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 47730724.0,
+        "incremental_outcome": 28706832.0
+      },
+      {
+        "spend_multiplier": 1.0,
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 47730724.0,
+        "incremental_outcome": 182858128.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 48602100.0,
+        "incremental_outcome": 67876176.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 48602100.0,
+        "incremental_outcome": 17427942.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 48602100.0,
+        "incremental_outcome": 135125344.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 37584348.0,
+        "incremental_outcome": 31480152.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 37584348.0,
+        "incremental_outcome": 8422784.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 37584348.0,
+        "incremental_outcome": 68436984.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 14495201.0,
+        "incremental_outcome": 18220678.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 14495201.0,
+        "incremental_outcome": 6374602.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 14495201.0,
+        "incremental_outcome": 33893512.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 105432328.0,
+        "incremental_outcome": 78572232.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 105432328.0,
+        "incremental_outcome": 26475284.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 105432328.0,
+        "incremental_outcome": 153227344.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 57276872.0,
+        "incremental_outcome": 103051336.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 57276872.0,
+        "incremental_outcome": 31342054.0
+      },
+      {
+        "spend_multiplier": 1.2,
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 57276872.0,
+        "incremental_outcome": 195460576.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 56702448.0,
+        "incremental_outcome": 72697552.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 56702448.0,
+        "incremental_outcome": 18745080.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 56702448.0,
+        "incremental_outcome": 143945920.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 43848404.0,
+        "incremental_outcome": 33849536.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 43848404.0,
+        "incremental_outcome": 9042262.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 43848404.0,
+        "incremental_outcome": 73191824.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 16911068.0,
+        "incremental_outcome": 19757924.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 16911068.0,
+        "incremental_outcome": 6911544.5
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 16911068.0,
+        "incremental_outcome": 36686932.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 123004376.0,
+        "incremental_outcome": 83951152.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 123004376.0,
+        "incremental_outcome": 28522876.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 123004376.0,
+        "incremental_outcome": 162798000.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 66823012.0,
+        "incremental_outcome": 109952056.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 66823012.0,
+        "incremental_outcome": 33347118.0
+      },
+      {
+        "spend_multiplier": 1.4,
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 66823012.0,
+        "incremental_outcome": 205635264.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 64802796.0,
+        "incremental_outcome": 76850352.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 64802796.0,
+        "incremental_outcome": 19679280.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 64802796.0,
+        "incremental_outcome": 151781856.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 50112464.0,
+        "incremental_outcome": 35914148.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 50112464.0,
+        "incremental_outcome": 9534291.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 50112464.0,
+        "incremental_outcome": 77259368.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 19326934.0,
+        "incremental_outcome": 21128206.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 19326934.0,
+        "incremental_outcome": 7370400.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 19326934.0,
+        "incremental_outcome": 39188216.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 140576432.0,
+        "incremental_outcome": 88572960.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 140576432.0,
+        "incremental_outcome": 29930874.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 140576432.0,
+        "incremental_outcome": 170300272.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 76369160.0,
+        "incremental_outcome": 115878192.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 76369160.0,
+        "incremental_outcome": 35078148.0
+      },
+      {
+        "spend_multiplier": 1.6,
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 76369160.0,
+        "incremental_outcome": 214166128.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 72903144.0,
+        "incremental_outcome": 80470952.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 72903144.0,
+        "incremental_outcome": 20622456.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 72903144.0,
+        "incremental_outcome": 158572496.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 56376520.0,
+        "incremental_outcome": 37733748.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 56376520.0,
+        "incremental_outcome": 9976746.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 56376520.0,
+        "incremental_outcome": 80979768.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 21742800.0,
+        "incremental_outcome": 22362416.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 21742800.0,
+        "incremental_outcome": 7812708.5
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 21742800.0,
+        "incremental_outcome": 41794016.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 158148480.0,
+        "incremental_outcome": 92595344.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 158148480.0,
+        "incremental_outcome": 31120284.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 158148480.0,
+        "incremental_outcome": 177676848.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 85915304.0,
+        "incremental_outcome": 121034616.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 85915304.0,
+        "incremental_outcome": 36846768.0
+      },
+      {
+        "spend_multiplier": 1.8,
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 85915304.0,
+        "incremental_outcome": 221280400.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 81003496.0,
+        "incremental_outcome": 83660624.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 81003496.0,
+        "incremental_outcome": 21425958.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 81003496.0,
+        "incremental_outcome": 164966592.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 62640580.0,
+        "incremental_outcome": 39352932.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 62640580.0,
+        "incremental_outcome": 10414453.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 62640580.0,
+        "incremental_outcome": 84312344.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 24158668.0,
+        "incremental_outcome": 23483324.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 24158668.0,
+        "incremental_outcome": 8185597.5
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 24158668.0,
+        "incremental_outcome": 43931516.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 175720544.0,
+        "incremental_outcome": 96132928.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 175720544.0,
+        "incremental_outcome": 32353350.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 175720544.0,
+        "incremental_outcome": 184047344.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 95461448.0,
+        "incremental_outcome": 125568240.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 95461448.0,
+        "incremental_outcome": 38219436.0
+      },
+      {
+        "spend_multiplier": 2.0,
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 95461448.0,
+        "incremental_outcome": 228834176.0
+      }
+    ]
+  },
+  "budget_optimization": {
+    "fixed_budget": true,
+    "budget": null,
+    "confidence_level": 0.9,
+    "optimized": [
+      {
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 52600000.0,
+        "pct_of_spend": 0.2396355353,
+        "incremental_outcome": 70349792.0,
+        "effectiveness": 0.009807107,
+        "roi": 1.3374447823,
+        "mroi": 0.5918290019,
+        "cpik": 1.11606884
+      },
+      {
+        "channel": "Channel0",
+        "metric": "median",
+        "spend": 52600000.0,
+        "pct_of_spend": 0.2396355353,
+        "incremental_outcome": 65160340.0,
+        "effectiveness": 0.0090836976,
+        "roi": 1.2387897968,
+        "mroi": 0.5347071886,
+        "cpik": 0.8072395325
+      },
+      {
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 52600000.0,
+        "pct_of_spend": 0.2396355353,
+        "incremental_outcome": 18162820.0,
+        "effectiveness": 0.0025319934,
+        "roi": 0.3453007936,
+        "mroi": 0.1251493394,
+        "cpik": 0.3764615953
+      },
+      {
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 52600000.0,
+        "pct_of_spend": 0.2396355353,
+        "incremental_outcome": 139722096.0,
+        "effectiveness": 0.0194780026,
+        "roi": 2.6563136578,
+        "mroi": 1.2482136488,
+        "cpik": 2.8960273266
+      },
+      {
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 27200000.0,
+        "pct_of_spend": 0.1239179954,
+        "incremental_outcome": 26640130.0,
+        "effectiveness": 0.0094427727,
+        "roi": 0.9794169068,
+        "mroi": 0.533511281,
+        "cpik": 1.5454932451
+      },
+      {
+        "channel": "Channel1",
+        "metric": "median",
+        "spend": 27200000.0,
+        "pct_of_spend": 0.1239179954,
+        "incremental_outcome": 23366392.0,
+        "effectiveness": 0.0082823839,
+        "roi": 0.8590584993,
+        "mroi": 0.467941165,
+        "cpik": 1.1640651226
+      },
+      {
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 27200000.0,
+        "pct_of_spend": 0.1239179954,
+        "incremental_outcome": 7193447.5,
+        "effectiveness": 0.0025497687,
+        "roi": 0.2644649744,
+        "mroi": 0.1287341863,
+        "cpik": 0.4659105241
+      },
+      {
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 27200000.0,
+        "pct_of_spend": 0.1239179954,
+        "incremental_outcome": 58380304.0,
+        "effectiveness": 0.0206933152,
+        "roi": 2.1463348866,
+        "mroi": 1.1556433439,
+        "cpik": 3.7812185287
+      },
+      {
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 15700000.0,
+        "pct_of_spend": 0.0715261959,
+        "incremental_outcome": 19010488.0,
+        "effectiveness": 0.0089977449,
+        "roi": 1.2108544111,
+        "mroi": 0.6331907511,
+        "cpik": 1.0895547867
+      },
+      {
+        "channel": "Channel2",
+        "metric": "median",
+        "spend": 15700000.0,
+        "pct_of_spend": 0.0715261959,
+        "incremental_outcome": 17863120.0,
+        "effectiveness": 0.0084547251,
+        "roi": 1.1377784014,
+        "mroi": 0.5820127726,
+        "cpik": 0.8789057732
+      },
+      {
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 15700000.0,
+        "pct_of_spend": 0.0715261959,
+        "incremental_outcome": 6656440.5,
+        "effectiveness": 0.0031505346,
+        "roi": 0.4239771068,
+        "mroi": 0.1925003082,
+        "cpik": 0.4445772171
+      },
+      {
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 15700000.0,
+        "pct_of_spend": 0.0715261959,
+        "incremental_outcome": 35314448.0,
+        "effectiveness": 0.0167145468,
+        "roi": 2.249327898,
+        "mroi": 1.2390031815,
+        "cpik": 2.3586175442
+      },
+      {
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 62000000.0,
+        "pct_of_spend": 0.2824601367,
+        "incremental_outcome": 60339728.0,
+        "effectiveness": 0.0075841504,
+        "roi": 0.9732202888,
+        "mroi": 0.5326203108,
+        "cpik": 1.3940258026
+      },
+      {
+        "channel": "Channel3",
+        "metric": "median",
+        "spend": 62000000.0,
+        "pct_of_spend": 0.2824601367,
+        "incremental_outcome": 54127696.0,
+        "effectiveness": 0.0068033501,
+        "roi": 0.8730273247,
+        "mroi": 0.494145155,
+        "cpik": 1.1454393864
+      },
+      {
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 62000000.0,
+        "pct_of_spend": 0.2824601367,
+        "incremental_outcome": 20025310.0,
+        "effectiveness": 0.0025169959,
+        "roi": 0.3229888976,
+        "mroi": 0.1672833115,
+        "cpik": 0.5093902349
+      },
+      {
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 62000000.0,
+        "pct_of_spend": 0.2824601367,
+        "incremental_outcome": 121714152.0,
+        "effectiveness": 0.0152983414,
+        "roi": 1.963131547,
+        "mroi": 1.0280276537,
+        "cpik": 3.0960817337
+      },
+      {
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 62000000.0,
+        "pct_of_spend": 0.2824601367,
+        "incremental_outcome": 106603016.0,
+        "effectiveness": 0.0133974589,
+        "roi": 1.7194057703,
+        "mroi": 0.7185242772,
+        "cpik": 0.8132032752
+      },
+      {
+        "channel": "Channel4",
+        "metric": "median",
+        "spend": 62000000.0,
+        "pct_of_spend": 0.2824601367,
+        "incremental_outcome": 100841656.0,
+        "effectiveness": 0.012673392,
+        "roi": 1.6264783144,
+        "mroi": 0.6958774328,
+        "cpik": 0.6148253083
+      },
+      {
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 62000000.0,
+        "pct_of_spend": 0.2824601367,
+        "incremental_outcome": 32210606.0,
+        "effectiveness": 0.0040481053,
+        "roi": 0.5195258856,
+        "mroi": 0.1896580607,
+        "cpik": 0.3086279333
+      },
+      {
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 62000000.0,
+        "pct_of_spend": 0.2824601367,
+        "incremental_outcome": 200889136.0,
+        "effectiveness": 0.0252469741,
+        "roi": 3.2401473522,
+        "mroi": 1.3323174715,
+        "cpik": 1.9248318672
+      }
+    ],
+    "nonoptimized": [
+      {
+        "channel": "Channel0",
+        "metric": "mean",
+        "spend": 40500000.0,
+        "pct_of_spend": 0.1845102506,
+        "incremental_outcome": 62192940.0,
+        "effectiveness": 0.0112602841,
+        "roi": 1.5356248617,
+        "mroi": 0.7615073323,
+        "cpik": 0.9735595584
+      },
+      {
+        "channel": "Channel0",
+        "metric": "median",
+        "spend": 40500000.0,
+        "pct_of_spend": 0.1845102506,
+        "incremental_outcome": 57363296.0,
+        "effectiveness": 0.010385897,
+        "roi": 1.4163775444,
+        "mroi": 0.6947308779,
+        "cpik": 0.7060264349
+      },
+      {
+        "channel": "Channel0",
+        "metric": "ci_lo",
+        "spend": 40500000.0,
+        "pct_of_spend": 0.1845102506,
+        "incremental_outcome": 16044150.0,
+        "effectiveness": 0.0029048694,
+        "roi": 0.3961518407,
+        "mroi": 0.1707177907,
+        "cpik": 0.3252414465
+      },
+      {
+        "channel": "Channel0",
+        "metric": "ci_hi",
+        "spend": 40500000.0,
+        "pct_of_spend": 0.1845102506,
+        "incremental_outcome": 124522856.0,
+        "effectiveness": 0.0225454532,
+        "roi": 3.0746383667,
+        "mroi": 1.5743229389,
+        "cpik": 2.5242843628
+      },
+      {
+        "channel": "Channel1",
+        "metric": "mean",
+        "spend": 31300000.0,
+        "pct_of_spend": 0.1425968109,
+        "incremental_outcome": 28712738.0,
+        "effectiveness": 0.0088442853,
+        "roi": 0.9173396826,
+        "mroi": 0.4753157496,
+        "cpik": 1.6477457285
+      },
+      {
+        "channel": "Channel1",
+        "metric": "median",
+        "spend": 31300000.0,
+        "pct_of_spend": 0.1425968109,
+        "incremental_outcome": 25263998.0,
+        "effectiveness": 0.0077819796,
+        "roi": 0.8071564436,
+        "mroi": 0.4151469469,
+        "cpik": 1.2389171124
+      },
+      {
+        "channel": "Channel1",
+        "metric": "ci_lo",
+        "spend": 31300000.0,
+        "pct_of_spend": 0.1425968109,
+        "incremental_outcome": 7732839.5,
+        "effectiveness": 0.0023819192,
+        "roi": 0.2470555753,
+        "mroi": 0.1123502403,
+        "cpik": 0.4992924929
+      },
+      {
+        "channel": "Channel1",
+        "metric": "ci_hi",
+        "spend": 31300000.0,
+        "pct_of_spend": 0.1425968109,
+        "incremental_outcome": 62688704.0,
+        "effectiveness": 0.0193097796,
+        "roi": 2.0028338432,
+        "mroi": 1.0374778509,
+        "cpik": 4.0476717949
+      },
+      {
+        "channel": "Channel2",
+        "metric": "mean",
+        "spend": 12100000.0,
+        "pct_of_spend": 0.0551252847,
+        "incremental_outcome": 16490069.0,
+        "effectiveness": 0.010127021,
+        "roi": 1.3628216982,
+        "mroi": 0.7701802254,
+        "cpik": 0.9675608277
+      },
+      {
+        "channel": "Channel2",
+        "metric": "median",
+        "spend": 12100000.0,
+        "pct_of_spend": 0.0551252847,
+        "incremental_outcome": 15454098.0,
+        "effectiveness": 0.0094907619,
+        "roi": 1.2771980762,
+        "mroi": 0.7166280746,
+        "cpik": 0.782963872
+      },
+      {
+        "channel": "Channel2",
+        "metric": "ci_lo",
+        "spend": 12100000.0,
+        "pct_of_spend": 0.0551252847,
+        "incremental_outcome": 5796830.5,
+        "effectiveness": 0.003559984,
+        "roi": 0.4790769219,
+        "mroi": 0.2430436164,
+        "cpik": 0.3926715255
+      },
+      {
+        "channel": "Channel2",
+        "metric": "ci_hi",
+        "spend": 12100000.0,
+        "pct_of_spend": 0.0551252847,
+        "incremental_outcome": 30814558.0,
+        "effectiveness": 0.0189240184,
+        "roi": 2.5466575623,
+        "mroi": 1.4816389084,
+        "cpik": 2.0873475075
+      },
+      {
+        "channel": "Channel3",
+        "metric": "mean",
+        "spend": 87900000.0,
+        "pct_of_spend": 0.4004555809,
+        "incremental_outcome": 72229816.0,
+        "effectiveness": 0.0064035892,
+        "roi": 0.8217276931,
+        "mroi": 0.3932692707,
+        "cpik": 1.6322422028
+      },
+      {
+        "channel": "Channel3",
+        "metric": "median",
+        "spend": 87900000.0,
+        "pct_of_spend": 0.4004555809,
+        "incremental_outcome": 65571872.0,
+        "effectiveness": 0.0058133202,
+        "roi": 0.7459826469,
+        "mroi": 0.3628214002,
+        "cpik": 1.3405138254
+      },
+      {
+        "channel": "Channel3",
+        "metric": "ci_lo",
+        "spend": 87900000.0,
+        "pct_of_spend": 0.4004555809,
+        "incremental_outcome": 24382652.0,
+        "effectiveness": 0.0021616612,
+        "roi": 0.2773908377,
+        "mroi": 0.1141573414,
+        "cpik": 0.6187915206
+      },
+      {
+        "channel": "Channel3",
+        "metric": "ci_hi",
+        "spend": 87900000.0,
+        "pct_of_spend": 0.4004555809,
+        "incremental_outcome": 142051056.0,
+        "effectiveness": 0.0125936354,
+        "roi": 1.6160531044,
+        "mroi": 0.7703079581,
+        "cpik": 3.6050214767
+      },
+      {
+        "channel": "Channel4",
+        "metric": "mean",
+        "spend": 47700000.0,
+        "pct_of_spend": 0.2173120729,
+        "incremental_outcome": 94856976.0,
+        "effectiveness": 0.0154950703,
+        "roi": 1.9886111021,
+        "mroi": 0.931276679,
+        "cpik": 0.7091578245
+      },
+      {
+        "channel": "Channel4",
+        "metric": "median",
+        "spend": 47700000.0,
+        "pct_of_spend": 0.2173120729,
+        "incremental_outcome": 88519848.0,
+        "effectiveness": 0.0144599397,
+        "roi": 1.8557620049,
+        "mroi": 0.9134172201,
+        "cpik": 0.5388622284
+      },
+      {
+        "channel": "Channel4",
+        "metric": "ci_lo",
+        "spend": 47700000.0,
+        "pct_of_spend": 0.2173120729,
+        "incremental_outcome": 28694310.0,
+        "effectiveness": 0.0046872878,
+        "roi": 0.6015579104,
+        "mroi": 0.2589735687,
+        "cpik": 0.2609230876
+      },
+      {
+        "channel": "Channel4",
+        "metric": "ci_hi",
+        "spend": 47700000.0,
+        "pct_of_spend": 0.2173120729,
+        "incremental_outcome": 182812480.0,
+        "effectiveness": 0.029862877,
+        "roi": 3.832546711,
+        "mroi": 1.6807386875,
+        "cpik": 1.662350297
+      }
+    ],
+    "total_incremental_lift": {
+      "optimized": 282943154.0,
+      "current": 274482539.0,
+      "delta": 8460615.0,
+      "delta_pct": 3.08
+    }
+  },
+  "model_health": {
+    "confidence_level": 0.9,
+    "rhat": [
+      {
+        "param": "alpha_m",
+        "n_params": 5.0,
+        "avg_rhat": 1.0020986795,
+        "max_rhat": 1.0037766695,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "alpha_om",
+        "n_params": 1.0,
+        "avg_rhat": 0.9995439649,
+        "max_rhat": 0.9995439649,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "beta_gm",
+        "n_params": 200.0,
+        "avg_rhat": 1.0020867586,
+        "max_rhat": 1.0186575651,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "beta_gom",
+        "n_params": 40.0,
+        "avg_rhat": 1.000251174,
+        "max_rhat": 1.0078567266,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "beta_m",
+        "n_params": 5.0,
+        "avg_rhat": 1.0031154156,
+        "max_rhat": 1.0073698759,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "beta_om",
+        "n_params": 1.0,
+        "avg_rhat": 1.00023067,
+        "max_rhat": 1.00023067,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "contribution_n",
+        "n_params": 1.0,
+        "avg_rhat": 0.9996696115,
+        "max_rhat": 0.9996696115,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "contribution_om",
+        "n_params": 1.0,
+        "avg_rhat": 1.0008337498,
+        "max_rhat": 1.0008337498,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "ec_m",
+        "n_params": 5.0,
+        "avg_rhat": 1.0010112524,
+        "max_rhat": 1.0031903982,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "ec_om",
+        "n_params": 1.0,
+        "avg_rhat": 1.0004805326,
+        "max_rhat": 1.0004805326,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "eta_m",
+        "n_params": 5.0,
+        "avg_rhat": 1.0086866617,
+        "max_rhat": 1.0185470581,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "eta_om",
+        "n_params": 1.0,
+        "avg_rhat": 1.0029915571,
+        "max_rhat": 1.0029915571,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "gamma_c",
+        "n_params": 2.0,
+        "avg_rhat": 1.0203287601,
+        "max_rhat": 1.0368249416,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "gamma_gc",
+        "n_params": 80.0,
+        "avg_rhat": 0.9999365807,
+        "max_rhat": 1.0022324324,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "gamma_gn",
+        "n_params": 40.0,
+        "avg_rhat": 1.0000927448,
+        "max_rhat": 1.002141118,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "gamma_n",
+        "n_params": 1.0,
+        "avg_rhat": 1.0006923676,
+        "max_rhat": 1.0006923676,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "knot_values",
+        "n_params": 64.0,
+        "avg_rhat": 1.0617814064,
+        "max_rhat": 1.0733275414,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "mu_t",
+        "n_params": 156.0,
+        "avg_rhat": 1.0651580095,
+        "max_rhat": 1.0788066387,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "roi_m",
+        "n_params": 5.0,
+        "avg_rhat": 1.0031772852,
+        "max_rhat": 1.0098696947,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "sigma",
+        "n_params": 1.0,
+        "avg_rhat": 0.9995738864,
+        "max_rhat": 0.9995738864,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "tau_g",
+        "n_params": 40.0,
+        "avg_rhat": 1.0282782316,
+        "max_rhat": 1.0411044359,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "xi_c",
+        "n_params": 2.0,
+        "avg_rhat": 1.0097894669,
+        "max_rhat": 1.0172655582,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      },
+      {
+        "param": "xi_n",
+        "n_params": 1.0,
+        "avg_rhat": 1.0007038116,
+        "max_rhat": 1.0007038116,
+        "percent_bad_rhat": 0.0,
+        "row_idx_bad_rhat": [],
+        "col_idx_bad_rhat": []
+      }
+    ],
+    "max_rhat": 1.0651580095291138,
+    "predictive_accuracy": [
+      {
+        "metric": "R_Squared",
+        "geo_granularity": "geo",
+        "evaluation_set": "Train",
+        "value": 0.7766367197
+      },
+      {
+        "metric": "R_Squared",
+        "geo_granularity": "geo",
+        "evaluation_set": "Test",
+        "value": 0.6091387272
+      },
+      {
+        "metric": "R_Squared",
+        "geo_granularity": "geo",
+        "evaluation_set": "All Data",
+        "value": 0.7677711248
+      },
+      {
+        "metric": "R_Squared",
+        "geo_granularity": "national",
+        "evaluation_set": "Train",
+        "value": 0.7828452587
+      },
+      {
+        "metric": "R_Squared",
+        "geo_granularity": "national",
+        "evaluation_set": "Test",
+        "value": -16.3804759979
+      },
+      {
+        "metric": "R_Squared",
+        "geo_granularity": "national",
+        "evaluation_set": "All Data",
+        "value": 0.4512780309
+      },
+      {
+        "metric": "MAPE",
+        "geo_granularity": "geo",
+        "evaluation_set": "Train",
+        "value": 0.2533794045
+      },
+      {
+        "metric": "MAPE",
+        "geo_granularity": "geo",
+        "evaluation_set": "Test",
+        "value": 0.395522356
+      },
+      {
+        "metric": "MAPE",
+        "geo_granularity": "geo",
+        "evaluation_set": "All Data",
+        "value": 0.2606687844
+      },
+      {
+        "metric": "MAPE",
+        "geo_granularity": "national",
+        "evaluation_set": "Train",
+        "value": 0.0266734362
+      },
+      {
+        "metric": "MAPE",
+        "geo_granularity": "national",
+        "evaluation_set": "Test",
+        "value": 0.1632747054
+      },
+      {
+        "metric": "MAPE",
+        "geo_granularity": "national",
+        "evaluation_set": "All Data",
+        "value": 0.0336786285
+      },
+      {
+        "metric": "wMAPE",
+        "geo_granularity": "geo",
+        "evaluation_set": "Train",
+        "value": 0.1988066137
+      },
+      {
+        "metric": "wMAPE",
+        "geo_granularity": "geo",
+        "evaluation_set": "Test",
+        "value": 0.2595340312
+      },
+      {
+        "metric": "wMAPE",
+        "geo_granularity": "geo",
+        "evaluation_set": "All Data",
+        "value": 0.2020041645
+      },
+      {
+        "metric": "wMAPE",
+        "geo_granularity": "national",
+        "evaluation_set": "Train",
+        "value": 0.0266177598
+      },
+      {
+        "metric": "wMAPE",
+        "geo_granularity": "national",
+        "evaluation_set": "Test",
+        "value": 0.1614896804
+      },
+      {
+        "metric": "wMAPE",
+        "geo_granularity": "national",
+        "evaluation_set": "All Data",
+        "value": 0.0337193385
+      }
+    ],
+    "mape": 0.1632747054,
+    "r_squared": -16.3804759979,
+    "training_window": {
+      "start": "2021-01-25",
+      "end": "2024-01-15",
+      "n_weeks": 156,
+      "holdout_weeks": 8
+    }
+  }
+}

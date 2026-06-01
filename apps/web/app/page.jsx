@@ -5,6 +5,7 @@
 // modules are concatenated in load order; window.* exports and the standalone
 // ReactDOM bootstrap are stripped (Next renders <App/> as the route).
 import React from 'react';
+import ResultsLive from './_components/ResultsLive';
 
 // ============================== icons.jsx ==============================
 // Minimal inline Lucide-style icons. ~14-16px line icons.
@@ -3800,7 +3801,7 @@ function App() {
     case 'pipeline':      body = <DataPipeline client={activeClient} />; break;
     case 'model-studio':  body = <ModelStudio client={activeClient} />; break;
     case 'training':      body = <TrainingRuns client={activeClient} />; break;
-    case 'results':       body = <Results client={activeClient} />; break;
+    case 'results':       body = <ResultsLive client={activeClient} />; break;
     case 'reports':       body = <ReportsScreen client={activeClient} />; break;
     case 'signal':        body = <SignalScreen client={activeClient} />; break;
     case 'client-settings': body = <ClientSettings client={activeClient} />; break;

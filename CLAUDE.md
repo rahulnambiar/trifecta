@@ -79,7 +79,15 @@ trifecta/
     (Cloud Run service `trifecta-mcp`, `asia-southeast1`, unauthenticated, scales to zero).
   - This is what the Signal route (M5) attaches via the Anthropic API `mcp_servers` parameter.
 - **M3 — web: auth, shell, Dashboard** — Supabase email/password auth; wire Login + shell + Dashboard.
-- **M4 — web: Model Studio, Training Runs, Results** — read views; `/api/results` reads `results.json` from GCS, renders real charts.
+- **M4 — web: Results wired to real data** ✅ `/api/results` serves the posterior bundle (bundled
+  `apps/web/data/results.json` in Phase 0; GCS-fetch is the documented Phase 1 seam). The **Results**
+  screen (`app/_components/ResultsLive.jsx`) renders genuine Meridian outputs across all 4 tabs —
+  contribution (incremental revenue + share), ROI & marginal ROI (with CI whiskers), response curves
+  (posterior saturation + credible band), budget optimiser (current vs optimal + lift) — keeping the
+  handoff's SVG chart language. Model Studio & Training Runs remain the handoff's faithful seeded
+  read-views (the model *config* isn't persisted in Phase 0; only Results/Signal carry real numbers,
+  per the brief). Note: the real model has 5 channels (Meta/YouTube/TV/Paid Search/TikTok); the
+  config screens show the richer Aeon fiction.
 - **M5 — web: Signal chat** — `/api/signal` calls the Anthropic API with the Trifecta MCP server attached (`mcp_servers`, `MCP_SERVER_URL`); streams grounded answers.
 - **M6 — Deploy & polish** — Vercel + Cloud Run; end-to-end smoke test; "fictional demo data" disclaimer.
 
