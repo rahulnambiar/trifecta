@@ -23,3 +23,6 @@ gcp-key*.json
 
 # os
 .DS_Store
+
+# sample datasets (downloaded by the runner; see services/meridian-runner/README.md)
+data/sample/*.csv

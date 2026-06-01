@@ -44,7 +44,7 @@ trifecta/
   apps/
     web/                 # Next.js operator console → Vercel  (BUILT: design handoff ported)
   services/
-    meridian-runner/     # Python — Vertex AI training job    (TODO: M1)
+    meridian-runner/     # Python — Vertex AI training job    (M1: code complete; run on GPU)
     mcp-server/          # Python — MCP server → Cloud Run    (TODO: M2)
   packages/
     db/                  # Supabase schema + seed             (TODO)
@@ -58,7 +58,12 @@ trifecta/
 ## Build milestones (see `docs/phase0-build-brief.md` §7)
 
 - **M0 — Handoff & scaffold** ✅ design ported into `apps/web`, monorepo + docs in place, git initialised.
-- **M1 — meridian-runner** — train Meridian on `hypothetical_geo_all_channels.csv`; export `model.pkl` + `results.json` to GCS.
+- **M1 — meridian-runner** ✅ *code complete (not yet executed — needs a GPU + GCS).* Trains Meridian
+  on `data/sample/geo_all_channels.csv` (current API: `DataFrameInputDataBuilder`, not the brief's
+  deprecated `CsvDataLoader`; `hypothetical_geo_all_channels.csv` has no KPI column and is the
+  optimiser scenario input). Exports `model.pkl` (`save_mmm`) + `results.json` (contribution, ROI,
+  marginal ROI, response curves, budget optimisation, R-hat/MAPE — all with 90% credible intervals).
+  Dockerfile + `vertex/submit_job.py` for the Vertex AI GPU job.
 - **M2 — mcp-server** — FastMCP server loading the fitted model; Phase 0 tools (§8) with credible intervals; Cloud Run.
 - **M3 — web: auth, shell, Dashboard** — Supabase email/password auth; wire Login + shell + Dashboard.
 - **M4 — web: Model Studio, Training Runs, Results** — read views; `/api/results` reads `results.json` from GCS, renders real charts.
