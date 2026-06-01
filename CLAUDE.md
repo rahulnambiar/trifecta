@@ -45,7 +45,7 @@ trifecta/
     web/                 # Next.js operator console → Vercel  (BUILT: design handoff ported)
   services/
     meridian-runner/     # Python — Vertex AI training job    (M1 ✅ trained; artifacts in GCS)
-    mcp-server/          # Python — MCP server → Cloud Run    (TODO: M2)
+    mcp-server/          # Python — MCP server → Cloud Run    (M2 ✅ deployed & live)
   packages/
     db/                  # Supabase schema + seed             (TODO)
   data/
@@ -71,7 +71,13 @@ trifecta/
     `gs://trifecta-artifacts-498105` (artifacts at `aeon/model.pkl`, `aeon/results.json`).
   - `apps/web/app/results-preview` is a temporary viewer for the bundle (replaced by the real
     Results screen in M4). gcloud CLI lives at `~/google-cloud-sdk/bin`.
-- **M2 — mcp-server** — FastMCP server loading the fitted model; Phase 0 tools (§8) with credible intervals; Cloud Run.
+- **M2 — mcp-server** ✅ *deployed to Cloud Run.* FastMCP (Streamable HTTP) server exposing the six
+  Phase 0 tools, each with 90% credible intervals. Serves the posterior bundle (`results.json`,
+  baked into the image for Phase 0 — no runtime GCS creds; GCS-load path retained for re-trains).
+  All 6 tools verified live via an MCP client.
+  - **MCP_SERVER_URL** = `https://trifecta-mcp-781866440451.asia-southeast1.run.app/mcp`
+    (Cloud Run service `trifecta-mcp`, `asia-southeast1`, unauthenticated, scales to zero).
+  - This is what the Signal route (M5) attaches via the Anthropic API `mcp_servers` parameter.
 - **M3 — web: auth, shell, Dashboard** — Supabase email/password auth; wire Login + shell + Dashboard.
 - **M4 — web: Model Studio, Training Runs, Results** — read views; `/api/results` reads `results.json` from GCS, renders real charts.
 - **M5 — web: Signal chat** — `/api/signal` calls the Anthropic API with the Trifecta MCP server attached (`mcp_servers`, `MCP_SERVER_URL`); streams grounded answers.
