@@ -1,0 +1,22 @@
+# Build the CPU runner image on Cloud Build.
+# Pull the previous image as a layer cache so unchanged deps (TensorFlow/Meridian)
+# aren't reinstalled — only the code COPY layer rebuilds.
+steps:
+  - name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    args:
+      - -c
+      - docker pull asia-southeast1-docker.pkg.dev/$PROJECT_ID/trifecta/meridian-runner:cpu || true
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - Dockerfile.cpu
+      - --cache-from
+      - asia-southeast1-docker.pkg.dev/$PROJECT_ID/trifecta/meridian-runner:cpu
+      - -t
+      - asia-southeast1-docker.pkg.dev/$PROJECT_ID/trifecta/meridian-runner:cpu
+      - .
+images:
+  - asia-southeast1-docker.pkg.dev/$PROJECT_ID/trifecta/meridian-runner:cpu
+timeout: 2400s

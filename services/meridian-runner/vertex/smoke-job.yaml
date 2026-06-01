@@ -1,0 +1,24 @@
+# Vertex AI CustomJob — SMOKE validation (tiny sampler, NOT publishable).
+# Proves the container runs against real Meridian and writes artifacts to GCS.
+# Submit:
+#   gcloud ai custom-jobs create --region=asia-southeast1 \
+#     --display-name=meridian-smoke --config=vertex/smoke-job.yaml
+workerPoolSpecs:
+  - machineSpec:
+      machineType: n1-standard-8
+    replicaCount: 1
+    containerSpec:
+      imageUri: asia-southeast1-docker.pkg.dev/trifecta-platform-498105/trifecta/meridian-runner:cpu
+      args:
+        - "--smoke"
+      env:
+        - name: TRAINING_CSV
+          value: "https://raw.githubusercontent.com/google/meridian/refs/heads/main/meridian/data/simulated_data/csv/geo_all_channels.csv"
+        - name: GCS_BUCKET
+          value: "trifecta-artifacts-498105"
+        - name: MODEL_ARTIFACT_PATH
+          value: "aeon/smoke/model.pkl"
+        - name: RESULTS_ARTIFACT_PATH
+          value: "aeon/smoke/results.json"
+scheduling:
+  timeout: 3600s   # 1h hard cap — cost guardrail

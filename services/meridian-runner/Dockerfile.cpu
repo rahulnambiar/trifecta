@@ -1,0 +1,19 @@
+# CPU-only image for the Phase 0 Vertex AI CustomJob (no GPU quota required).
+# The GPU production path uses ./Dockerfile (CUDA base) instead.
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+COPY meridian_runner ./meridian_runner
+
+# The dataset is read from its public URL (TRAINING_CSV env), so no data is baked in.
+ENTRYPOINT ["python", "-m", "meridian_runner.run"]

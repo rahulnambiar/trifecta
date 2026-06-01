@@ -1,0 +1,32 @@
+# Vertex AI CustomJob — REAL run (reduced-but-converging CPU sampler).
+# 4 chains x (500 adapt + 200 burn-in + 500 keep). Publishable Phase 0 numbers.
+# Submit (only after smoke passes + cost OK):
+#   gcloud ai custom-jobs create --region=asia-southeast1 \
+#     --display-name=meridian-real --config=vertex/real-job.yaml
+workerPoolSpecs:
+  - machineSpec:
+      machineType: n1-standard-16
+    replicaCount: 1
+    containerSpec:
+      imageUri: asia-southeast1-docker.pkg.dev/trifecta-platform-498105/trifecta/meridian-runner:cpu
+      env:
+        - name: TRAINING_CSV
+          value: "https://raw.githubusercontent.com/google/meridian/refs/heads/main/meridian/data/simulated_data/csv/geo_all_channels.csv"
+        - name: GCS_BUCKET
+          value: "trifecta-artifacts-498105"
+        - name: MODEL_ARTIFACT_PATH
+          value: "aeon/model.pkl"
+        - name: RESULTS_ARTIFACT_PATH
+          value: "aeon/results.json"
+        - name: N_CHAINS
+          value: "4"
+        - name: N_ADAPT
+          value: "500"
+        - name: N_BURNIN
+          value: "200"
+        - name: N_KEEP
+          value: "500"
+        - name: HOLDOUT_WEEKS
+          value: "8"
+scheduling:
+  timeout: 18000s   # 5h hard cap — cost guardrail

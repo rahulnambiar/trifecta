@@ -46,7 +46,9 @@ def _channel_intervals(draws, channels, cfg: RunnerConfig) -> list[dict]:
     arr = arr.reshape(-1, arr.shape[-1])  # (samples, n_channels)
     lo_q, hi_q = _ci_bounds(cfg.confidence_level)
     out = []
-    for i, ch in enumerate(channels):
+    n = min(arr.shape[-1], len(channels))
+    for i in range(n):
+        ch = channels[i]
         col = arr[:, i]
         out.append(
             {
@@ -69,15 +71,21 @@ def _ds_records(ds, max_rows: int | None = None) -> list[dict]:
     return json.loads(df.to_json(orient="records"))
 
 
-def _media_channels(mmm) -> list[str]:
-    return [str(c) for c in np.asarray(mmm.input_data.media_channels)]
+def _media_channels(mmm, cfg: RunnerConfig) -> list[str]:
+    """Paid-media channel names. InputData exposes ``media_channel`` (singular)."""
+    idata = mmm.input_data
+    for attr in ("media_channel", "media_channels"):
+        v = getattr(idata, attr, None)
+        if v is not None:
+            return [str(c) for c in np.asarray(v)]
+    return list(cfg.media_channels)
 
 
 # --------------------------------------------------------------------------- #
 # sections
 # --------------------------------------------------------------------------- #
 def channel_contribution(az, mmm, cfg: RunnerConfig) -> list[dict]:
-    channels = _media_channels(mmm)
+    channels = _media_channels(mmm, cfg)
     incremental = az.incremental_outcome(use_posterior=True, include_non_paid_channels=False)
     roi = az.roi(use_posterior=True)
 
@@ -107,7 +115,7 @@ def channel_contribution(az, mmm, cfg: RunnerConfig) -> list[dict]:
 
 
 def marginal_roi(az, mmm, cfg: RunnerConfig) -> list[dict]:
-    channels = _media_channels(mmm)
+    channels = _media_channels(mmm, cfg)
     mroi = az.marginal_roi(use_posterior=True)
     return _channel_intervals(mroi, channels, cfg)
 
@@ -131,7 +139,14 @@ def budget_optimization(mmm, cfg: RunnerConfig) -> dict:
     nonoptimized = _ds_records(res.nonoptimized_data)
 
     def _total_incremental(records: list[dict]) -> float | None:
-        vals = [r.get("incremental_outcome") for r in records if r.get("incremental_outcome") is not None]
+        # optimized/nonoptimized carry a `metric` dim (mean / median / ci bounds);
+        # sum the point estimate (mean) only, else we ~4x-count.
+        vals = [
+            r.get("incremental_outcome")
+            for r in records
+            if r.get("incremental_outcome") is not None
+            and str(r.get("metric", "mean")).lower() == "mean"
+        ]
         return float(sum(vals)) if vals else None
 
     opt_total = _total_incremental(optimized)
@@ -193,35 +208,37 @@ def model_health(az, cfg: RunnerConfig, data) -> dict:
 
 
 def _extract_headline_accuracy(records: list[dict]) -> dict:
-    """Best-effort pull of a single MAPE / R² number for the UI headline."""
+    """Pull a single MAPE / R² for the UI headline.
+
+    predictive_accuracy() records look like:
+      {metric: 'MAPE'|'R_Squared', geo_granularity: 'geo'|'national',
+       evaluation_set: 'Train'|'Test'|'All Data', value: float}
+    Prefer the held-out (Test) national figure — that's the "holdout MAPE" the
+    UI reports — falling back through national/All Data → geo/Test → anything.
+    """
     out: dict = {}
     if not records:
         return out
 
-    def _pick(metric_key: str):
-        # Prefer national-level Test split, else national All-Data, else any.
-        cands = []
+    PREF = [("national", "Test"), ("national", "All Data"), ("geo", "Test"), ("geo", "All Data")]
+
+    def _pick(metric_norm: str):
+        by = {}
         for r in records:
-            blob = " ".join(str(v).lower() for v in r.values())
-            val = None
-            for k, v in r.items():
-                if metric_key in k.lower() and isinstance(v, (int, float)):
-                    val = v
-            if val is None:
+            name = str(r.get("metric", "")).lower().replace("_", "").replace("-", "").replace(" ", "")
+            if name != metric_norm:
                 continue
-            score = 0
-            if "test" in blob:
-                score += 2
-            if "national" in blob:
-                score += 1
-            cands.append((score, val))
-        if not cands:
-            return None
-        cands.sort(key=lambda x: x[0], reverse=True)
-        return float(cands[0][1])
+            by[(r.get("geo_granularity"), r.get("evaluation_set"))] = r.get("value")
+        for key in PREF:
+            if by.get(key) is not None:
+                return float(by[key])
+        for v in by.values():
+            if v is not None:
+                return float(v)
+        return None
 
     mape = _pick("mape")
-    r2 = _pick("r-squared") or _pick("r_squared") or _pick("rsquared")
+    r2 = _pick("rsquared")
     if mape is not None:
         out["mape"] = mape
     if r2 is not None:
@@ -236,32 +253,47 @@ def build_results(mmm, data, cfg: RunnerConfig) -> dict:
     az = analyzer.Analyzer(mmm)
     log.info("Deriving results bundle (confidence_level=%.2f)", cfg.confidence_level)
 
-    results = {
-        "meta": {
-            "client": cfg.client_name,
-            "generated_at": dt.datetime.utcnow().isoformat() + "Z",
-            "dataset": cfg.csv_path,
-            "library": "google-meridian",
-            "sampler": {
-                "n_chains": cfg.n_chains,
-                "n_adapt": cfg.n_adapt,
-                "n_burnin": cfg.n_burnin,
-                "n_keep": cfg.n_keep,
-                "method": "NUTS",
-            },
-            "confidence_level": cfg.confidence_level,
-            "channel_display_names": {c: cfg.display_name(c) for c in cfg.media_channels},
-            "disclaimer": (
-                "Fictional demo client. Numbers are genuine Meridian posterior "
-                "outputs trained on Google's public simulated dataset."
-            ),
+    meta = {
+        "client": cfg.client_name,
+        "generated_at": dt.datetime.utcnow().isoformat() + "Z",
+        "dataset": cfg.csv_path,
+        "library": "google-meridian",
+        "sampler": {
+            "n_chains": cfg.n_chains,
+            "n_adapt": cfg.n_adapt,
+            "n_burnin": cfg.n_burnin,
+            "n_keep": cfg.n_keep,
+            "method": "NUTS",
         },
-        "channel_contribution": channel_contribution(az, mmm, cfg),
-        "marginal_roi": marginal_roi(az, mmm, cfg),
-        "response_curves": response_curves(az, cfg),
-        "budget_optimization": budget_optimization(mmm, cfg),
-        "model_health": model_health(az, cfg, data),
+        "confidence_level": cfg.confidence_level,
+        "channel_display_names": {c: cfg.display_name(c) for c in cfg.media_channels},
+        "disclaimer": (
+            "Fictional demo client. Numbers are genuine Meridian posterior "
+            "outputs trained on Google's public simulated dataset."
+        ),
     }
+
+    # Each section is computed independently so one API hiccup neither loses the
+    # other sections nor aborts the run (model.pkl + a partial bundle still ship).
+    sections = {
+        "channel_contribution": lambda: channel_contribution(az, mmm, cfg),
+        "marginal_roi": lambda: marginal_roi(az, mmm, cfg),
+        "response_curves": lambda: response_curves(az, cfg),
+        "budget_optimization": lambda: budget_optimization(mmm, cfg),
+        "model_health": lambda: model_health(az, cfg, data),
+    }
+    results: dict = {"meta": meta}
+    errors: dict = {}
+    for name, fn in sections.items():
+        try:
+            results[name] = fn()
+        except Exception as e:  # noqa: BLE001 - capture, keep going
+            log.exception("section %s failed", name)
+            results[name] = None
+            errors[name] = repr(e)
+    meta["errors"] = errors
+    if errors:
+        log.warning("results bundle has %d failed section(s): %s", len(errors), list(errors))
     return results
 
 
