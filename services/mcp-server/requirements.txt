@@ -1,0 +1,5 @@
+# MCP server (FastMCP / Streamable HTTP) + GCS read.
+# No Meridian/TensorFlow at runtime — the server serves the posterior bundle
+# (results.json) the runner already produced.
+mcp>=1.2
+google-cloud-storage>=2.16

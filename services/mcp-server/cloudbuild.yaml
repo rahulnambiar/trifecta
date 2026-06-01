@@ -1,0 +1,18 @@
+# Build & push the MCP server image (small; cache the previous image's layers).
+steps:
+  - name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    args:
+      - -c
+      - docker pull asia-southeast1-docker.pkg.dev/$PROJECT_ID/trifecta/mcp-server:latest || true
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --cache-from
+      - asia-southeast1-docker.pkg.dev/$PROJECT_ID/trifecta/mcp-server:latest
+      - -t
+      - asia-southeast1-docker.pkg.dev/$PROJECT_ID/trifecta/mcp-server:latest
+      - .
+images:
+  - asia-southeast1-docker.pkg.dev/$PROJECT_ID/trifecta/mcp-server:latest
+timeout: 1200s
