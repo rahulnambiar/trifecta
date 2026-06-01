@@ -3733,7 +3733,7 @@ const TopBar = ({ screen, activeClient, theme, setTheme }) => {
         <div className="row-h faint mono" style={{ gap: 8, fontSize: 11.5 }}>
           <I.Search size={13} /> Quick find
         </div>
-        <span className="wf-badge">WIREFRAME · v1.0</span>
+        <span className="wf-badge">PHASE 0 · DEMO</span>
         <ThemeToggle theme={theme} setTheme={setTheme} />
         <div style={{ width: 30, height: 30, borderRadius: 999, background: 'var(--panel2)', border: '1px solid var(--line)', display: 'grid', placeItems: 'center', color: 'var(--sky)' }} className="mono">
           RB
@@ -3822,7 +3822,7 @@ function App() {
       <main className="main">
         <TopBar screen={screen} activeClient={activeClient} theme={theme} setTheme={setTheme} />
         <div className="content" data-screen-label={`${SCREEN_META[screen]?.title}`}>{body}</div>
-        <div className="footer-note">DESIGN BLUEPRINT · NAVIGABLE WIREFRAME · FICTIONAL DATA</div>
+        <div className="footer-note">TRIFECTA PLATFORM · PHASE 0 DEMO · GENUINE MERIDIAN OUTPUTS ON FICTIONAL DEMO DATA</div>
       </main>
       {adding ? <AddClientWizard onClose={() => setAdding(false)} onCreate={createClient} /> : null}
     </div>
