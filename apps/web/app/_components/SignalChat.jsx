@@ -3,6 +3,7 @@
 // Claude with the Trifecta MCP server attached; answers are grounded in the
 // fitted Meridian model and carry credible intervals.
 import React from 'react';
+import SignalArtifact from './SignalArtifact';
 
 const SUGGESTIONS = [
   'Which channels drive revenue?',
@@ -39,7 +40,7 @@ export default function SignalChat({ client }) {
     setBusy(true);
 
     const history = messages.map((m) => ({ role: m.role, content: m.text }));
-    const next = [...messages, { role: 'user', text: q }, { role: 'assistant', text: '', tools: [] }];
+    const next = [...messages, { role: 'user', text: q }, { role: 'assistant', text: '', tools: [], artifacts: [] }];
     setMessages(next);
     const aIdx = next.length - 1;
 
@@ -73,6 +74,10 @@ export default function SignalChat({ client }) {
           try { evt = JSON.parse(line); } catch { continue; }
           if (evt.type === 'tool') {
             update((m) => ({ ...m, tools: [...(m.tools || []), evt.name] }));
+          } else if (evt.type === 'tool_result') {
+            if (evt.data && !evt.is_error) {
+              update((m) => ({ ...m, artifacts: [...(m.artifacts || []), { name: evt.name, data: evt.data }] }));
+            }
           } else if (evt.type === 'text') {
             update((m) => ({ ...m, text: m.text + evt.text }));
           } else if (evt.type === 'error') {
@@ -108,7 +113,14 @@ export default function SignalChat({ client }) {
               <div style={{ fontSize: 13 }}>Signal answers from the fitted MMM — contribution, ROI, saturation, and budget — always with the model's uncertainty.</div>
             </div>
           ) : (
-            messages.map((m, i) => <Bubble key={i} m={m} busy={busy && i === messages.length - 1} />)
+            messages.map((m, i) => (
+              <div key={i} style={{ display: 'flex', flexDirection: 'column' }}>
+                <Bubble m={m} busy={busy && i === messages.length - 1} />
+                {m.role === 'assistant' && m.artifacts && m.artifacts.length ? (
+                  <div>{m.artifacts.map((a, j) => <SignalArtifact key={j} name={a.name} data={a.data} />)}</div>
+                ) : null}
+              </div>
+            ))
           )}
         </div>
 

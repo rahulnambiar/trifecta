@@ -64,9 +64,25 @@ export async function POST(req) {
           stream: true,
         });
 
+        const toolNames = {}; // tool_use id -> tool name
         for await (const event of events) {
-          if (event.type === 'content_block_start' && event.content_block?.type === 'mcp_tool_use') {
-            send({ type: 'tool', name: event.content_block.name });
+          if (event.type === 'content_block_start') {
+            const block = event.content_block;
+            if (block?.type === 'mcp_tool_use') {
+              toolNames[block.id] = block.name;
+              send({ type: 'tool', id: block.id, name: block.name, input: block.input });
+            } else if (block?.type === 'mcp_tool_result') {
+              const text = (block.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('');
+              let data = null;
+              try { data = JSON.parse(text); } catch { /* non-JSON result */ }
+              send({
+                type: 'tool_result',
+                id: block.tool_use_id,
+                name: toolNames[block.tool_use_id],
+                is_error: !!block.is_error,
+                data,
+              });
+            }
           } else if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
             send({ type: 'text', text: event.delta.text });
           }
