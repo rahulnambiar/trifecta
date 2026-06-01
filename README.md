@@ -7,6 +7,9 @@ This monorepo holds the **Phase 0 showcase prototype**: a navigable platform bac
 Meridian model trained on Google's public simulated dataset. One hardcoded demo client
 ("Aeon Skincare"), read-mostly — but the Results and Signal figures are genuine Meridian outputs.
 
+**🔗 Live demo: https://trifecta-platform.vercel.app** — sign in (mock auth), open **Results** for
+real Meridian charts, and **Signal** to chat with the model (grounded answers, with credible intervals).
+
 ## Structure
 
 ```

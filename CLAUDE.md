@@ -94,7 +94,10 @@ trifecta/
   (chat UI with tool-call chips + suggested prompts). System prompt is prompt-cached. Verified live:
   "which channels drive revenue?" → Claude calls `get_channel_contribution` → grounded answer with 90%
   CIs. **Needs `ANTHROPIC_API_KEY` + `MCP_SERVER_URL` in `apps/web/.env.local`** (gitignored).
-- **M6 — Deploy & polish** — Vercel + Cloud Run; end-to-end smoke test; "fictional demo data" disclaimer.
+- **M6 — Deploy & polish** ✅ `apps/web` deployed to **Vercel** at **https://trifecta-platform.vercel.app**
+  (project `trifecta-platform`, `ANTHROPIC_API_KEY` + `MCP_SERVER_URL` set as production env vars).
+  End-to-end smoke test passed in production (Signal → Claude → MCP on Cloud Run → grounded answer with
+  CIs). Badge/footer rebranded as a Phase 0 demo with the "fictional demo data" disclaimer.
 
 ## Phase 0 MCP tools (only what the simulated dataset supports)
 
