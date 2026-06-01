@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 120" fill="none" role="img" aria-label="Trifecta — Part of Midpoint Global">
+  <title>Trifecta — Part of Midpoint Global</title>
+
+  <defs>
+    <linearGradient id="tf-mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3B54D6"></stop>
+      <stop offset="100%" stop-color="#1C9A70"></stop>
+    </linearGradient>
+  </defs>
+
+  
+  <g transform="translate(60 60) rotate(45)">
+    <rect x="-32" y="-32" width="64" height="64" rx="16" fill="url(#tf-mark)"></rect>
+    <rect x="-10" y="-10" width="20" height="20" rx="5" fill="#FFFFFF"></rect>
+  </g>
+
+  
+  <g transform="translate(130 0)">
+    <text x="0" y="62" font-family="&#39;Bricolage Grotesque&#39;, &#39;Space Grotesk&#39;, &#39;Inter&#39;, system-ui, sans-serif" font-weight="800" font-size="44" letter-spacing="4.5" fill="#0E1428">TRIFECTA</text>
+    <text x="0" y="92" font-family="&#39;JetBrains Mono&#39;, &#39;IBM Plex Mono&#39;, ui-monospace, Menlo, monospace" font-weight="500" font-size="14" letter-spacing="2" fill="#8A93A8">PART OF <tspan font-weight="700" fill="#0E1428">MIDPOINT GLOBAL</tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,25 @@
+# dependencies
+node_modules/
+**/node_modules/
+
+# next.js
+apps/web/.next/
+apps/web/out/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# env / secrets
+.env
+.env*.local
+*-service-account*.json
+gcp-key*.json
+
+# artifacts
+*.pkl
+
+# os
+.DS_Store

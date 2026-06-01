@@ -1,0 +1,2059 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Trifecta — Growth engines for the digital business</title>
+<meta name="viewport" content="width=1920" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #ffffff;
+    --bg2:      #f6f8fc;
+    --panel:    #ffffff;
+    --panel2:   #ffffff;
+    --panel3:   #f5f7fb;
+    --line:     #e3e7f0;
+    --line2:    #c9d0e0;
+    --text:     #0e1428;
+    --dim:      #5b6680;
+    --faint:    #8a93a8;
+    --blue:     #3b54d6;
+    --sky:      #4b6cf0;
+    --mint:     #1c9a70;
+    --amber:    #a87526;
+    --red:      #c44a40;
+
+    --f-display: 'Bricolage Grotesque', serif;
+    --f-body:    'Hanken Grotesk', sans-serif;
+    --f-mono:    'JetBrains Mono', monospace;
+  }
+  * , *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #e8edf5; color: var(--text); font-family: var(--f-body); }
+  body { font-size: 18px; line-height: 1.45; }
+
+  deck-stage { --slide-w: 1920px; --slide-h: 1080px; }
+
+  /* ===== Slide chrome ===== */
+  section.slide {
+    width: 1920px; height: 1080px;
+    background: var(--bg);
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 0 rgba(20,28,55,0.03);
+  }
+  .slide-pad { padding: 80px 96px; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+  /* Header chrome that appears on most slides */
+  .slide-chrome-top {
+    position: absolute; top: 36px; left: 96px; right: 96px;
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--f-mono); font-size: 13px;
+    letter-spacing: 0.16em; color: var(--faint);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .slide-chrome-top > span { white-space: nowrap; }
+  .slide-chrome-top .logomark {
+    width: 22px; height: 22px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--blue) 0%, var(--mint) 100%);
+    transform: rotate(45deg);
+    position: relative;
+    flex: 0 0 22px;
+  }
+  .slide-chrome-top .logomark::after {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 7px; height: 7px; border-radius: 2px;
+    background: var(--bg);
+  }
+  .slide-chrome-top .brand { font-weight: 700; color: var(--text); letter-spacing: 0.22em; line-height: 1; }
+  .slide-chrome-top .brand-lockup {
+    display: inline-flex; flex-direction: column; gap: 3px;
+    align-self: center;
+  }
+  .slide-chrome-top .partof-mini {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--f-mono); font-size: 9.5px; letter-spacing: 0.12em;
+    color: var(--faint); text-transform: uppercase;
+    line-height: 1;
+  }
+  .slide-chrome-top .partof-mini .mp {
+    width: 11px; height: 11px; border-radius: 999px;
+    background: linear-gradient(135deg, #05927D 0%, #0ADE7C 100%);
+    display: inline-grid; place-items: center;
+    color: #fff; font-family: var(--f-display); font-weight: 800; font-size: 7px;
+    letter-spacing: 0;
+    flex: 0 0 11px;
+  }
+  .slide-chrome-top .partof-mini b {
+    color: var(--text); font-weight: 700;
+  }
+  .slide-chrome-top .sep { color: var(--line2); }
+  .slide-chrome-top .right { margin-left: auto; }
+
+  .slide-chrome-bottom {
+    position: absolute; bottom: 36px; left: 96px; right: 96px;
+    display: flex; justify-content: space-between;
+    font-family: var(--f-mono); font-size: 12px;
+    letter-spacing: 0.16em; color: var(--faint);
+    text-transform: uppercase;
+  }
+
+  /* Eyebrow + title */
+  .eyebrow {
+    font-family: var(--f-mono); font-size: 14px; letter-spacing: 0.22em;
+    color: var(--sky); text-transform: uppercase; margin-bottom: 18px;
+  }
+  h1.title, h1.title-xl {
+    font-family: var(--f-display);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 0.98;
+    margin: 0;
+  }
+  h1.title { font-size: 84px; }
+  h1.title-xl { font-size: 132px; }
+  h2.sec {
+    font-family: var(--f-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-size: 58px; line-height: 1.02;
+    margin: 0 0 12px 0;
+  }
+  .lead { font-size: 24px; color: var(--dim); line-height: 1.4; max-width: 1100px; }
+  .lead.big { font-size: 32px; color: var(--text); max-width: 1200px; line-height: 1.3; }
+
+  .tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.16em;
+    text-transform: uppercase; padding: 6px 12px; border-radius: 4px;
+    border: 1px solid var(--line2); color: var(--dim);
+    white-space: nowrap;
+    background: rgba(20,28,55,0.02);
+  }
+  .tag.mint  { color: var(--mint);  border-color: rgba(28,154,112,0.4); background: rgba(28,154,112,0.10); }
+  .tag.amber { color: var(--amber); border-color: rgba(168,117,38,0.4); background: rgba(168,117,38,0.10); }
+  .tag.red   { color: var(--red);   border-color: rgba(196,74,64,0.4);  background: rgba(196,74,64,0.10);  }
+  .tag.sky   { color: var(--sky);   border-color: rgba(75,108,240,0.4); background: rgba(75,108,240,0.10); }
+  .tag.blue  { color: var(--blue);  border-color: rgba(59,84,214,0.5);  background: rgba(59,84,214,0.10); }
+
+  .card {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 28px 30px;
+  }
+  .card h3 {
+    font-family: var(--f-display);
+    font-weight: 700; letter-spacing: -0.01em;
+    font-size: 28px; margin: 0 0 12px 0;
+  }
+  .card p { margin: 0; color: var(--dim); font-size: 18px; line-height: 1.5; }
+
+  .num-pill {
+    display: inline-grid; place-items: center;
+    width: 36px; height: 36px; border-radius: 999px;
+    background: var(--panel3); border: 1px solid var(--line2);
+    font-family: var(--f-mono); font-size: 14px; color: var(--sky);
+  }
+
+  .grid { display: grid; gap: 24px; }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  .g5 { grid-template-columns: repeat(5, 1fr); }
+
+  /* Connector arrow between cards */
+  .arr {
+    align-self: center; color: var(--line2);
+    font-family: var(--f-mono); font-size: 22px;
+  }
+
+  /* small mono labels */
+  .mono-label {
+    font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.18em;
+    color: var(--faint); text-transform: uppercase;
+  }
+
+  /* skeleton hatch placeholder */
+  .skel {
+    border: 1px dashed var(--line2); border-radius: 10px;
+    background:
+      repeating-linear-gradient(135deg, rgba(125,155,255,0.05) 0 1px, transparent 1px 12px),
+      var(--panel3);
+    color: var(--faint);
+    font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.1em;
+    display: grid; place-items: center;
+    text-align: center; text-transform: uppercase;
+    padding: 12px;
+  }
+
+  /* ===== Slide 1 — Title ===== */
+  .s-title {
+    background:
+      radial-gradient(1200px 700px at 78% -10%, rgba(79,110,242,0.30), transparent 60%),
+      radial-gradient(900px 600px at 10% 110%, rgba(55,211,155,0.16), transparent 60%),
+      var(--bg);
+  }
+  .s-title .stack { padding: 0 96px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .s-title .powered-pill {
+    align-self: flex-start;
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 10px 18px 10px 14px;
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: var(--f-mono); font-size: 12.5px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--dim);
+    margin-bottom: 36px;
+    white-space: nowrap;
+  }
+  .s-title .powered-pill .mp-logo {
+    width: 24px; height: 24px; border-radius: 999px;
+    background: linear-gradient(135deg, #05927D 0%, #0ADE7C 100%);
+    flex: 0 0 24px;
+    display: grid; place-items: center;
+    color: #fff; font-family: var(--f-display); font-weight: 800; font-size: 13px;
+    letter-spacing: 0;
+  }
+  .s-title .powered-pill b {
+    color: var(--text); font-weight: 700; letter-spacing: 0.16em;
+  }
+  .s-title .big-logo {
+    display: flex; align-items: center; gap: 22px; margin-bottom: 56px;
+  }
+  .s-title .big-logo .lm {
+    width: 56px; height: 56px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--blue) 0%, var(--mint) 100%);
+    transform: rotate(45deg); position: relative;
+  }
+  .s-title .big-logo .lm::after {
+    content:''; position: absolute; top:50%; left:50%; transform: translate(-50%,-50%);
+    width: 18px; height: 18px; border-radius: 5px; background: var(--bg);
+  }
+  .s-title .big-logo .wm {
+    font-family: var(--f-display); font-weight: 800; letter-spacing: 0.18em;
+    font-size: 30px;
+  }
+  .s-title .big-logo .divider {
+    width: 1px; height: 38px; background: var(--line2); align-self: center;
+  }
+  .s-title .big-logo .partof {
+    display: flex; flex-direction: column; gap: 2px;
+    font-family: var(--f-mono); line-height: 1.15;
+  }
+  .s-title .big-logo .partof .po-top {
+    font-size: 10.5px; letter-spacing: 0.22em;
+    color: var(--faint); text-transform: uppercase;
+  }
+  .s-title .big-logo .partof .po-mp {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 16px; letter-spacing: 0.14em;
+    color: var(--text); text-transform: uppercase; font-weight: 700;
+  }
+  .s-title .big-logo .partof .po-mp .po-mark {
+    width: 18px; height: 18px; border-radius: 999px;
+    background: linear-gradient(135deg, #05927D 0%, #0ADE7C 100%);
+    display: inline-grid; place-items: center;
+    color: #fff; font-family: var(--f-display); font-weight: 800; font-size: 10px;
+    letter-spacing: 0;
+  }
+  .s-title h1 {
+    font-size: 116px;
+    line-height: 0.98;
+    max-width: 1500px;
+  }
+  .s-title h1 em {
+    font-style: normal;
+    background: linear-gradient(95deg, var(--sky), var(--mint));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .s-title .sub {
+    margin-top: 32px;
+    font-size: 24px; max-width: 1200px;
+    color: var(--dim);
+    line-height: 1.45;
+  }
+  .s-title .pillrow {
+    margin-top: 48px; display: flex; gap: 14px; flex-wrap: wrap;
+  }
+  .s-title .pillrow .tag { font-size: 15px; padding: 10px 16px; letter-spacing: 0.14em; }
+
+  /* About Midpoint stripe at the bottom of slide 1 */
+  .s-title .midpoint-stripe {
+    margin: 40px 96px 64px;
+    padding: 24px 28px;
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    display: grid;
+    grid-template-columns: 1.7fr 1fr 1.15fr;
+    gap: 32px;
+    align-items: stretch;
+  }
+  .s-title .midpoint-stripe > div { display: flex; flex-direction: column; gap: 8px; }
+  .s-title .midpoint-stripe .ms-head {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .s-title .midpoint-stripe .ms-mark {
+    width: 32px; height: 32px; border-radius: 999px;
+    background: linear-gradient(135deg, #05927D 0%, #0ADE7C 100%);
+    flex: 0 0 32px;
+    display: grid; place-items: center;
+    color: #fff; font-family: var(--f-display); font-weight: 800; font-size: 16px;
+  }
+  .s-title .midpoint-stripe .ms-title {
+    font-family: var(--f-display); font-weight: 700; font-size: 19px; letter-spacing: -0.01em;
+  }
+  .s-title .midpoint-stripe .ms-label {
+    font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.18em;
+    color: var(--faint); text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .s-title .midpoint-stripe .ms-label .pin-sg,
+  .s-title .midpoint-stripe .ms-label .pin-id {
+    display: inline-block; vertical-align: middle;
+  }
+  .s-title .midpoint-stripe p { margin: 0; color: var(--dim); font-size: 14.5px; line-height: 1.5; }
+  .s-title .midpoint-stripe .venture-line {
+    margin-top: 4px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+    font-size: 14px; color: var(--text); line-height: 1.45;
+  }
+  .s-title .midpoint-stripe .venture-line b { color: var(--blue); }
+  .s-title .midpoint-stripe .ms-addr {
+    font-size: 14px; color: var(--text); line-height: 1.55;
+    font-style: normal;
+  }
+  .s-title .midpoint-stripe .ms-addr .entity {
+    display: block; margin-top: 6px;
+    font-family: var(--f-mono); font-size: 10.5px;
+    color: var(--faint); letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  /* ===== Slide 2 — The problem ===== */
+  .quotemark {
+    font-family: var(--f-display); font-weight: 700;
+    font-size: 220px; line-height: 0.8;
+    color: var(--line2);
+    margin-bottom: -20px;
+  }
+  .quote {
+    font-family: var(--f-display); font-weight: 600;
+    font-size: 72px; line-height: 1.05;
+    letter-spacing: -0.02em;
+    max-width: 1500px;
+  }
+  .quote .hl { color: var(--amber); }
+  .attrib { margin-top: 28px; font-family: var(--f-mono); font-size: 14px; color: var(--faint); letter-spacing: 0.16em; text-transform: uppercase; }
+
+  /* ===== Slide 3 — Approach (3 pillars) ===== */
+  .pillar {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 28px 24px;
+    display: flex; flex-direction: column; gap: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .pillar .pnum {
+    font-family: var(--f-mono); font-size: 12px; color: var(--faint);
+    letter-spacing: 0.22em;
+  }
+  .pillar h3 {
+    font-family: var(--f-display); font-weight: 700;
+    font-size: 28px; line-height: 1.05; letter-spacing: -0.015em;
+    margin: 0;
+  }
+  .pillar .desc { color: var(--dim); font-size: 16px; line-height: 1.5; }
+  .pillar .vis {
+    margin-top: auto; min-height: 200px;
+    border-radius: 12px; padding: 18px;
+    background: var(--panel3);
+    border: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 10px;
+    font-family: var(--f-mono); font-size: 13px; color: var(--dim);
+  }
+  .pillar .accent { width: 28px; height: 4px; border-radius: 2px; }
+  .pillar.b1 .accent { background: var(--blue); }
+  .pillar.b2 .accent { background: var(--mint); }
+  .pillar.b3 .accent { background: var(--sky); }
+  .pillar.b4 .accent { background: var(--amber); }
+
+  /* ===== Slide 6 / 7 — Architecture diagrams ===== */
+  .layer {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 26px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .layer .lhead {
+    display: flex; align-items: center; gap: 14px;
+    color: var(--text);
+  }
+  .layer .lhead .tab {
+    font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.2em;
+    color: var(--sky); text-transform: uppercase;
+  }
+  .layer .lhead .label {
+    font-family: var(--f-display); font-weight: 700; font-size: 24px;
+  }
+  .layer .lhead .sub {
+    margin-left: auto; font-family: var(--f-mono); font-size: 12px;
+    color: var(--faint); letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .layer.row { flex-direction: row; flex-wrap: wrap; }
+  .chip {
+    background: var(--panel3);
+    border: 1px solid var(--line2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 15px;
+    color: var(--text);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .chip .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--sky); }
+  .chip.mint .dot { background: var(--mint); }
+  .chip.amber .dot { background: var(--amber); }
+  .chip.blue .dot { background: var(--blue); }
+
+  .down {
+    text-align: center; color: var(--line2);
+    font-family: var(--f-mono); font-size: 22px;
+    line-height: 1;
+    height: 22px;
+  }
+
+  /* ===== Operator console mockups ===== */
+  .console {
+    flex: 1;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--panel);
+    overflow: hidden;
+    display: flex;
+    min-height: 0;
+  }
+  .console .sb {
+    width: 220px;
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    padding: 18px 12px;
+    display: flex; flex-direction: column; gap: 4px;
+    font-size: 14px;
+  }
+  .console .sb .brand {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 8px 16px; border-bottom: 1px solid var(--line); margin-bottom: 10px;
+  }
+  .console .sb .brand .lm {
+    width: 22px; height: 22px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--blue), var(--mint));
+    transform: rotate(45deg); position: relative;
+  }
+  .console .sb .brand .lm::after {
+    content:''; position: absolute; top:50%; left:50%; transform: translate(-50%,-50%);
+    width: 7px; height: 7px; border-radius: 2px; background: var(--panel);
+  }
+  .console .sb .brand .wm {
+    font-family: var(--f-display); font-weight: 800; letter-spacing: 0.18em; font-size: 14px;
+  }
+  .console .sb .grp {
+    font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.18em;
+    color: var(--faint); text-transform: uppercase;
+    padding: 12px 10px 6px;
+  }
+  .console .sb .nav {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: 6px; color: var(--dim);
+    border-left: 2px solid transparent;
+  }
+  .console .sb .nav.active {
+    background: rgba(79,110,242,0.10);
+    color: var(--text);
+    border-left-color: var(--blue);
+  }
+  .console .sb .nav .ic {
+    width: 14px; height: 14px; border-radius: 3px; background: var(--line2);
+    flex: 0 0 14px;
+  }
+  .console .sb .nav.active .ic { background: var(--sky); }
+  .console .sb .client {
+    margin: 4px 6px;
+    padding: 8px 10px;
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 600;
+  }
+  .console .sb .client .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--mint); }
+
+  .console .body {
+    flex: 1; min-width: 0; display: flex; flex-direction: column;
+  }
+  .console .topbar {
+    border-bottom: 1px solid var(--line);
+    padding: 14px 22px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .console .topbar h4 {
+    margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em;
+  }
+  .console .topbar .desc { color: var(--dim); font-size: 13px; }
+  .console .topbar .wf {
+    margin-left: auto; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.16em;
+    color: var(--sky); border: 1px solid var(--line2); padding: 4px 8px; border-radius: 4px;
+    background: rgba(125,155,255,0.06);
+  }
+  .console .work { flex: 1; min-height: 0; padding: 22px; overflow: hidden; }
+
+  /* lifecycle strip used in console */
+  .lc-strip { display: flex; }
+  .lc-strip .step {
+    flex: 1; padding: 12px 14px;
+    background: var(--panel2); border: 1px solid var(--line);
+    position: relative;
+    display: flex; flex-direction: column; gap: 3px;
+    font-size: 13px;
+  }
+  .lc-strip .step + .step { border-left: none; }
+  .lc-strip .step:first-child { border-radius: 10px 0 0 10px; }
+  .lc-strip .step:last-child { border-radius: 0 10px 10px 0; }
+  .lc-strip .step .n {
+    font-family: var(--f-mono); font-size: 10px; color: var(--faint); letter-spacing: 0.12em;
+  }
+  .lc-strip .step .t {
+    font-family: var(--f-display); font-weight: 700; font-size: 14px;
+  }
+  .lc-strip .step .s { font-size: 12px; color: var(--dim); }
+  .lc-strip .step::after {
+    content: ''; position: absolute; right: -7px; top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 14px; height: 14px;
+    background: var(--panel2);
+    border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    z-index: 2;
+  }
+  .lc-strip .step:last-child::after { display: none; }
+  .lc-strip .step.active .t { color: var(--sky); }
+
+  .tile {
+    background: var(--panel2); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .tile .lbl { font-family: var(--f-mono); font-size: 10px; color: var(--faint); letter-spacing: 0.16em; text-transform: uppercase; }
+  .tile .v { font-family: var(--f-display); font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
+  .tile .v .unit { font-size: 14px; color: var(--dim); margin-left: 4px; }
+  .tile .sub { font-size: 12px; color: var(--dim); }
+  .tile.amber .v { color: var(--amber); }
+
+  /* simple console table */
+  .ctbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ctbl th, .ctbl td { padding: 8px 12px; text-align: left; }
+  .ctbl th {
+    font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.16em;
+    color: var(--faint); text-transform: uppercase;
+    border-bottom: 1px solid var(--line); font-weight: 500;
+  }
+  .ctbl td { border-bottom: 1px solid var(--line); }
+  .ctbl tr.sel td { background: rgba(79,110,242,0.08); }
+  .ctbl tr.dim td { opacity: 0.45; }
+  .ctbl .ch { font-weight: 600; }
+  .ctbl .mono { font-family: var(--f-mono); font-size: 12px; }
+
+  .progress {
+    height: 6px; background: var(--panel3); border-radius: 999px; overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .progress > div { height: 100%; background: linear-gradient(90deg, var(--blue), var(--mint)); }
+
+  /* slider visual */
+  .slider {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .slider .track {
+    flex: 1; height: 4px; background: var(--panel3);
+    border-radius: 999px; position: relative; border: 1px solid var(--line);
+  }
+  .slider .fill {
+    position: absolute; top: -1px; left: -1px; height: 4px;
+    background: linear-gradient(90deg, var(--blue), var(--sky));
+    border-radius: 999px;
+  }
+  .slider .handle {
+    position: absolute; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px; height: 14px; border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(79,110,242,0.25);
+  }
+  .slider .val { font-family: var(--f-mono); font-size: 13px; color: var(--text); min-width: 40px; text-align: right; }
+
+  .toggle { width: 32px; height: 18px; border-radius: 999px; background: var(--panel3); border: 1px solid var(--line2); position: relative; flex: 0 0 32px; }
+  .toggle::after { content:''; position: absolute; top: 1px; left: 1px; width: 14px; height: 14px; border-radius: 999px; background: var(--dim); }
+  .toggle.on { background: rgba(79,110,242,0.4); border-color: var(--blue); }
+  .toggle.on::after { left: 17px; background: var(--blue); }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.16em;
+    color: var(--faint); text-transform: uppercase;
+  }
+  .field .inset {
+    background: var(--panel3); border: 1px solid var(--line); border-radius: 6px;
+    padding: 8px 11px; font-size: 13px; color: var(--text);
+  }
+
+  /* ===== Delivery lifecycle ===== */
+  .step-card {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px 26px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .step-card .stepnum {
+    font-family: var(--f-mono); font-size: 13px;
+    letter-spacing: 0.2em; color: var(--sky);
+  }
+  .step-card h3 {
+    font-family: var(--f-display); font-weight: 700;
+    font-size: 24px; line-height: 1.1; letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .step-card p { margin: 0; color: var(--dim); font-size: 16px; line-height: 1.5; }
+  .step-card .ic-box {
+    width: 56px; height: 56px; border-radius: 12px;
+    background: var(--panel3); border: 1px solid var(--line2);
+    color: var(--sky);
+    display: grid; place-items: center;
+    font-family: var(--f-display); font-weight: 800; font-size: 24px;
+  }
+
+  /* ===== Errors slide ===== */
+  .err-card {
+    border-radius: 18px;
+    padding: 48px;
+    border: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 18px;
+    align-items: flex-start;
+  }
+  .err-card.commission { background: linear-gradient(180deg, rgba(232,122,112,0.10), transparent 80%), var(--panel2); border-color: rgba(232,122,112,0.4); }
+  .err-card.omission   { background: linear-gradient(180deg, rgba(230,176,82,0.10), transparent 80%), var(--panel2); border-color: rgba(230,176,82,0.4); }
+  .err-card .ic-big {
+    font-family: var(--f-display); font-weight: 800; font-size: 64px;
+    line-height: 1;
+  }
+  .err-card.commission .ic-big { color: var(--red); }
+  .err-card.omission .ic-big { color: var(--amber); }
+  .err-card h3 {
+    font-family: var(--f-display); font-weight: 700;
+    font-size: 48px; letter-spacing: -0.02em; line-height: 1.0;
+    margin: 0;
+  }
+  .err-card .e-desc { color: var(--dim); font-size: 22px; line-height: 1.4; max-width: 620px; }
+  .err-card > div:last-child { align-self: stretch; }
+
+  /* ===== FAQ + Poor practices ===== */
+  .faq-row {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px 24px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .faq-row .q {
+    font-family: var(--f-display); font-weight: 700;
+    font-size: 22px; letter-spacing: -0.01em; line-height: 1.1;
+  }
+  .faq-row .a { color: var(--dim); font-size: 17px; line-height: 1.45; }
+
+  .anti {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--red);
+    border-radius: 10px;
+    padding: 22px 24px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .anti .anti-n { font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.2em; color: var(--red); }
+  .anti h4 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; }
+  .anti p  { margin: 0; color: var(--dim); font-size: 16px; line-height: 1.45; }
+
+  /* ===== Big numbered list (questions to ask) ===== */
+  .qcard {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 36px 36px;
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .qcard .qhd {
+    font-family: var(--f-display); font-weight: 800;
+    font-size: 92px; line-height: 0.9; letter-spacing: -0.03em;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+  .qcard h3 {
+    font-family: var(--f-display); font-weight: 700;
+    font-size: 30px; line-height: 1.05; letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .qcard p { margin: 0; color: var(--dim); font-size: 18px; line-height: 1.5; }
+  .qcard .ex {
+    margin-top: auto;
+    padding: 14px 16px;
+    background: var(--panel3);
+    border: 1px dashed var(--line2);
+    border-radius: 10px;
+    font-family: var(--f-mono); font-size: 14px;
+    color: var(--text);
+    line-height: 1.45;
+  }
+  .qcard .ex::before { content: '?  '; color: var(--sky); }
+
+  /* === Closing slide === */
+  .s-close .stack {
+    padding: 0 96px; flex: 1;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .s-close .kicker {
+    font-family: var(--f-mono); font-size: 14px; letter-spacing: 0.22em;
+    color: var(--mint); text-transform: uppercase; margin-bottom: 24px;
+  }
+  .s-close h1 { font-size: 120px; max-width: 1600px; }
+  .s-close .sub { margin-top: 36px; font-size: 24px; color: var(--dim); max-width: 1300px; }
+  .s-close .meta {
+    margin-top: 64px;
+    display: flex; gap: 48px; flex-wrap: wrap;
+    font-family: var(--f-mono); font-size: 14px; color: var(--dim);
+    letter-spacing: 0.08em;
+  }
+  .s-close .meta b { color: var(--text); font-weight: 600; }
+
+  /* === Speaker bracket utility === */
+  .brk-l, .brk-r {
+    color: var(--line2); font-family: var(--f-mono); font-size: 13px; letter-spacing: 0.18em;
+  }
+
+  /* Helper: limit slide content padding when there's chrome */
+  .with-chrome .slide-pad { padding-top: 100px; padding-bottom: 90px; }
+
+  /* === Strong divider title (used on architecture slides) === */
+  .titleblock { display: flex; flex-direction: column; gap: 8px; max-width: 1400px; margin-bottom: 36px; }
+
+  /* === channel detail panel for model studio === */
+  .detail-panel {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .detail-panel h5 {
+    font-family: var(--f-display); font-weight: 700; font-size: 18px;
+    margin: 0 0 4px 0; letter-spacing: -0.01em;
+  }
+  .detail-panel .row { display: flex; flex-direction: column; gap: 8px; }
+  .detail-panel .row .lab { font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.16em; color: var(--faint); text-transform: uppercase; }
+
+  /* small label row used inside cards */
+  .kv {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 0; border-bottom: 1px dashed var(--line);
+    font-size: 14px;
+  }
+  .kv:last-child { border-bottom: none; }
+  .kv .k { color: var(--dim); }
+  .kv .v { font-family: var(--f-mono); color: var(--text); }
+
+  /* ROUTER LINES — for platform architecture diagram */
+  .routes {
+    position: relative;
+    height: 28px;
+  }
+  .routes::before, .routes::after {
+    content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+    width: 2px; background: var(--line2);
+  }
+  .routes::after { transform: translateX(0); }
+
+  /* legend */
+  .legend {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    font-family: var(--f-mono); font-size: 11.5px; color: var(--dim);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .legend .l { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .legend .sw { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* === Founders === */
+  .founder-card {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 28px 28px 26px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .founder-card .portrait {
+    width: 96px; height: 96px; border-radius: 999px;
+    background:
+      repeating-linear-gradient(135deg, rgba(59,84,214,0.08) 0 1px, transparent 1px 10px),
+      var(--panel3);
+    border: 1px dashed var(--line2);
+    display: grid; place-items: center;
+    font-family: var(--f-display); font-weight: 800; font-size: 36px;
+    color: var(--blue);
+    letter-spacing: -0.02em;
+    flex: 0 0 96px;
+  }
+  .founder-card .meta-row { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .founder-card .role {
+    font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.16em;
+    color: var(--sky); text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .founder-card h3 {
+    font-family: var(--f-display); font-weight: 700;
+    font-size: 32px; letter-spacing: -0.025em; line-height: 1.0;
+    margin: 0;
+  }
+  .founder-card .focus {
+    font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.16em;
+    color: var(--text); text-transform: uppercase;
+    padding: 6px 10px;
+    background: var(--panel3);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    align-self: flex-start;
+  }
+  .founder-card .years {
+    font-family: var(--f-display); font-weight: 700;
+    font-size: 18px; letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .founder-card .years em {
+    font-style: normal; color: var(--mint);
+  }
+  .founder-card .bio {
+    color: var(--dim); font-size: 15px; line-height: 1.5;
+  }
+  .founder-card .pill-row {
+    margin-top: auto; display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .founder-card .pill-row .tag { font-size: 10.5px; padding: 5px 9px; }
+
+  /* Advisor card */
+  .advisor-card {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-style: dashed;
+    border-radius: 14px;
+    padding: 20px 22px;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .advisor-card .av-portrait {
+    width: 56px; height: 56px; border-radius: 999px;
+    background: var(--panel3);
+    border: 1px dashed var(--line2);
+    display: grid; place-items: center;
+    font-family: var(--f-mono); font-size: 11px;
+    color: var(--faint); letter-spacing: 0.12em;
+    flex: 0 0 56px;
+    text-align: center;
+    line-height: 1.1;
+  }
+  .advisor-card .av-meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .advisor-card .av-role {
+    font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.18em;
+    color: var(--sky); text-transform: uppercase;
+  }
+  .advisor-card .av-name {
+    font-family: var(--f-display); font-weight: 700;
+    font-size: 18px; letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .advisor-card .av-name.placeholder { color: var(--faint); font-style: italic; font-weight: 600; }
+  .advisor-card .av-sub { font-size: 13px; color: var(--dim); }
+
+  /* ID flag */
+  .id-flag {
+    display: inline-block; width: 22px; height: 15px; border-radius: 2px;
+    border: 1px solid var(--line2);
+    overflow: hidden; vertical-align: middle;
+    background: linear-gradient(180deg, #ED2939 50%, #ffffff 50%);
+  }
+
+  /* Mini console for features overview slide */
+  .console-mini {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .console-mini .mc-head {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 10px;
+    background: var(--panel3);
+  }
+  .console-mini .mc-head .mc-dot {
+    width: 8px; height: 8px; border-radius: 999px; background: var(--sky);
+  }
+  .console-mini .mc-head .mc-title {
+    font-family: var(--f-display); font-weight: 700; font-size: 15px; letter-spacing: -0.01em;
+  }
+  .console-mini .mc-head .mc-meta {
+    margin-left: auto;
+    font-family: var(--f-mono); font-size: 10px;
+    color: var(--faint); letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .console-mini .mc-body { padding: 14px; flex: 1; min-height: 0; }
+  .console-mini .mc-caption {
+    padding: 10px 14px 12px;
+    border-top: 1px solid var(--line);
+    font-size: 14px; color: var(--dim); line-height: 1.4;
+  }
+
+  /* Trifecta Signal hero slide */
+  .signal-hero {
+    background:
+      radial-gradient(900px 600px at 100% -10%, rgba(59,84,214,0.10), transparent 60%),
+      radial-gradient(700px 500px at -10% 110%, rgba(28,154,112,0.08), transparent 60%),
+      var(--bg);
+  }
+  .signal-chat {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 28px 32px;
+    display: flex; flex-direction: column; gap: 18px;
+    box-shadow: 0 8px 32px rgba(20,28,55,0.06);
+  }
+  .signal-msg-user {
+    align-self: flex-end; max-width: 70%;
+    background: rgba(59,84,214,0.10);
+    border: 1px solid rgba(59,84,214,0.30);
+    color: var(--text);
+    padding: 16px 20px; border-radius: 14px 14px 4px 14px;
+    font-size: 20px; line-height: 1.4;
+  }
+  .signal-msg-bot {
+    align-self: flex-start; max-width: 86%;
+    background: var(--panel3);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 18px 22px; border-radius: 14px 14px 14px 4px;
+    font-size: 19px; line-height: 1.5;
+  }
+  .signal-msg-bot .ans-num { color: var(--mint); font-weight: 700; }
+  .signal-msg-bot .ans-meta {
+    margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--line);
+    font-family: var(--f-mono); font-size: 12px; color: var(--faint); letter-spacing: 0.08em;
+  }
+  .signal-input {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px;
+    background: var(--panel3);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .signal-input .si-prompt {
+    font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.16em;
+    color: var(--faint); text-transform: uppercase;
+  }
+  .signal-input .si-placeholder {
+    flex: 1; color: var(--faint); font-size: 16px;
+  }
+  .signal-cap-card {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .signal-cap-card h4 {
+    margin: 0; font-family: var(--f-display); font-weight: 700;
+    font-size: 22px; letter-spacing: -0.01em;
+  }
+  .signal-cap-card p { margin: 0; font-size: 16px; color: var(--dim); line-height: 1.45; }
+
+  /* SG flag */
+  .sg-flag {
+    display: inline-block; width: 28px; height: 19px; border-radius: 3px;
+    border: 1px solid var(--line2);
+    overflow: hidden; vertical-align: middle;
+    position: relative;
+    background: linear-gradient(180deg, #ED2939 50%, #ffffff 50%);
+  }
+  .sg-flag::before {
+    content: ''; position: absolute;
+    width: 8px; height: 8px; border-radius: 999px;
+    background: #fff; top: 2px; left: 3px;
+  }
+  .sg-flag::after {
+    content: ''; position: absolute;
+    width: 7px; height: 7px; border-radius: 999px;
+    background: #ED2939; top: 2px; left: 5px;
+  }
+
+  /* Office row for closing */
+  .office-row {
+    display: flex; gap: 14px; align-items: center;
+    flex-wrap: wrap;
+  }
+  .office-row .office {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 10px 18px;
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 17px;
+  }
+  .office-row .office .pin {
+    width: 8px; height: 8px; border-radius: 999px;
+    background: var(--mint);
+  }
+  .office-row .office.hq .pin { background: var(--blue); }
+  .office-row .office .mono-label {
+    color: var(--faint);
+    font-size: 11px;
+  }
+
+</style>
+</head>
+<body>
+<deck-stage>
+
+<!-- =================================================================== -->
+<!-- Slide 1 — Title                                                      -->
+<!-- =================================================================== -->
+<section class="slide s-title" data-screen-label="01 Title">
+  <div class="stack">
+    <div class="powered-pill" style="display: none;">
+      <span class="mp-logo">m</span>
+      <span>Powered by <b>Midpoint Global</b></span>
+      <span style="color: var(--line2);">·</span>
+      <span style="color: var(--faint);">Data &amp; AI Transformation Consultancy</span>
+    </div>
+    <div class="big-logo">
+      <span class="lm"></span>
+      <span class="wm">TRIFECTA</span>
+      <span class="divider"></span>
+      <span class="partof">
+        <span class="po-top">Part of</span>
+        <span class="po-mp">Midpoint Global</span>
+      </span>
+    </div>
+    <h1 class="title">
+      Design and Build growth engines that run on <em>Bayesian Marketing Mix Models</em>.
+    </h1>
+    <p class="sub">
+      Bayesian causal Marketing Mix Models on Google Meridian, paired with model calibration and a
+      hypothesis engine. Growth becomes predictable, privacy-proof, and ready to answer the
+      what-if questions you can't ask today.
+    </p>
+    <div class="pillrow">
+      <span class="tag blue">Bayesian Causal MMM</span>
+      <span class="tag mint">Meridian · Open source</span>
+      <span class="tag sky">Geo-holdout Calibration</span>
+      <span class="tag amber">Ads Data Hub</span>
+    </div>
+  </div>
+  <div class="midpoint-stripe">
+    <div>
+      <div class="ms-head">
+        <span class="ms-title">About Midpoint Global</span>
+      </div>
+      <p>
+        A Data &amp; AI Transformation Consultancy delivering enterprise transformation for Indonesia's largest telcos, banks, and digital natives. Partners with Salesforce, Mixpanel, AWS, GCP and Anthropic.
+      </p>
+      <div class="venture-line">
+        <b>Trifecta</b> is a product-service venture from Midpoint Global. Built inside Midpoint, run by Midpoint operators, with Claude agents embedded in every squad.
+      </div>
+    </div>
+    <div>
+      <span class="ms-label"><span class="sg-flag"></span>Singapore office</span>
+      <address class="ms-addr">
+        151 Chin Swee Road<br>
+        #02-04A Manhattan House<br>
+        Singapore 169876
+        <span class="entity">FVG Capital Pte. Ltd. · Reg. 201901598G</span>
+      </address>
+    </div>
+    <div>
+      <span class="ms-label"><span class="id-flag"></span>Jakarta office</span>
+      <address class="ms-addr">
+        One Pacific Place, 15th Floor<br>
+        Jl. Jend. Sudirman Kav. 52–53<br>
+        Senayan, Kebayoran Baru<br>
+        Jakarta Selatan 12190, Indonesia
+        <span class="entity">PT Midpoint Teknologi Global</span>
+      </address>
+    </div>
+  </div>
+  <div class="slide-chrome-bottom">
+    <span>Trifecta · A Midpoint Global venture</span>
+    <span>v2.0 · 2026</span>
+  </div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 2 — The problem                                                -->
+<!-- =================================================================== -->
+<section class="slide with-chrome" data-screen-label="02 The Problem">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>The Problem</span>
+    <span class="right">02</span>
+  </div>
+  <div class="slide-pad" style="justify-content: center;">
+    <div class="eyebrow">The problem</div>
+    <div class="quotemark">“</div>
+    <div class="quote">
+      Half the money I spend on growth is wasted; <span class="hl">the trouble is I don't know which half.</span>
+    </div>
+    <div class="attrib">Every CMO, paraphrased</div>
+    <div style="margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1500px;">
+      <div class="card">
+        <h3>Tangled journeys</h3>
+        <p>Customers cross devices, channels and apps. Last-click and platform-reported ROAS double-count the same conversions.</p>
+      </div>
+      <div class="card">
+        <h3>Privacy walls</h3>
+        <p>Cookies, ATT and walled gardens have broken deterministic attribution. The signal you used to lean on is gone.</p>
+      </div>
+      <div class="card">
+        <h3>Unscientific budgeting</h3>
+        <p>Incrementality and what-if questions are treated as unanswerable, so budgets get set with obsolete heuristics.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>02 / 15</span></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 3 — The Trifecta Approach (3 pillars)                          -->
+<!-- =================================================================== -->
+<section class="slide with-chrome" data-screen-label="03 Approach">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>The Approach</span>
+    <span class="right">03</span>
+  </div>
+  <div class="slide-pad">
+    <div style="margin-bottom: 22px;">
+      <div class="eyebrow">The Trifecta approach</div>
+      <h2 class="sec" style="font-size: 54px;">We are not just a platform. We are the team that runs it.</h2>
+      <p class="lead" style="font-size: 22px; margin-top: 6px; max-width: 1500px;">Four engines that work together, with humans firmly in the loop. Software does the heavy compute. People do the judgement, calibration, and quality control that turn a model into a decision your CFO will sign.</p>
+    </div>
+
+    <div class="grid g4" style="flex: 1; gap: 18px;">
+      <div class="pillar b1" style="min-height: 0;">
+        <span class="accent"></span>
+        <div class="pnum">PILLAR 01 · MODEL</div>
+        <h3>Google Meridian</h3>
+        <div class="desc">
+          Sophisticated Bayesian causal inference that reveals the true, holistic impact of every investment, with full uncertainty quantification, at zero software cost.
+        </div>
+        <div class="vis">
+          <div style="font-size: 11px; color: var(--faint); letter-spacing: 0.18em;">POSTERIOR · ROI BY CHANNEL</div>
+          <div class="skel" style="flex:1;">[ posterior distribution by channel ]</div>
+          <div class="kv"><span class="k">Sampler</span><span class="v">NUTS · 4 chains</span></div>
+          <div class="kv"><span class="k">Cost</span><span class="v" style="color: var(--mint);">Open source</span></div>
+        </div>
+      </div>
+
+      <div class="pillar b2" style="min-height: 0;">
+        <span class="accent"></span>
+        <div class="pnum">PILLAR 02 · CALIBRATE</div>
+        <h3>Bayesian Calibration</h3>
+        <div class="desc">
+          Continuous geo-holdout experiments feed measured causal lift back into the model as priors, so accuracy compounds instead of decaying.
+        </div>
+        <div class="vis">
+          <div style="font-size: 11px; color: var(--faint); letter-spacing: 0.18em;">GEO-HOLDOUT FEEDBACK LOOP</div>
+          <div class="skel" style="flex:1;">[ test → measure → prior → retrain ]</div>
+          <div class="kv"><span class="k">Meta geo-test (Mar)</span><span class="v" style="color: var(--mint);">Applied</span></div>
+          <div class="kv"><span class="k">TV regional lift (Q4)</span><span class="v" style="color: var(--mint);">Applied</span></div>
+        </div>
+      </div>
+
+      <div class="pillar b3" style="min-height: 0;">
+        <span class="accent"></span>
+        <div class="pnum">PILLAR 03 · HYPOTHESISE</div>
+        <h3>Hypothesis Engine</h3>
+        <div class="desc">
+          Privacy-safe clean-room signals from Ads Data Hub. Cross-device journeys and data-driven attribution generate the hypotheses every experiment then proves.
+        </div>
+        <div class="vis">
+          <div style="font-size: 11px; color: var(--faint); letter-spacing: 0.18em;">ADS DATA HUB · DDA</div>
+          <div class="skel" style="flex:1;">[ fractional credit across journey ]</div>
+          <div class="kv"><span class="k">Privacy</span><span class="v" style="color: var(--mint);">Aggregated</span></div>
+          <div class="kv"><span class="k">Channels covered</span><span class="v">14</span></div>
+        </div>
+      </div>
+
+      <div class="pillar b4" style="min-height: 0;">
+        <span class="accent" style="background: var(--amber);"></span>
+        <div class="pnum">PILLAR 04 · HUMAN IN LOOP</div>
+        <h3>Operators, not just software.</h3>
+        <div class="desc">
+          Senior operators sit at every step. They tune priors, vet experiments, sense-check outputs, and translate posteriors into recommendations a CFO can defend. Trifecta is software plus the experts who run it.
+        </div>
+        <div class="vis">
+          <div style="font-size: 11px; color: var(--faint); letter-spacing: 0.18em;">EXPERT-IN-THE-LOOP</div>
+          <div class="skel" style="flex:1;">[ operator reviews + weekly QA ]</div>
+          <div class="kv"><span class="k">Senior operators</span><span class="v">2 per client</span></div>
+          <div class="kv"><span class="k">Review cadence</span><span class="v" style="color: var(--mint);">Weekly</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>03 / 15</span></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 4 — Navigating growth (questions to ask)                       -->
+<!-- =================================================================== -->
+<section class="slide with-chrome" data-screen-label="04 Questions">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>Navigating Growth</span>
+    <span class="right">04</span>
+  </div>
+  <div class="slide-pad">
+    <div class="titleblock">
+      <div class="eyebrow">Navigating growth with Trifecta</div>
+      <h2 class="sec">The questions you should be asking, answered.</h2>
+      <p class="lead">The platform is built around three questions every growth team has and very few can answer.</p>
+    </div>
+
+    <div class="grid g3" style="align-items: start; margin-top: 16px;">
+      <div class="qcard">
+        <div class="qhd">01</div>
+        <h3>Incrementality</h3>
+        <p>Which spends are driving true business lift, separate from the customers we would have won anyway?</p>
+        <div class="ex">What happens if I eliminate all non-SAN app network spending?</div>
+      </div>
+      <div class="qcard">
+        <div class="qhd">02</div>
+        <h3>What-if simulations</h3>
+        <p>How does the system respond to a change in spend, mix, or channel before we commit a single dollar?</p>
+        <div class="ex">If I raise TV TRPs by 20%, what new customer acquisition can I expect, and at what cost?</div>
+      </div>
+      <div class="qcard">
+        <div class="qhd">03</div>
+        <h3>Efficiency &amp; scale</h3>
+        <p>Where are we under-investing in channels that work, and over-investing in channels that don't?</p>
+        <div class="ex">Which 3 channels should absorb my next million in budget?</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>04 / 15</span></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 5 — Errors of commission and omission                          -->
+<!-- =================================================================== -->
+<section class="slide with-chrome" data-screen-label="05 Errors">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>Avoiding two costly errors</span>
+    <span class="right">05</span>
+  </div>
+  <div class="slide-pad">
+    <div class="titleblock">
+      <div class="eyebrow">Two costly errors</div>
+      <h2 class="sec">The mistakes a real MMM stops you making.</h2>
+      <p class="lead">Most growth losses live in one of these two buckets. Trifecta is engineered to spot both.</p>
+    </div>
+
+    <div class="grid g2" style="flex: 1;">
+      <div class="err-card commission">
+        <div class="ic-big">−</div>
+        <span class="tag red">Errors of commission</span>
+        <h3>Spending on channels that don't drive the business.</h3>
+        <div class="e-desc">
+          Money wasted where we should not have spent. Last-click attribution loves these channels. The geo-holdout test exposes them. Trifecta surfaces them inside the operator console so they can be defunded with conviction.
+        </div>
+        <div style="margin-top: auto; padding-top: 28px; border-top: 1px solid rgba(232,122,112,0.25);">
+          <div class="mono-label" style="margin-bottom: 8px;">Typical signature</div>
+          <div style="font-size: 18px; color: var(--text);">High reported ROAS · near-zero incremental lift in regional test.</div>
+        </div>
+      </div>
+      <div class="err-card omission">
+        <div class="ic-big">+</div>
+        <span class="tag amber">Errors of omission</span>
+        <h3>Failing to invest in channels that do drive the business.</h3>
+        <div class="e-desc">
+          Money never spent where we should have spent it. Often the slowest-burning, hardest-to-attribute channels like upper-funnel video, OOH, and podcast. They compound but never close a session.
+        </div>
+        <div style="margin-top: auto; padding-top: 28px; border-top: 1px solid rgba(230,176,82,0.25);">
+          <div class="mono-label" style="margin-bottom: 8px;">Typical signature</div>
+          <div style="font-size: 18px; color: var(--text);">Low last-click share · positive marginal ROI past current spend.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>05 / 15</span></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 6 — Growth Engine Architecture (conceptual three layers)        -->
+<!-- =================================================================== -->
+<section class="slide with-chrome" data-screen-label="06 Growth Engine">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>Growth Engine Architecture</span>
+    <span class="right">06</span>
+  </div>
+  <div class="slide-pad">
+    <div class="titleblock">
+      <div class="eyebrow">Growth engine architecture</div>
+      <h2 class="sec">Understand. Measure. Decide.</h2>
+      <p class="lead">Three loops that compose into a single engine. Each one feeds the next, and each one improves the last.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 18px; flex: 1;">
+      <div class="layer">
+        <div class="lhead">
+          <span class="tab">Layer 01</span>
+          <span class="label">Understand &amp; model</span>
+          <span class="sub">Unified causal measurement engine</span>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <span class="chip blue"><span class="dot"></span>Channel relationships</span>
+          <span class="chip blue"><span class="dot"></span>Audience segments</span>
+          <span class="chip blue"><span class="dot"></span>Heuristic development</span>
+          <span class="chip blue"><span class="dot"></span>External &amp; control variables</span>
+          <span class="chip blue"><span class="dot"></span>Seasonality &amp; trend</span>
+        </div>
+      </div>
+      <div class="down">↓</div>
+      <div class="layer">
+        <div class="lhead">
+          <span class="tab">Layer 02</span>
+          <span class="label">Measure &amp; prove</span>
+          <span class="sub">Bayesian MMM + calibration</span>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <span class="chip"><span class="dot"></span>Causal MMM (Meridian)</span>
+          <span class="chip"><span class="dot"></span>Incrementality tests</span>
+          <span class="chip"><span class="dot"></span>Model calibration</span>
+          <span class="chip"><span class="dot"></span>Forecasting</span>
+          <span class="chip"><span class="dot"></span>Marginal ROI &amp; response curves</span>
+        </div>
+      </div>
+      <div class="down">↓</div>
+      <div class="layer">
+        <div class="lhead">
+          <span class="tab">Layer 03</span>
+          <span class="label">Decide &amp; act</span>
+          <span class="sub">AI decision layer</span>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <span class="chip mint"><span class="dot"></span>Budget optimisation</span>
+          <span class="chip mint"><span class="dot"></span>Scenario planning</span>
+          <span class="chip mint"><span class="dot"></span>CFO reporting</span>
+          <span class="chip mint"><span class="dot"></span>Creative &amp; promo decisions</span>
+          <span class="chip mint"><span class="dot"></span>Conversational AI access</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>06 / 15</span></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 7 — Trifecta Platform Architecture (NEW · technical)            -->
+<!-- =================================================================== -->
+<section class="slide with-chrome" data-screen-label="07 Platform Architecture">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>Platform Architecture</span>
+    <span class="right">07</span>
+  </div>
+  <div class="slide-pad">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin-bottom: 24px;">
+      <div>
+        <div class="eyebrow">Trifecta platform architecture</div>
+        <h2 class="sec" style="font-size: 48px;">How the engine is wired together.</h2>
+        <p class="lead" style="font-size: 20px; margin-top: 6px;">Customisable per client. The pipeline scales with the volume and shape of your data. One Google Cloud project, five connection methods, one warehouse, one sampler, two decision surfaces.</p>
+      </div>
+      <div class="legend">
+        <span class="l"><span class="sw" style="background: var(--mint);"></span>Auto / live</span>
+        <span class="l"><span class="sw" style="background: var(--sky);"></span>Scheduled</span>
+        <span class="l"><span class="sw" style="background: var(--amber);"></span>Manual file</span>
+        <span class="l"><span class="sw" style="background: var(--blue);"></span>Internal</span>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px; flex: 1; min-height: 0;">
+
+      <!-- L1 sources -->
+      <div class="layer" style="padding: 16px 22px; gap: 10px;">
+        <div class="lhead" style="margin-bottom: 0;">
+          <span class="tab">01 · Sources</span>
+          <span class="label" style="font-size: 20px;">Every marketing input, however it arrives</span>
+          <span class="sub">5 connection methods</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
+          <div class="chip" style="flex-direction: column; align-items: flex-start; gap: 4px; padding: 10px 14px;">
+            <div class="mono-label" style="color: var(--mint);">API · AUTO</div>
+            <div style="font-size: 14px;">Google Ads · Meta · TikTok · DV360</div>
+          </div>
+          <div class="chip" style="flex-direction: column; align-items: flex-start; gap: 4px; padding: 10px 14px;">
+            <div class="mono-label" style="color: var(--sky);">FEED · SFTP</div>
+            <div style="font-size: 14px;">TV agency · weekly GRPs</div>
+          </div>
+          <div class="chip" style="flex-direction: column; align-items: flex-start; gap: 4px; padding: 10px 14px;">
+            <div class="mono-label" style="color: var(--amber);">UPLOAD · CSV / XLSX</div>
+            <div style="font-size: 14px;">Programmatic · Influencer · Podcast · Print · OOH</div>
+          </div>
+          <div class="chip" style="flex-direction: column; align-items: flex-start; gap: 4px; padding: 10px 14px;">
+            <div class="mono-label" style="color: var(--amber);">MANUAL ENTRY</div>
+            <div style="font-size: 14px;">Cinema · niche partner buys</div>
+          </div>
+          <div class="chip" style="flex-direction: column; align-items: flex-start; gap: 4px; padding: 10px 14px;">
+            <div class="mono-label" style="color: var(--mint);">WAREHOUSE</div>
+            <div style="font-size: 14px;">Sales / POS · GA4 · CRM</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="down" style="height: 14px;">↓</div>
+
+      <!-- L2 ingest / harmonise -->
+      <div class="layer" style="padding: 16px 22px; gap: 10px;">
+        <div class="lhead" style="margin-bottom: 0;">
+          <span class="tab">02 · Ingest &amp; harmonise</span>
+          <span class="label" style="font-size: 20px;">Column mapping &amp; canonical schema</span>
+          <span class="sub">BigQuery · trifecta-{client}-prod</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+          <div class="chip blue" style="padding: 10px 14px;"><span class="dot"></span>Scales with your sources</div>
+          <div class="chip blue" style="padding: 10px 14px;"><span class="dot"></span>Custom canonical schema</div>
+          <div class="chip blue" style="padding: 10px 14px;"><span class="dot"></span>Per-client model variables</div>
+          <div class="chip blue" style="padding: 10px 14px;"><span class="dot"></span>Weekly time series, your window</div>
+        </div>
+      </div>
+
+      <div class="down" style="height: 14px;">↓</div>
+
+      <!-- L3 train + store side by side -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <div class="layer" style="padding: 16px 22px; gap: 10px;">
+          <div class="lhead" style="margin-bottom: 0;">
+            <span class="tab">03a · Train</span>
+            <span class="label" style="font-size: 20px;">Meridian · Vertex AI GPU</span>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <span class="chip" style="padding: 8px 12px; font-size: 13px;"><span class="dot"></span>Bayesian · NUTS</span>
+            <span class="chip" style="padding: 8px 12px; font-size: 13px;"><span class="dot"></span>Priors + calibration</span>
+            <span class="chip" style="padding: 8px 12px; font-size: 13px;"><span class="dot"></span>Batch · ~2–3h</span>
+          </div>
+        </div>
+        <div class="layer" style="padding: 16px 22px; gap: 10px;">
+          <div class="lhead" style="margin-bottom: 0;">
+            <span class="tab">03b · Store</span>
+            <span class="label" style="font-size: 20px;">Posterior artifact · GCS</span>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <span class="chip" style="padding: 8px 12px; font-size: 13px;"><span class="dot"></span>Versioned per model</span>
+            <span class="chip" style="padding: 8px 12px; font-size: 13px;"><span class="dot"></span>90% credible intervals</span>
+            <span class="chip" style="padding: 8px 12px; font-size: 13px;"><span class="dot"></span>Single source of truth</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="down" style="height: 14px;">↓</div>
+
+      <!-- L4 consumers -->
+      <div class="layer" style="padding: 16px 22px; gap: 10px;">
+        <div class="lhead" style="margin-bottom: 0;">
+          <span class="tab">04 · Decision surfaces</span>
+          <span class="label" style="font-size: 20px;">Operator Console + Client-facing Signal</span>
+          <span class="sub">Reads from posterior artifact</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+          <div class="chip mint" style="justify-content: space-between; padding: 10px 14px;"><span style="display: inline-flex; align-items: center; gap: 8px;"><span class="dot"></span>Operator Console</span><span class="mono-label" style="color: var(--mint);">2 users</span></div>
+          <div class="chip mint" style="justify-content: space-between; padding: 10px 14px;"><span style="display: inline-flex; align-items: center; gap: 8px;"><span class="dot"></span>Signal · MCP server</span><span class="mono-label" style="color: var(--mint);">Chat</span></div>
+          <div class="chip mint" style="justify-content: space-between; padding: 10px 14px;"><span style="display: inline-flex; align-items: center; gap: 8px;"><span class="dot"></span>CFO &amp; CMO reports</span><span class="mono-label" style="color: var(--mint);">PDF</span></div>
+          <div class="chip mint" style="justify-content: space-between; padding: 10px 14px;"><span style="display: inline-flex; align-items: center; gap: 8px;"><span class="dot"></span>Ads Data Hub feedback</span><span class="mono-label" style="color: var(--mint);">DDA</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>07 / 15</span></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 8 — Operator Console (Features overview)                        -->
+<!-- =================================================================== -->
+<section class="slide with-chrome" data-screen-label="08 Operator Console">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>Operator Console</span>
+    <span class="right">08</span>
+  </div>
+  <div class="slide-pad">
+    <div style="margin-bottom: 20px;">
+      <div class="eyebrow">The platform we operate for you</div>
+      <h2 class="sec" style="font-size: 52px;">The Operator Console.</h2>
+      <p class="lead" style="font-size: 20px; margin-top: 4px; max-width: 1500px;">Where two operators run the engine. Data pipelines, model configuration, training, and posterior outputs. All client-isolated, all versioned, all on one console.</p>
+    </div>
+
+    <div class="grid g2" style="flex: 1; min-height: 0; gap: 20px;">
+
+      <!-- Dashboard mini -->
+      <div class="console-mini">
+        <div class="mc-head">
+          <span class="mc-dot"></span>
+          <span class="mc-title">Workspace Dashboard</span>
+          <span class="mc-meta">Portfolio view</span>
+        </div>
+        <div class="mc-body" style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="lc-strip" style="font-size: 11px;">
+            <div class="step" style="padding: 8px 10px;"><span class="n">01</span><span class="t" style="font-size: 12px;">Connect</span></div>
+            <div class="step" style="padding: 8px 10px;"><span class="n">02</span><span class="t" style="font-size: 12px;">Configure</span></div>
+            <div class="step active" style="padding: 8px 10px;"><span class="n">03</span><span class="t" style="font-size: 12px;">Train</span></div>
+            <div class="step" style="padding: 8px 10px;"><span class="n">04</span><span class="t" style="font-size: 12px;">Analyse</span></div>
+            <div class="step" style="padding: 8px 10px;"><span class="n">05</span><span class="t" style="font-size: 12px;">Signal</span></div>
+          </div>
+          <div class="grid g4" style="gap: 8px;">
+            <div class="tile" style="padding: 8px 10px;"><span class="lbl" style="font-size: 9px;">Active</span><span class="v" style="font-size: 22px;">4</span></div>
+            <div class="tile" style="padding: 8px 10px;"><span class="lbl" style="font-size: 9px;">Models</span><span class="v" style="font-size: 22px;">3</span></div>
+            <div class="tile amber" style="padding: 8px 10px;"><span class="lbl" style="font-size: 9px;">Actions</span><span class="v" style="font-size: 22px;">10</span></div>
+            <div class="tile" style="padding: 8px 10px;"><span class="lbl" style="font-size: 9px;">Next run</span><span class="v" style="font-size: 22px;">28<span class="unit" style="font-size: 11px;">May</span></span></div>
+          </div>
+        </div>
+        <div class="mc-caption">Portfolio of clients in one view. Lifecycle stage, model readiness, and open actions across every engagement.</div>
+      </div>
+
+      <!-- Data Pipeline mini -->
+      <div class="console-mini">
+        <div class="mc-head">
+          <span class="mc-dot" style="background: var(--mint);"></span>
+          <span class="mc-title">Data Pipeline</span>
+          <span class="mc-meta">Aeon Skincare</span>
+        </div>
+        <div class="mc-body" style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="font-family: var(--f-display); font-weight: 700; font-size: 22px;">78%</div>
+            <div class="mono-label" style="font-size: 10px;">Model readiness</div>
+            <div style="flex:1;" class="progress"><div style="width: 78%;"></div></div>
+          </div>
+          <table class="ctbl" style="font-size: 11px;">
+            <thead><tr><th style="font-size: 9px;">Channel</th><th style="font-size: 9px;">Method</th><th style="font-size: 9px;">Status</th></tr></thead>
+            <tbody>
+              <tr><td class="ch">TV</td><td><span class="tag sky" style="font-size: 9px; padding: 3px 6px;">Feed</span></td><td><span class="tag amber" style="font-size: 9px; padding: 3px 6px;">Remap</span></td></tr>
+              <tr><td class="ch">Google Ads, Meta</td><td><span class="tag mint" style="font-size: 9px; padding: 3px 6px;">API</span></td><td><span class="tag mint" style="font-size: 9px; padding: 3px 6px;">Live</span></td></tr>
+              <tr><td class="ch">Influencer</td><td><span class="tag amber" style="font-size: 9px; padding: 3px 6px;">Upload</span></td><td><span class="tag amber" style="font-size: 9px; padding: 3px 6px;">Late</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mc-caption">Every input on one canvas, tagged by connection method. Upload-and-map is a first-class flow, not an edge case.</div>
+      </div>
+
+      <!-- Model Studio mini -->
+      <div class="console-mini">
+        <div class="mc-head">
+          <span class="mc-dot" style="background: var(--blue);"></span>
+          <span class="mc-title">Model Studio</span>
+          <span class="mc-meta">Aeon MMM v3 · Live</span>
+        </div>
+        <div class="mc-body" style="display: flex; flex-direction: column; gap: 10px;">
+          <table class="ctbl" style="font-size: 11px;">
+            <thead><tr><th style="font-size: 9px;">Channel</th><th style="font-size: 9px;">ROI prior</th><th style="font-size: 9px;">Strength</th><th style="font-size: 9px;">Adstock</th></tr></thead>
+            <tbody>
+              <tr><td class="ch">TV</td><td class="mono">1.8×</td><td><span class="tag blue" style="font-size: 9px; padding: 3px 6px;">Strong</span></td><td class="mono">0.72</td></tr>
+              <tr class="sel"><td class="ch" style="color: var(--sky);">Meta</td><td class="mono">2.4×</td><td><span class="tag blue" style="font-size: 9px; padding: 3px 6px;">Strong</span></td><td class="mono">0.30</td></tr>
+              <tr><td class="ch">YouTube</td><td class="mono">3.0×</td><td><span class="tag sky" style="font-size: 9px; padding: 3px 6px;">Medium</span></td><td class="mono">0.35</td></tr>
+              <tr><td class="ch">Paid Search</td><td class="mono">2.0×</td><td><span class="tag sky" style="font-size: 9px; padding: 3px 6px;">Medium</span></td><td class="mono">0.15</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mc-caption">Per-brand model weights. Channels, priors, strength, carry-over, and calibration. All versioned, all explainable, all tuned per brand.</div>
+      </div>
+
+      <!-- Results mini -->
+      <div class="console-mini">
+        <div class="mc-head">
+          <span class="mc-dot" style="background: var(--amber);"></span>
+          <span class="mc-title">Results</span>
+          <span class="mc-meta">Run #28 · 90% CI</span>
+        </div>
+        <div class="mc-body" style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="skel" style="flex: 1; min-height: 90px;">[ channel contribution by week ]</div>
+          <div class="grid g3" style="gap: 8px;">
+            <div class="tile" style="padding: 8px 10px;"><span class="lbl" style="font-size: 9px;">Top driver</span><span class="v" style="font-size: 16px;">Paid Search</span></div>
+            <div class="tile" style="padding: 8px 10px;"><span class="lbl" style="font-size: 9px;">Holdout MAPE</span><span class="v" style="font-size: 16px;">9%</span></div>
+            <div class="tile" style="padding: 8px 10px;"><span class="lbl" style="font-size: 9px;">R̂</span><span class="v" style="font-size: 16px;">1.01</span></div>
+          </div>
+        </div>
+        <div class="mc-caption">Contribution, ROI, marginal ROI, response curves, and budget optimiser. Every figure carries a 90% credible interval.</div>
+      </div>
+
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>08 / 15</span></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 9 — Trifecta Signal (HERO)                                      -->
+<!-- =================================================================== -->
+<section class="slide with-chrome signal-hero" data-screen-label="09 Trifecta Signal">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>Trifecta Signal</span>
+    <span class="right">09</span>
+  </div>
+  <div class="slide-pad">
+    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 44px; flex: 1; min-height: 0;">
+
+      <!-- Left: value proposition -->
+      <div style="display: flex; flex-direction: column; justify-content: center; gap: 20px;">
+        <div class="eyebrow">For the client</div>
+        <h1 class="title" style="font-size: 80px; line-height: 0.98;">Trifecta <em style="font-style: normal; background: linear-gradient(95deg, var(--blue), var(--mint)); -webkit-background-clip: text; background-clip: text; color: transparent;">Signal</em>.</h1>
+        <div style="font-family: var(--f-mono); font-size: 17px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sky);">Conversational decision layer</div>
+        <p style="font-size: 22px; color: var(--dim); line-height: 1.45; max-width: 540px;">
+          The single most important feature for your team. Anyone in the organisation can ask the model anything, in plain language, and get a defensible answer in seconds.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px;">
+          <div class="signal-cap-card">
+            <h4>Plain language</h4>
+            <p>No SQL, no dashboards. Type a question, get a posterior-backed answer with 90% credible intervals.</p>
+          </div>
+          <div class="signal-cap-card">
+            <h4>Always live</h4>
+            <p>Reads from the latest posterior artifact. The answer reflects the most recent training run.</p>
+          </div>
+          <div class="signal-cap-card">
+            <h4>Auditable</h4>
+            <p>Every answer cites the model version, run ID, and confidence band. Decisions stay defensible.</p>
+          </div>
+          <div class="signal-cap-card">
+            <h4>Built on MCP</h4>
+            <p>An MCP server over Meridian. Tools the operator turns on per client, no model retraining required.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: the chat hero -->
+      <div class="signal-chat" style="justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid var(--line);">
+          <span class="mc-dot" style="background: var(--mint); width: 10px; height: 10px; border-radius: 999px;"></span>
+          <div>
+            <div style="font-family: var(--f-display); font-weight: 700; font-size: 20px;">Signal · Aeon Skincare</div>
+            <div class="mono-label" style="font-size: 11px;">Live for maya@aeonskincare.com and 2 others</div>
+          </div>
+          <span class="tag mint" style="margin-left: auto;">Posterior · Run #28</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px; flex: 1; padding: 8px 0;">
+          <div class="signal-msg-user">If I raise TV TRPs by 20% next quarter, what new customer acquisition can I expect, and at what cost?</div>
+          <div class="signal-msg-bot">
+            Expected lift: <span class="ans-num">+4,200 new customers / month</span> (90% CI 3,100 to 5,300). Marginal CAC rises from S$38 to S$46. The Hill curve flattens past +28% TRPs, so diminishing returns kick in above that point.
+            <div class="ans-meta">Posterior · Run #28 · Confidence: high · 4 channels referenced</div>
+          </div>
+          <div class="signal-msg-user">Show me the optimal mix for S$1.2M next month.</div>
+          <div class="signal-msg-bot">
+            Recommended split (90% CI): Paid Search <span class="ans-num">26%</span>, YouTube <span class="ans-num">22%</span>, TV <span class="ans-num">20%</span>, Meta <span class="ans-num">18%</span>, OOH <span class="ans-num">14%</span>. Projected outcome lift: +11% vs current allocation.
+            <div class="ans-meta">Budget optimiser · Run #28 · Constraints respected</div>
+          </div>
+        </div>
+
+        <div class="signal-input">
+          <span class="si-prompt">Ask Signal</span>
+          <span class="si-placeholder">/optimise · /forecast · /compare · or just ask…</span>
+          <span class="tag blue" style="background: var(--blue); color: #fff; border-color: var(--blue);">Send</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>09 / 15</span></div>
+</section>
+
+<!-- Slide 10 — Delivery Lifecycle                                         -->
+<!-- =================================================================== -->
+<section class="slide with-chrome" data-screen-label="10 Delivery Lifecycle">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>Delivery Lifecycle</span>
+    <span class="right">10</span>
+  </div>
+  <div class="slide-pad">
+    <div class="titleblock">
+      <div class="eyebrow">Delivery lifecycle</div>
+      <h2 class="sec">Design. Build. Operate. Transfer.</h2>
+      <p class="lead">Five stages, repeated per client. The first run takes weeks. Subsequent runs are an operator job, not a project.</p>
+    </div>
+
+    <div class="grid g5" style="align-items: start;">
+      <div class="step-card">
+        <div class="ic-box">01</div>
+        <div class="stepnum">GROWTH &amp; DATA AUDIT</div>
+        <h3>Audit the spend, audit the data.</h3>
+        <p>We assess current marketing investments and evaluate every data stream natively available in BigQuery, mapping the external and control variables we'll need.</p>
+      </div>
+      <div class="step-card">
+        <div class="ic-box">02</div>
+        <div class="stepnum">DATA INGESTION</div>
+        <h3>Capture, clean, inject.</h3>
+        <p>We pull and harmonise every input, API-available or not, into BigQuery. Signal is separated from noise with a per-source mapping you can re-use forever.</p>
+      </div>
+      <div class="step-card">
+        <div class="ic-box">03</div>
+        <div class="stepnum">MODEL CALIBRATION</div>
+        <h3>Anchor the model to measured lift.</h3>
+        <p>We continually run geo-holdout incrementality experiments and inject their results into the model as deterministic priors.</p>
+      </div>
+      <div class="step-card">
+        <div class="ic-box">04</div>
+        <div class="stepnum">HYPOTHESIS FORMULATION</div>
+        <h3>Decide what to test next.</h3>
+        <p>We mine Ads Data Hub DDA data for the hypotheses worth testing. Every experiment then closes a loop the model needs closed.</p>
+      </div>
+      <div class="step-card">
+        <div class="ic-box">05</div>
+        <div class="stepnum">DEMOCRATISATION</div>
+        <h3>Put the model in everyone's chat.</h3>
+        <p>We connect Meridian to an MCP server so anyone in your organisation can query the MMM in plain language, then act on what it says.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>10 / 15</span></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 11 — Internalise the engine                                     -->
+<!-- =================================================================== -->
+<section class="slide with-chrome" data-screen-label="11 Internalise">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>Internalise the engine</span>
+    <span class="right">11</span>
+  </div>
+  <div class="slide-pad" style="justify-content: center;">
+    <div class="eyebrow">Internalise the engine</div>
+    <h1 class="title" style="font-size: 96px; max-width: 1500px;">
+      Growth is too important to be <span style="color: var(--red);">outsourced.</span>
+    </h1>
+    <p class="lead big" style="margin-top: 28px; max-width: 1400px;">
+      Growth is the lifeblood of the business. It cannot live with consultants or third-party platforms.
+      It has to be managed and diffused from inside the organisation, with democratic access to all.
+    </p>
+
+    <div class="grid g3" style="margin-top: 56px;">
+      <div class="card">
+        <div class="mono-label" style="color: var(--sky);">WE DESIGN</div>
+        <h3 style="margin-top: 6px;">Your growth engine.</h3>
+        <p>Per-brand model archetype, prior catalogue, channel taxonomy and experiment cadence. Designed around your business, not a generic template.</p>
+      </div>
+      <div class="card">
+        <div class="mono-label" style="color: var(--sky);">WE BUILD &amp; OPERATE</div>
+        <h3 style="margin-top: 6px;">The platform around it.</h3>
+        <p>Two operators run the data pipelines, calibration loops and training runs while the engine matures inside your cloud, from month one to month twelve.</p>
+      </div>
+      <div class="card">
+        <div class="mono-label" style="color: var(--mint);">THEN WE TRANSFER</div>
+        <h3 style="margin-top: 6px;">Ownership to you.</h3>
+        <p>The model, the data, the priors, the playbook. All of it sits in your GCP project. We hand the operator console and Signal to your team. The engine is yours.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>11 / 15</span></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 12 — Poor MMM practices                                         -->
+<!-- =================================================================== -->
+<section class="slide with-chrome" data-screen-label="12 Poor Practices">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>Poor MMM Practices</span>
+    <span class="right">12</span>
+  </div>
+  <div class="slide-pad">
+    <div class="titleblock">
+      <div class="eyebrow">Poor MMM practices</div>
+      <h2 class="sec">Five anti-patterns we refuse to repeat.</h2>
+      <p class="lead">If you've tried MMM before and it didn't stick, one of these is usually why.</p>
+    </div>
+
+    <div class="grid g5" style="align-items: start;">
+      <div class="anti">
+        <div class="anti-n">ANTI-PATTERN 01</div>
+        <h4>Annual planning cycles</h4>
+        <p>Engaging MMM once a year. The world is dynamic. The planning cycle must be quarters or weeks, not seasons.</p>
+      </div>
+      <div class="anti">
+        <div class="anti-n">ANTI-PATTERN 02</div>
+        <h4>Post-report abandonment</h4>
+        <p>Letting data ingestion and Bayesian priors decay after the consultant report ships. A static MMM is a dead MMM.</p>
+      </div>
+      <div class="anti">
+        <div class="anti-n">ANTI-PATTERN 03</div>
+        <h4>Irregular prior updates</h4>
+        <p>Not feeding priors systematically keeps models unintelligent. Regular updates compound into real knowledge.</p>
+      </div>
+      <div class="anti">
+        <div class="anti-n">ANTI-PATTERN 04</div>
+        <h4>Ignoring Ads Data Hub</h4>
+        <p>Overlooking the only privacy-safe clean-room for cross-device customer journey insights, out of the box and at scale.</p>
+      </div>
+      <div class="anti">
+        <div class="anti-n">ANTI-PATTERN 05</div>
+        <h4>Lack of democratisation</h4>
+        <p>MMM has to be accessible via conversational AI. Without that, it never becomes part of the company's growth DNA.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>12 / 15</span></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 13 — FAQ                                                        -->
+<!-- =================================================================== -->
+<section class="slide with-chrome" data-screen-label="13 FAQ">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>Frequently Asked Questions</span>
+    <span class="right">13</span>
+  </div>
+  <div class="slide-pad">
+    <div class="titleblock">
+      <div class="eyebrow">Engagement details</div>
+      <h2 class="sec">Frequently asked questions.</h2>
+    </div>
+
+    <div class="grid g2" style="flex: 1;">
+      <div class="faq-row">
+        <div class="q">Minimum annual spend</div>
+        <div class="a">Requires at least US$1M / year on paid media, advertising and marketing combined.</div>
+      </div>
+      <div class="faq-row">
+        <div class="q">Data duration</div>
+        <div class="a">At least 2 years of weekly time-series to account for seasonality. Larger datasets are preferred.</div>
+      </div>
+      <div class="faq-row">
+        <div class="q">Supported data types</div>
+        <div class="a">Any time-series variable. Competitor activity, offline media, stock volatility (VIX), weather, query volume. Any signal that moves.</div>
+      </div>
+      <div class="faq-row">
+        <div class="q">Ideal tech stack</div>
+        <div class="a">BigQuery is the preferred warehouse for seamless and accurate ingestion. The engine runs on Google Meridian with Vertex AI.</div>
+      </div>
+      <div class="faq-row">
+        <div class="q">Costs &amp; expertise</div>
+        <div class="a">Setup from US$10K. Expert engagements average US$50K+ per year. Built on open-source models, with zero software licence cost.</div>
+      </div>
+      <div class="faq-row">
+        <div class="q">Expected ROI</div>
+        <div class="a">Conservatively, 15%+ more outcomes at the same cost, or 15%+ cost reduction at the same outcomes.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>13 / 15</span></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 14 — Co-founders                                                -->
+<!-- =================================================================== -->
+<section class="slide with-chrome" data-screen-label="14 Co-founders">
+  <div class="slide-chrome-top">
+    <span class="logomark"></span><span class="brand-lockup"><span class="brand">TRIFECTA</span><span class="partof-mini">Part of <b>Midpoint Global</b></span></span>
+    <span class="sep">/</span><span>The team</span>
+    <span class="right">14</span>
+  </div>
+  <div class="slide-pad">
+    <div style="margin-bottom: 22px; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;">
+      <div>
+        <div class="eyebrow">The team</div>
+        <h2 class="sec" style="font-size: 52px;">Operators across the region. Advisors at the edges.</h2>
+        <p class="lead" style="font-size: 19px; margin-top: 4px;">Partners who run the engagement, supported by domain advisors with deep MMM and category expertise.</p>
+      </div>
+      <div style="display: inline-flex; align-items: center; gap: 12px; padding: 10px 18px; background: var(--panel2); border: 1px solid var(--line); border-radius: 999px; font-family: var(--f-mono); font-size: 12px; color: var(--dim); letter-spacing: 0.12em; text-transform: uppercase;">
+        <span class="sg-flag"></span>
+        <span>HQ Singapore</span>
+        <span style="color: var(--line2);">·</span>
+        <span class="id-flag"></span>
+        <span>Indonesia</span>
+      </div>
+    </div>
+
+    <div class="mono-label" style="margin-bottom: 10px;">Partners</div>
+    <div class="grid g3" style="align-items: stretch; gap: 16px; margin-bottom: 22px;">
+
+      <div class="founder-card">
+        <div style="display: flex; align-items: center; gap: 18px;">
+          <div class="portrait">RB</div>
+          <div class="meta-row">
+            <div class="role">Co-founder &amp; Partner</div>
+            <h3>Rajeev Bala</h3>
+          </div>
+        </div>
+        <div class="focus">Marketing Science &amp; Business</div>
+        <div class="years"><em>30+ years</em> in performance media, globally.</div>
+        <div class="bio">
+          Most recently VP of Performance Marketing at Tokopedia, the US$5B e-commerce platform in South-East Asia. Previously Global Managing Director of Havas Performance, leading the performance media practice across the network. A career spent building measurement and growth engines for brands at global scale.
+        </div>
+        <div class="pill-row">
+          <span class="tag sky">Measurement</span>
+          <span class="tag blue">Havas · Tokopedia</span>
+        </div>
+      </div>
+
+      <div class="founder-card">
+        <div style="display: flex; align-items: center; gap: 18px;">
+          <div class="portrait" style="color: var(--sky);">SU</div>
+          <div class="meta-row">
+            <div class="role">Co-founder &amp; MD, Midpoint Global</div>
+            <h3 style="display: flex; align-items: center; gap: 12px;">Sai Uday <span class="id-flag" style="width: 26px; height: 18px;"></span></h3>
+          </div>
+        </div>
+        <div class="focus">Regional Growth · Indonesia</div>
+        <div class="years"><em>15+ years</em> in data &amp; analytics.</div>
+        <div class="bio">
+          Leads Midpoint Global in Indonesia and the wider archipelago. Brings deep data and analytics expertise built across South-East Asian media, retail and consumer businesses, and runs engagement delivery for the region.
+        </div>
+        <div class="pill-row">
+          <span class="tag sky">South-East Asia</span>
+          <span class="tag mint">Midpoint Global · MD</span>
+        </div>
+      </div>
+
+      <div class="founder-card">
+        <div style="display: flex; align-items: center; gap: 18px;">
+          <div class="portrait" style="color: var(--mint);">RN</div>
+          <div class="meta-row">
+            <div class="role">Co-founder &amp; Partner</div>
+            <h3>Rahul Nambiar</h3>
+          </div>
+        </div>
+        <div class="focus">Commercial &amp; Technology</div>
+        <div class="years"><em>20+ years</em> in performance media, marketing &amp; analytics.</div>
+        <div class="bio">
+          An entrepreneur who bootstrapped his own performance agency from zero, then exited it to Dentsu. Brings the commercial and technology lens, from data platform plumbing to packaging the offer for clients.
+        </div>
+        <div class="pill-row">
+          <span class="tag sky">Commercial</span>
+          <span class="tag blue">Entrepreneur · Exit to Dentsu</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mono-label" style="margin-bottom: 10px;">Advisors</div>
+    <div class="grid g3" style="gap: 12px;">
+      <div class="advisor-card">
+        <div class="av-portrait">MMM<br>Expert</div>
+        <div class="av-meta">
+          <div class="av-role">Advisor</div>
+          <div class="av-name placeholder">MMM Expert · placeholder</div>
+          <div class="av-sub">Senior Bayesian MMM practitioner. To be confirmed.</div>
+        </div>
+      </div>
+      <div class="advisor-card">
+        <div class="av-portrait">ADV</div>
+        <div class="av-meta">
+          <div class="av-role">Advisor</div>
+          <div class="av-name placeholder">Category Advisor · placeholder</div>
+          <div class="av-sub">Industry expert for FMCG and DTC engagements.</div>
+        </div>
+      </div>
+      <div class="advisor-card">
+        <div class="av-portrait">ADV</div>
+        <div class="av-meta">
+          <div class="av-role">Advisor</div>
+          <div class="av-name placeholder">Cloud / Data Advisor · placeholder</div>
+          <div class="av-sub">BigQuery, Vertex AI and Ads Data Hub specialist.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>14 / 15</span></div>
+</section>
+
+<!-- =================================================================== -->
+<!-- Slide 15 — Closing                                                    -->
+<!-- =================================================================== -->
+<section class="slide s-close" data-screen-label="15 Close">
+  <div class="stack">
+    <div class="kicker">Let's build it</div>
+    <h1 class="title">
+      Your growth engine. Designed, built, and handed back to you.
+    </h1>
+    <p class="sub">
+      Two operators, one platform, your brand. Bayesian causal MMM with calibration and hypothesis loops baked in, and a conversational decision layer for everyone who touches budget.
+    </p>
+
+    <div style="margin-top: 48px;">
+      <div class="mono-label" style="font-size: 12px; margin-bottom: 14px;">Where we operate</div>
+      <div class="office-row" style="gap: 18px; align-items: stretch;">
+        <div class="office hq" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px 20px; border-radius: 14px;">
+          <div style="display: inline-flex; align-items: center; gap: 10px;">
+            <span class="pin"></span>
+            <b>Singapore</b>
+            <span class="mono-label">HQ · Midpoint Global office</span>
+          </div>
+          <div style="font-size: 14px; color: var(--dim); line-height: 1.4;">
+            151 Chin Swee Road, #02-04A Manhattan House · Singapore 169876<br>
+            <span style="color: var(--faint); font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;">FVG Capital Pte. Ltd. · Reg. 201901598G</span>
+          </div>
+        </div>
+        <div class="office" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px 20px; border-radius: 14px;">
+          <div style="display: inline-flex; align-items: center; gap: 10px;">
+            <span class="pin"></span>
+            <b>Jakarta</b>
+            <span class="mono-label">Midpoint Global office</span>
+          </div>
+          <div style="font-size: 14px; color: var(--dim); line-height: 1.4;">
+            One Pacific Place, 15th Floor · Jl. Jend. Sudirman Kav. 52–53<br>
+            Senayan, Kebayoran Baru · Jakarta Selatan 12190
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="meta" style="margin-top: 56px;">
+      <div><b>Trifecta · A Midpoint Global venture</b><br>Singapore · Jakarta</div>
+      <div><b>Rajeev Bala</b><br>rajeev@trifecta.sg</div>
+      <div><b>Stack</b><br>Google Meridian · Vertex AI · BigQuery · Ads Data Hub</div>
+    </div>
+  </div>
+  <div style="position: absolute; top: 60px; right: 96px;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <span class="logomark" style="width: 28px; height: 28px; border-radius: 8px;"></span>
+      <span style="font-family: var(--f-display); font-weight: 800; letter-spacing: 0.22em; font-size: 18px;">TRIFECTA</span>
+    </div>
+  </div>
+  <div class="slide-chrome-bottom"><span>Trifecta · A Midpoint Global venture</span><span>15 / 15</span></div>
+</section>
+
+</deck-stage>
+
+<script src="deck-stage.js"></script>
+</body>
+</html>
