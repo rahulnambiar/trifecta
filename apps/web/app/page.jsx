@@ -2579,10 +2579,31 @@ const ReportsScreen = ({ client }) => {
 // ============================== screens-system.jsx ==============================
 // Login + System Settings (Team, Auth, Infrastructure, Billing)
 
+// Phase 0 demo gate — hardcoded single operator credential (client-side only;
+// not real security — that's M3/Supabase auth).
+const DEMO_EMAIL = 'rajeev@trifecta.sg';
+const DEMO_PASSWORD = '12345678';
+
 const Login = ({ onSignIn }) => {
+  const [email, setEmail] = React.useState(DEMO_EMAIL);
+  const [password, setPassword] = React.useState('');
+  const [error, setError] = React.useState('');
+
+  const submit = (e) => {
+    if (e) e.preventDefault();
+    if (email.trim().toLowerCase() === DEMO_EMAIL && password === DEMO_PASSWORD) {
+      setError('');
+      onSignIn();
+    } else {
+      setError('Invalid email or password.');
+    }
+  };
+
+  const inputStyle = { flex: 1, background: 'transparent', border: 'none', outline: 'none', color: 'var(--text)', font: 'inherit' };
+
   return (
     <div className="login-bg">
-      <div className="login-card">
+      <form className="login-card" onSubmit={submit}>
         <div className="row-h" style={{ gap: 10, marginBottom: 4 }}>
           <Logo size={26} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 3, lineHeight: 1 }}>
@@ -2599,25 +2620,43 @@ const Login = ({ onSignIn }) => {
           <label>Email</label>
           <div className="inset mono">
             <span style={{ color: 'var(--faint)' }}><I.Mail size={13} /></span>
-            <span style={{ flex: 1 }}>rajeev@trifecta.sg</span>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="username"
+              style={inputStyle}
+            />
           </div>
         </div>
         <div className="field">
           <label>Password</label>
           <div className="inset mono">
             <span style={{ color: 'var(--faint)' }}><I.Lock size={13} /></span>
-            <span style={{ flex: 1, letterSpacing: 2 }}>••••••••••</span>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              autoComplete="current-password"
+              autoFocus
+              style={inputStyle}
+            />
           </div>
         </div>
 
-        <Btn kind="primary" onClick={onSignIn} style={{ width: '100%', justifyContent: 'center', padding: '11px 16px', marginTop: 4 }}>
+        {error ? (
+          <div style={{ color: 'var(--red)', fontSize: 12, marginTop: -6 }}>{error}</div>
+        ) : null}
+
+        <Btn type="submit" kind="primary" style={{ width: '100%', justifyContent: 'center', padding: '11px 16px', marginTop: 4 }}>
           Sign in
         </Btn>
 
         <div className="row-h faint" style={{ gap: 8, fontSize: 11.5, justifyContent: 'center', marginTop: 4 }}>
           <I.Shield size={12} /> Protected by 2-factor authentication
         </div>
-      </div>
+      </form>
     </div>
   );
 };
