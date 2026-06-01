@@ -13,8 +13,22 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
-const MODEL = 'claude-opus-4-8';
+// Cost-aware routing: Sonnet 4.6 handles the common "call a tool, explain the
+// number" turns (cheaper + faster); Opus 4.8 is reserved for genuinely advanced
+// questions (reasoning, strategy, comparison, multi-part) where its edge pays off.
+const SONNET = process.env.SIGNAL_MODEL_DEFAULT || 'claude-sonnet-4-6';
+const OPUS = process.env.SIGNAL_MODEL_ADVANCED || 'claude-opus-4-8';
 const MCP_BETA = 'mcp-client-2025-11-20';
+
+// Signals that a question wants reasoning/synthesis rather than a single lookup.
+const ADVANCED_RE = /\b(why|because|recommend|recommendation|advice|advise|suggest|should\s+(i|we)|strateg|compare|comparison|versus|\bvs\b|explain|reason|trade[-\s]?off|prioriti[sz]|how\s+(should|would|do|can)\s+(i|we)|what\s+should|implication|forecast|predict|holistic|justify|defend|pros\s+and\s+cons|cut\s+and|and\s+why)\b/i;
+
+function isAdvanced(text) {
+  if (!text) return false;
+  const questions = (text.match(/\?/g) || []).length;
+  const words = text.trim().split(/\s+/).length;
+  return ADVANCED_RE.test(text) || questions >= 2 || words > 40;
+}
 
 // Stable system prompt → cache it (prompt caching, prefix match).
 const SYSTEM = `You are Signal, the decision assistant for Trifecta Consulting Group's
@@ -45,16 +59,21 @@ export async function POST(req) {
   if (!apiKey) return new Response('ANTHROPIC_API_KEY not set', { status: 500 });
   if (!mcpUrl) return new Response('MCP_SERVER_URL not set', { status: 500 });
 
-  const { messages } = await req.json();
+  const { messages, deep } = await req.json();
   const client = new Anthropic({ apiKey });
+
+  const lastUser = [...messages].reverse().find((m) => m.role === 'user');
+  const advanced = deep === true || isAdvanced(typeof lastUser?.content === 'string' ? lastUser.content : '');
+  const model = advanced ? OPUS : SONNET;
 
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
       const send = (o) => controller.enqueue(encoder.encode(JSON.stringify(o) + '\n'));
       try {
-        const events = await client.beta.messages.create({
-          model: MODEL,
+        send({ type: 'model', model, advanced });
+        const params = {
+          model,
           max_tokens: 4096,
           system: [{ type: 'text', text: SYSTEM, cache_control: { type: 'ephemeral' } }],
           messages,
@@ -62,7 +81,11 @@ export async function POST(req) {
           tools: [{ type: 'mcp_toolset', mcp_server_name: 'trifecta' }],
           betas: [MCP_BETA],
           stream: true,
-        });
+        };
+        // Let Opus reason on advanced questions (thinking stays server-side; only
+        // the final answer text streams to the user).
+        if (advanced) params.thinking = { type: 'adaptive' };
+        const events = await client.beta.messages.create(params);
 
         const toolNames = {}; // tool_use id -> tool name
         for await (const event of events) {

@@ -22,11 +22,17 @@ const TOOL_LABELS = {
   get_model_health: 'model health',
 };
 
+const MODEL_LABELS = {
+  'claude-sonnet-4-6': 'Sonnet 4.6',
+  'claude-opus-4-8': 'Opus 4.8',
+};
+
 export default function SignalChat({ client }) {
   const clientName = client?.name || 'Aeon Skincare';
   const [messages, setMessages] = React.useState([]); // {role, text, tools?: []}
   const [input, setInput] = React.useState('');
   const [busy, setBusy] = React.useState(false);
+  const [deep, setDeep] = React.useState(false); // force Opus 4.8
   const scrollRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -40,7 +46,7 @@ export default function SignalChat({ client }) {
     setBusy(true);
 
     const history = messages.map((m) => ({ role: m.role, content: m.text }));
-    const next = [...messages, { role: 'user', text: q }, { role: 'assistant', text: '', tools: [], artifacts: [] }];
+    const next = [...messages, { role: 'user', text: q }, { role: 'assistant', text: '', tools: [], artifacts: [], model: null }];
     setMessages(next);
     const aIdx = next.length - 1;
 
@@ -55,7 +61,7 @@ export default function SignalChat({ client }) {
       const res = await fetch('/api/signal', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ messages: [...history, { role: 'user', content: q }] }),
+        body: JSON.stringify({ messages: [...history, { role: 'user', content: q }], deep }),
       });
       if (!res.ok || !res.body) throw new Error('HTTP ' + res.status);
 
@@ -72,7 +78,9 @@ export default function SignalChat({ client }) {
           if (!line.trim()) continue;
           let evt;
           try { evt = JSON.parse(line); } catch { continue; }
-          if (evt.type === 'tool') {
+          if (evt.type === 'model') {
+            update((m) => ({ ...m, model: evt.model, advanced: evt.advanced }));
+          } else if (evt.type === 'tool') {
             update((m) => ({ ...m, tools: [...(m.tools || []), evt.name] }));
           } else if (evt.type === 'tool_result') {
             if (evt.data && !evt.is_error) {
@@ -125,10 +133,16 @@ export default function SignalChat({ client }) {
         </div>
 
         <div style={{ borderTop: '1px solid var(--line)', padding: 12 }}>
-          <div className="row-h" style={{ gap: 8, flexWrap: 'wrap', marginBottom: 10 }}>
-            {SUGGESTIONS.map((s) => (
-              <button key={s} className="btn ghost small" onClick={() => ask(s)} disabled={busy}>{s}</button>
-            ))}
+          <div className="between" style={{ marginBottom: 10, gap: 8 }}>
+            <div className="row-h" style={{ gap: 8, flexWrap: 'wrap' }}>
+              {SUGGESTIONS.map((s) => (
+                <button key={s} className="btn ghost small" onClick={() => ask(s)} disabled={busy}>{s}</button>
+              ))}
+            </div>
+            <label className="row-h" style={{ gap: 6, cursor: 'pointer', whiteSpace: 'nowrap' }} title="Force Claude Opus 4.8 for deeper reasoning (otherwise Sonnet 4.6 unless the question looks advanced)">
+              <span className={'tog' + (deep ? ' on' : '')} onClick={() => setDeep((v) => !v)} role="switch" aria-checked={deep} />
+              <span className="faint mono" style={{ fontSize: 10 }}>DEEP · OPUS</span>
+            </label>
           </div>
           <form
             className="row-h"
@@ -179,6 +193,11 @@ function Bubble({ m, busy }) {
         >
           {m.text || (busy ? <span className="dim mono" style={{ fontSize: 12 }}>…</span> : '')}
         </div>
+        {!isUser && m.model ? (
+          <div className="faint mono" style={{ fontSize: 9.5, marginTop: 4 }}>
+            {MODEL_LABELS[m.model] || m.model}{m.advanced ? ' · deep reasoning' : ''}
+          </div>
+        ) : null}
       </div>
     </div>
   );
