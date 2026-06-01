@@ -88,7 +88,12 @@ trifecta/
   read-views (the model *config* isn't persisted in Phase 0; only Results/Signal carry real numbers,
   per the brief). Note: the real model has 5 channels (Meta/YouTube/TV/Paid Search/TikTok); the
   config screens show the richer Aeon fiction.
-- **M5 — web: Signal chat** — `/api/signal` calls the Anthropic API with the Trifecta MCP server attached (`mcp_servers`, `MCP_SERVER_URL`); streams grounded answers.
+- **M5 — web: Signal chat** ✅ `app/api/signal/route.js` calls the Anthropic API (`claude-opus-4-8`) with the
+  Trifecta MCP server attached via the **MCP connector** (`mcp_servers` + `mcp_toolset`, beta header
+  `mcp-client-2025-11-20`, `MCP_SERVER_URL`), streaming NDJSON back to `app/_components/SignalChat.jsx`
+  (chat UI with tool-call chips + suggested prompts). System prompt is prompt-cached. Verified live:
+  "which channels drive revenue?" → Claude calls `get_channel_contribution` → grounded answer with 90%
+  CIs. **Needs `ANTHROPIC_API_KEY` + `MCP_SERVER_URL` in `apps/web/.env.local`** (gitignored).
 - **M6 — Deploy & polish** — Vercel + Cloud Run; end-to-end smoke test; "fictional demo data" disclaimer.
 
 ## Phase 0 MCP tools (only what the simulated dataset supports)
