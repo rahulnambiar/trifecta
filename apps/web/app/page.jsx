@@ -7,6 +7,7 @@
 import React from 'react';
 import ResultsLive from './_components/ResultsLive';
 import SignalChat from './_components/SignalChat';
+import { getSupabaseBrowser, isSupabaseConfigured } from '../lib/supabase/client';
 
 // ============================== icons.jsx ==============================
 // Minimal inline Lucide-style icons. ~14-16px line icons.
@@ -93,11 +94,11 @@ const Tag = ({ children, kind = 'default', solid = false, dot = false, style }) 
   );
 };
 
-const Btn = ({ children, kind = 'ghost', small = false, leftIcon, onClick, style, type }) => {
+const Btn = ({ children, kind = 'ghost', small = false, leftIcon, onClick, style, type, disabled }) => {
   const cls = ['btn', kind];
   if (small) cls.push('small');
   return (
-    <button type={type || 'button'} className={cls.join(' ')} onClick={onClick} style={style}>
+    <button type={type || 'button'} className={cls.join(' ')} onClick={onClick} style={style} disabled={disabled}>
       {leftIcon ? <span style={{ display:'inline-flex' }}>{leftIcon}</span> : null}
       {children}
     </button>
@@ -2588,11 +2589,29 @@ const Login = ({ onSignIn }) => {
   const [email, setEmail] = React.useState(DEMO_EMAIL);
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState('');
+  const [busy, setBusy] = React.useState(false);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     if (e) e.preventDefault();
+    setError('');
+
+    const sb = getSupabaseBrowser();
+    if (sb) {
+      // Real Supabase auth. onAuthStateChange in App flips the session on success.
+      setBusy(true);
+      const { error: err } = await sb.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+      setBusy(false);
+      if (err) setError(err.message || 'Invalid email or password.');
+      // success path is handled by the auth listener; no onSignIn() needed.
+      return;
+    }
+
+    // Fallback (Supabase not configured yet — "scaffold now, creds later"):
+    // keep the Phase 0 demo credentials working so the branch stays testable.
     if (email.trim().toLowerCase() === DEMO_EMAIL && password === DEMO_PASSWORD) {
-      setError('');
       onSignIn();
     } else {
       setError('Invalid email or password.');
@@ -2649,8 +2668,8 @@ const Login = ({ onSignIn }) => {
           <div style={{ color: 'var(--red)', fontSize: 12, marginTop: -6 }}>{error}</div>
         ) : null}
 
-        <Btn type="submit" kind="primary" style={{ width: '100%', justifyContent: 'center', padding: '11px 16px', marginTop: 4 }}>
-          Sign in
+        <Btn type="submit" kind="primary" disabled={busy} style={{ width: '100%', justifyContent: 'center', padding: '11px 16px', marginTop: 4, opacity: busy ? 0.7 : 1 }}>
+          {busy ? 'Signing in…' : 'Sign in'}
         </Btn>
 
         <div className="row-h faint" style={{ gap: 8, fontSize: 11.5, justifyContent: 'center', marginTop: 4 }}>
@@ -3784,8 +3803,29 @@ const TopBar = ({ screen, activeClient, theme, setTheme }) => {
 
 // -----------------------------------------------------------------------------
 
+// Map tenant-scoped DB client rows → the shape the console UI expects, merging
+// the Phase 0 demo detail (lifecycle steps) by slug for visual continuity.
+function mapDbClients(rows) {
+  const bySlug = Object.fromEntries(TRIFECTA_DATA.clients.map(c => [c.id, c]));
+  return rows.map(r => {
+    const demo = bySlug[r.slug] || {};
+    return {
+      id: r.slug,
+      name: r.name,
+      readiness: r.readiness ?? demo.readiness ?? 0,
+      version: r.version || demo.version || 'v1',
+      state: r.state || demo.state || 'draft',
+      run: r.run_label || demo.run || '',
+      actions: r.actions ?? demo.actions ?? 0,
+      status: r.status || demo.status || 'Onboarding',
+      steps: demo.steps || { data: 'active', config: 'pending', train: 'pending', results: 'pending', signal: 'pending' },
+    };
+  });
+}
+
 function App() {
   const [authed, setAuthed] = React.useState(false);
+  const [authReady, setAuthReady] = React.useState(!isSupabaseConfigured());
   const [screen, setScreen] = React.useState('dashboard');
   const [activeClientId, setActiveClientId] = React.useState(TRIFECTA_DATA.activeClientId);
   const [theme, setTheme] = React.useState('light');
@@ -3796,10 +3836,47 @@ function App() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  // Determine the initial session and subscribe to auth changes (Supabase only).
+  React.useEffect(() => {
+    const sb = getSupabaseBrowser();
+    if (!sb) { setAuthReady(true); return; }
+    let mounted = true;
+    sb.auth.getSession().then(({ data }) => {
+      if (!mounted) return;
+      setAuthed(!!data.session);
+      setAuthReady(true);
+    });
+    const { data: sub } = sb.auth.onAuthStateChange((_event, session) => {
+      if (!mounted) return;
+      setAuthed(!!session);
+      if (session) setScreen('dashboard');
+    });
+    return () => { mounted = false; sub.subscription.unsubscribe(); };
+  }, []);
+
+  // Load the portfolio the signed-in user is allowed to see (RLS-scoped).
+  React.useEffect(() => {
+    const sb = getSupabaseBrowser();
+    if (!authed || !sb) return;
+    let mounted = true;
+    sb.from('clients').select('*').order('created_at', { ascending: true }).then(({ data, error }) => {
+      if (!mounted || error || !data || !data.length) return;
+      const mapped = mapDbClients(data);
+      setClients(mapped);
+      setActiveClientId(prev => (mapped.find(c => c.id === prev) ? prev : mapped[0].id));
+    });
+    return () => { mounted = false; };
+  }, [authed]);
+
   const activeClient = clients.find(c => c.id === activeClientId) || clients[0];
 
   const go = (s) => {
-    if (s === '__signout') { setAuthed(false); return; }
+    if (s === '__signout') {
+      const sb = getSupabaseBrowser();
+      if (sb) { sb.auth.signOut(); }  // auth listener flips `authed` to false
+      else { setAuthed(false); }      // demo-fallback path
+      return;
+    }
     setScreen(s);
     window.scrollTo({ top: 0 });
   };
@@ -3820,6 +3897,11 @@ function App() {
     setScreen('pipeline');
     window.scrollTo({ top: 0 });
   };
+
+  // Avoid flashing the Login screen before the initial session check resolves.
+  if (!authReady) {
+    return <div className="login-bg" />;
+  }
 
   if (!authed) {
     return (
