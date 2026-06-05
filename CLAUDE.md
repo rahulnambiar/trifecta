@@ -6,10 +6,17 @@ building Bayesian causal models with Google's open-source **Meridian** library. 
 service across a portfolio of clients. It is *not* self-serve SaaS — it is an operator
 console with a thin client-facing layer ("Signal") on top.
 
-We are in **Phase 0 — the showcase prototype**: a deployed, navigable platform backed by a
-*real* Meridian model trained on Google's public simulated dataset. Single hardcoded demo
-client ("Aeon Skincare"), read-mostly, no real data ingestion — but every number on the
-Results and Signal screens is a genuine Meridian output.
+**Phase 0 — the showcase prototype — is complete and live** (deployed at
+https://platform.trifecta.sg, a custom domain on the `trifecta-platform` Vercel project;
+`trifecta-platform.vercel.app` still works too). A *real* Meridian model trained on Google's
+public simulated dataset backs it. Single hardcoded demo client ("Aeon Skincare"),
+read-mostly — but every number on the Results and Signal screens is a genuine Meridian output.
+
+**We are now in Phase 1 — the core loop (`Ingest → Customise → Train → Live`).** The goal is to
+convert the first paying client end-to-end through the platform. The plan of record is
+**`docs/phase1-build-brief.md`** (v2.0) — see the "Phase 1" section below. Work it milestone by
+milestone (M1–M7), one milestone per arc, **always on a feature branch** (`feature/M<n>-<slug>`),
+never directly on `main`.
 
 ## Source of truth for the UI
 
@@ -98,6 +105,42 @@ trifecta/
   (project `trifecta-platform`, `ANTHROPIC_API_KEY` + `MCP_SERVER_URL` set as production env vars).
   End-to-end smoke test passed in production (Signal → Claude → MCP on Cloud Run → grounded answer with
   CIs). Badge/footer rebranded as a Phase 0 demo with the "fictional demo data" disclaimer.
+
+## Phase 1 — the core loop (plan of record: `docs/phase1-build-brief.md` v2.0)
+
+Phase 1 turns the read-mostly Phase 0 console into the real control surface and onboards the
+**first paying client** end-to-end. Core loop: **`Ingest → Customise → Train → Live`**. Anything
+not on that line is deferred (ADH, reconciliation, AI mapping, saved-mapping templates,
+auto-controls, vertical taxonomy, auto-QA, portfolio dashboard, run scheduling — see brief §3).
+Capture every "we should build X" temptation in `docs/phase1b-notes.md` instead of building it.
+
+Build sequence (order of work, not separate tracks):
+1. **M1 — Auth & multi-tenancy.** Supabase Auth (email/password, 2FA; roles `admin`,
+   `client-viewer`); schema `tenants, clients, users, user_clients` with **row-level security on
+   every query**; per-client BigQuery dataset + GCS prefix; wire the Login screen (Phase 0 left it
+   a hardcoded boolean). *Unblocks everything; the platform URL isn't safely shareable until this lands.*
+2. **M2 — Client onboarding.** "Create client" provisions per-client GCP resources (manual OK for
+   clients 1–2); Client Settings screen functional.
+3. **M3 — Data ingestion** (build whichever path client #1 needs first; see brief §9). **Path A**
+   BigQuery-direct (paste dataset ref → grant read → map tables/cols to canonical schema). **Path C**
+   file upload (signed-URL → GCS → manual column-mapping UI, no AI assist). Mappings persist in
+   Supabase. **Harmonisation SQL** writes canonical weekly tables to the client's BQ dataset.
+4. **M4 — Model config + runner refactor.** Supabase `model_configs, model_versions, training_runs`;
+   refactor `services/meridian-runner` to read config from Supabase by `model_version_id` (not
+   hardcoded Python); translation layer (UI fields → Meridian model spec); `POST /api/model-config`,
+   `POST /api/training-runs` (trigger Vertex job).
+5. **M5 — Editable Model Studio.** Every Channels/Controls/Calibration/Settings input persists via the
+   API; "Train new version" with a **cost-confirmation dialog**; Training Runs shows real
+   queued→running→completed status; "Promote to Live" flips Results + Signal to the new posterior.
+6. **M6 — Multi-tenant Signal + Results.** MCP server loads per-client model from a GCS path encoded
+   in the auth token; every tool call + Results route scoped to one client; no cross-tenant leakage.
+7. **M7 — First client onboarding.** Whole flow on real data; document friction in `docs/phase1b-notes.md`
+   (that file is the Phase 2 priority list).
+
+Conventions for Phase 1: feature branch per milestone; end each session with a working commit on the
+branch; **write tests for the three high-stakes areas** — row-level security (data isolation), the
+translation layer (UI → Meridian spec), and the harmonisation SQL. New env vars land in `apps/web/.env.local`
+(+ Vercel) and Cloud Run; keep `docs/` current as decisions land.
 
 ## Phase 0 MCP tools (only what the simulated dataset supports)
 
