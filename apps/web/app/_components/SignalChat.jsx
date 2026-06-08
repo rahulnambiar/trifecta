@@ -4,6 +4,7 @@
 // fitted Meridian model and carry credible intervals.
 import React from 'react';
 import SignalArtifact from './SignalArtifact';
+import { formatAsOf, ciLabel } from '../../lib/exportIntegrity';
 
 const SUGGESTIONS = [
   'Which channels drive revenue?',
@@ -129,9 +130,16 @@ export default function SignalChat({ client }) {
           <span className="logomark" style={{ width: 18, height: 18, flexBasis: 18 }} />
           <div>
             <h3>Signal · {clientName}</h3>
-            <div className="sub">Grounded in the latest Meridian model · answers carry 90% credible intervals</div>
+            <div className="sub">Grounded in the latest Meridian model · answers carry {ciLabel(provenance?.confidenceLevel) || '90% CI'}</div>
           </div>
-          <div className="actions"><span className="tag mint" >LIVE MODEL</span></div>
+          <div className="actions" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 3 }}>
+            <span className="tag mint">● LIVE{client?.version ? ' · ' + client.version : ''}</span>
+            {provenance?.asOf && formatAsOf(provenance.asOf) ? (
+              <span className="faint mono" style={{ fontSize: 9.5 }} title="When the live model was last refreshed">
+                refreshed {formatAsOf(provenance.asOf)}
+              </span>
+            ) : null}
+          </div>
         </div>
 
         <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>

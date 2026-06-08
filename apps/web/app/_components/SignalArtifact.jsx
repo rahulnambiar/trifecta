@@ -6,10 +6,12 @@
 import React from 'react';
 import {
   ExportIntegrityError,
+  assertProvenance,
   provenanceCaption,
   toProvenancedCSV,
   toProvenancedJSON,
 } from '../../lib/exportIntegrity';
+import { chartSvgToPng, sharePng } from '../../lib/shareCard';
 
 // Pure diagnostics (model health) carry no per-figure credible interval, so they are
 // exempt from the interval requirement — they still carry as-of + version.
@@ -68,34 +70,18 @@ const TITLES = {
   get_model_health: 'Model health',
 };
 
-function Toolbar({ name, data, rows, provenance }) {
-  const [copied, setCopied] = React.useState(false);
-  const [err, setErr] = React.useState(null);
-  const requireInterval = !NON_ESTIMATE.has(name);
-
-  const flash = (e) => {
-    // Export integrity blocked the action — surface why instead of shipping a bare number.
-    setErr(e instanceof ExportIntegrityError ? e.message : 'Export failed.');
-    setTimeout(() => setErr(null), 4000);
-  };
-  const exportCSV = () => {
-    try {
-      download(`${name}.csv`, toProvenancedCSV(toCSV(rows), provenance, { rows, requireInterval }), 'text/csv');
-    } catch (e) { flash(e); }
-  };
-  const copy = () => {
-    try {
-      navigator.clipboard?.writeText(toProvenancedJSON(data, provenance));
-      setCopied(true); setTimeout(() => setCopied(false), 1200);
-    } catch (e) { flash(e); }
-  };
+// Presentational toolbar — all handlers + state live in SignalArtifact.
+function Toolbar({ hasRows, canShare, sharing, copied, err, onCSV, onJSON, onShare }) {
   return (
     <div className="row-h" style={{ gap: 6, marginLeft: 'auto' }}>
       {err ? <span className="tag amber" style={{ fontSize: 9.5 }} title={err}>⚠ interval required</span> : null}
-      {rows && rows.length ? (
-        <button className="btn ghost small" onClick={exportCSV}>CSV</button>
+      {canShare ? (
+        <button className="btn ghost small" onClick={onShare} disabled={sharing} title="Share this chart as an image — interval, date and model version baked in">
+          {sharing ? '…' : 'Share'}
+        </button>
       ) : null}
-      <button className="btn ghost small" onClick={copy}>{copied ? 'Copied' : 'JSON'}</button>
+      {hasRows ? <button className="btn ghost small" onClick={onCSV}>CSV</button> : null}
+      <button className="btn ghost small" onClick={onJSON}>{copied ? 'Copied' : 'JSON'}</button>
     </div>
   );
 }
@@ -281,15 +267,28 @@ function Caption({ children }) {
 }
 
 export default function SignalArtifact({ name, data, provenance }) {
+  const bodyRef = React.useRef(null);
+  const [copied, setCopied] = React.useState(false);
+  const [sharing, setSharing] = React.useState(false);
+  const [canShare, setCanShare] = React.useState(false);
+  const [err, setErr] = React.useState(null);
+
+  // A chart is shareable-as-image only if it rendered an <svg> (bar/curve tools);
+  // table tools (optimiser/scenario/health) still export via CSV/JSON.
+  React.useEffect(() => {
+    setCanShare(!!bodyRef.current && !!bodyRef.current.querySelector('svg'));
+  }, [name, data]);
+
   if (!data) return null;
-  const rowsFor = {
+  const rows = {
     get_channel_contribution: data.channels,
     get_marginal_roi: data.channels,
     get_response_curve: data.points,
     optimize_budget: data.allocation,
     run_budget_scenario: data.changes,
     get_model_health: [data],
-  };
+  }[name];
+
   let body = null;
   if (name === 'get_channel_contribution') body = <Contribution data={data} />;
   else if (name === 'get_marginal_roi') body = <ROIBars data={data} unit="x" />;
@@ -299,14 +298,46 @@ export default function SignalArtifact({ name, data, provenance }) {
   else if (name === 'get_model_health') body = <Health data={data} />;
   else return null;
 
+  const requireInterval = !NON_ESTIMATE.has(name);
   const stamp = provenance ? provenanceCaption(provenance) : null;
+
+  const flash = (e) => {
+    // Export integrity blocked the action — surface why instead of shipping a bare number.
+    setErr(e instanceof ExportIntegrityError ? e.message : 'Export failed.');
+    setTimeout(() => setErr(null), 4000);
+  };
+  const onCSV = () => {
+    try { download(`${name}.csv`, toProvenancedCSV(toCSV(rows), provenance, { rows, requireInterval }), 'text/csv'); }
+    catch (e) { flash(e); }
+  };
+  const onJSON = () => {
+    try {
+      navigator.clipboard?.writeText(toProvenancedJSON(data, provenance));
+      setCopied(true); setTimeout(() => setCopied(false), 1200);
+    } catch (e) { flash(e); }
+  };
+  const onShare = async () => {
+    setSharing(true);
+    try {
+      assertProvenance(provenance);  // an image must carry interval + date + version too
+      const svg = bodyRef.current && bodyRef.current.querySelector('svg');
+      if (!svg) throw new Error('no chart to share');
+      const blob = await chartSvgToPng(svg, { title: TITLES[name] || name, stamp });
+      await sharePng(blob, `trifecta-${name}.png`, `${TITLES[name] || name} — Trifecta Signal`);
+    } catch (e) { flash(e); }
+    finally { setSharing(false); }
+  };
+
   return (
     <div className="card" style={{ marginTop: 8 }}>
       <div className="card-head" style={{ padding: '10px 14px' }}>
         <h3 style={{ fontSize: 13 }}>{TITLES[name] || name}</h3>
-        <Toolbar name={name} data={data} rows={rowsFor[name]} provenance={provenance} />
+        <Toolbar
+          hasRows={!!(rows && rows.length)} canShare={canShare} sharing={sharing}
+          copied={copied} err={err} onCSV={onCSV} onJSON={onJSON} onShare={onShare}
+        />
       </div>
-      <div className="card-pad" style={{ padding: 14 }}>{body}</div>
+      <div className="card-pad" style={{ padding: 14 }} ref={bodyRef}>{body}</div>
       {stamp ? (
         <div className="faint mono" style={{ fontSize: 9.5, padding: '0 14px 10px', letterSpacing: '0.04em' }}>
           {stamp}
