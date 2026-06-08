@@ -21,10 +21,10 @@ security on every table**, not by application code.
    ```
 3. Create the operator auth user `rajeev@trifecta.sg` via Supabase Auth
    (Dashboard → Authentication → Add user, or the app's Login once configured).
-   The `handle_new_user` trigger creates a `client-viewer` profile attached to the
-   single tenant.
-4. Promote that user to operator + join them to every client: uncomment and run the
-   bootstrap block at the bottom of `seed.sql`.
+   The `handle_new_user` trigger creates a least-privileged `client_signal` profile
+   attached to the single tenant.
+4. Promote that user to `in_house` operator (+ `can_sign_off`) and join them to every
+   client: uncomment and run the bootstrap block at the bottom of `seed.sql`.
 
 ## Test
 
@@ -32,8 +32,15 @@ security on every table**, not by application code.
 psql "$SUPABASE_DB_URL" -f packages/db/test/rls.test.sql   # prints "RLS TEST PASSED"
 ```
 
-## Roles
-- `admin` (operator) — sees/manages every client in their tenant.
-- `client-viewer` — sees only the clients listed in `user_clients`.
+## User types (brief v4.0 §3b) — `users.role`
+- `in_house` (T1) — Trifecta operator/admin. Every client in the tenant; user mgmt,
+  onboarding, billing. The only type that creates clients/users.
+- `expert` (T2) — fractional DS bench. Scoped to assigned clients; fits models.
+- `client_upload` (T3) — client marketing-ops. Own client, ingestion only.
+- `client_signal` (T4) — the CMO / decision-maker. Own client's Signal chat ONLY.
+  Highest-risk isolation surface — covered by `test/rls.test.sql` TEST 2/3.
+
+`can_sign_off` is an orthogonal flag (only seniors hold it); the M5 sign-off workflow
+enforces fitter ≠ reviewer. `clients.lead_ds` names each client's lead data scientist.
 
 `SUPABASE_SERVICE_ROLE_KEY` bypasses RLS — server-side provisioning only (M2). Never ship it to the browser.

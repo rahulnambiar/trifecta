@@ -3689,8 +3689,24 @@ const NAV = {
   ],
 };
 
-const Sidebar = ({ screen, go, activeClient, clients, setActiveClient }) => {
+// Which surfaces each of the four user types (brief v4.0 §3b) may reach, and where
+// they land on sign-in. RLS scopes WHICH clients they see; this scopes WHICH screens.
+// `signalOnly` collapses the whole console to the standalone CMO Signal surface.
+const ALL_SCREENS = ['dashboard','library','pipeline','model-studio','training','results','reports','signal','client-settings','system'];
+const ACCESS = {
+  in_house:      { screens: ALL_SCREENS, home: 'dashboard' },
+  expert:        { screens: ['dashboard','library','pipeline','model-studio','training','results','reports','signal'], home: 'dashboard' },
+  client_upload: { screens: ['pipeline','results','signal'], home: 'pipeline' },
+  client_signal: { screens: ['signal'], home: 'signal', signalOnly: true },
+};
+const accessFor = (role) => ACCESS[role] || ACCESS.in_house;
+
+const Sidebar = ({ screen, go, activeClient, clients, setActiveClient, allowed, userEmail }) => {
   const [open, setOpen] = React.useState(false);
+  const can = (id) => !allowed || allowed.includes(id);
+  const ws = NAV.workspace.filter(n => can(n.id));
+  const cl = NAV.client.filter(n => can(n.id));
+  const sy = NAV.system.filter(n => can(n.id));
   const NavItem = ({ item }) => {
     const Ic = I[item.icon] || I.Grid;
     return (
@@ -3710,8 +3726,12 @@ const Sidebar = ({ screen, go, activeClient, clients, setActiveClient }) => {
         </div>
       </div>
       <div className="scroll">
-        <div className="group-label">WORKSPACE</div>
-        {NAV.workspace.map(n => <NavItem key={n.id} item={n} />)}
+        {ws.length ? (
+          <>
+            <div className="group-label">WORKSPACE</div>
+            {ws.map(n => <NavItem key={n.id} item={n} />)}
+          </>
+        ) : null}
 
         <div className="group-label" style={{ marginTop: 14 }}>CLIENT</div>
         <div style={{ position: 'relative' }}>
@@ -3745,14 +3765,18 @@ const Sidebar = ({ screen, go, activeClient, clients, setActiveClient }) => {
             </div>
           ) : null}
         </div>
-        {NAV.client.map(n => <NavItem key={n.id} item={n} />)}
+        {cl.map(n => <NavItem key={n.id} item={n} />)}
 
-        <div className="group-label" style={{ marginTop: 14 }}>SYSTEM</div>
-        {NAV.system.map(n => <NavItem key={n.id} item={n} />)}
+        {sy.length ? (
+          <>
+            <div className="group-label" style={{ marginTop: 14 }}>SYSTEM</div>
+            {sy.map(n => <NavItem key={n.id} item={n} />)}
+          </>
+        ) : null}
       </div>
       <div className="signout" onClick={() => go('__signout')}>
         <I.LogOut size={14} />
-        <span style={{ flex: 1, fontSize: 11.5 }} className="mono">rajeev@trifecta.sg</span>
+        <span style={{ flex: 1, fontSize: 11.5 }} className="mono">{userEmail || 'rajeev@trifecta.sg'}</span>
       </div>
     </aside>
   );
@@ -3823,9 +3847,42 @@ function mapDbClients(rows) {
   });
 }
 
+// Type-4 (CMO / decision-maker) surface: the standalone Signal chat, scoped to the
+// client's live model, with no path to any other console screen. The full CMO
+// product (persistent history, share-as-image, freshness) lands in M6; this M1 shell
+// guarantees the isolation — a Type-4 user simply cannot reach anything else.
+function CMOSignalShell({ client, email, theme, setTheme, onSignOut }) {
+  return (
+    <div className="cmo-shell" style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', flexDirection: 'column' }}>
+      <header style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderBottom: '1px solid var(--line)' }}>
+        <Logo size={22} />
+        <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+          <span className="wordmark" style={{ fontWeight: 700, letterSpacing: '0.08em' }}>SIGNAL</span>
+          <span className="faint mono" style={{ fontSize: 10 }}>{client?.name || ''}</span>
+        </div>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <ThemeToggle theme={theme} setTheme={setTheme} />
+          {email ? <span className="faint mono" style={{ fontSize: 11 }}>{email}</span> : null}
+          <button className="btn ghost small" onClick={onSignOut}>Sign out</button>
+        </div>
+      </header>
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: 18 }}>
+        <div style={{ width: '100%', maxWidth: 880 }}>
+          <SignalChat client={client} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [authed, setAuthed] = React.useState(false);
   const [authReady, setAuthReady] = React.useState(!isSupabaseConfigured());
+  // userType drives which surfaces are reachable. With Supabase unconfigured (the
+  // Phase 0 demo fallback) we treat the session as an in_house operator so the full
+  // console renders; with Supabase on, it stays null until the profile loads.
+  const [userRole, setUserRole] = React.useState(isSupabaseConfigured() ? null : 'in_house');
+  const [userEmail, setUserEmail] = React.useState(null);
   const [screen, setScreen] = React.useState('dashboard');
   const [activeClientId, setActiveClientId] = React.useState(TRIFECTA_DATA.activeClientId);
   const [theme, setTheme] = React.useState('light');
@@ -3854,11 +3911,21 @@ function App() {
     return () => { mounted = false; sub.subscription.unsubscribe(); };
   }, []);
 
-  // Load the portfolio the signed-in user is allowed to see (RLS-scoped).
+  // Load the signed-in user's profile (role → surface access) and the portfolio
+  // they're allowed to see (RLS-scoped). Both are scoped server-side by RLS.
   React.useEffect(() => {
     const sb = getSupabaseBrowser();
     if (!authed || !sb) return;
     let mounted = true;
+    sb.auth.getUser().then(({ data: u }) => {
+      if (!mounted || !u?.user) return;
+      setUserEmail(u.user.email || null);
+      sb.from('users').select('role, email').eq('id', u.user.id).single().then(({ data: p }) => {
+        if (!mounted) return;
+        setUserRole((p && p.role) || 'client_signal');  // unknown profile → least privilege
+        if (p && p.email) setUserEmail(p.email);
+      });
+    });
     sb.from('clients').select('*').order('created_at', { ascending: true }).then(({ data, error }) => {
       if (!mounted || error || !data || !data.length) return;
       const mapped = mapDbClients(data);
@@ -3868,15 +3935,24 @@ function App() {
     return () => { mounted = false; };
   }, [authed]);
 
+  // When the role resolves, land the user on their permitted home surface.
+  React.useEffect(() => {
+    if (!userRole) return;
+    const acc = accessFor(userRole);
+    setScreen(s => (acc.screens.includes(s) ? s : acc.home));
+  }, [userRole]);
+
   const activeClient = clients.find(c => c.id === activeClientId) || clients[0];
 
   const go = (s) => {
     if (s === '__signout') {
       const sb = getSupabaseBrowser();
-      if (sb) { sb.auth.signOut(); }  // auth listener flips `authed` to false
+      if (sb) { sb.auth.signOut(); setUserRole(null); setUserEmail(null); } // listener flips `authed`
       else { setAuthed(false); }      // demo-fallback path
       return;
     }
+    // Never navigate to a surface this user type can't reach.
+    if (userRole && !accessFor(userRole).screens.includes(s)) return;
     setScreen(s);
     window.scrollTo({ top: 0 });
   };
@@ -3916,8 +3992,31 @@ function App() {
     );
   }
 
+  // Authed but role not yet resolved (Supabase on): hold a splash so no console
+  // surface flashes before we know the user type (matters most for a Type-4 CMO).
+  if (isSupabaseConfigured() && !userRole) {
+    return <div className="login-bg" />;
+  }
+
+  const acc = accessFor(userRole);
+  const allowed = acc.screens;
+  const safeScreen = allowed.includes(screen) ? screen : acc.home;
+
+  // Type 4 (CMO / decision-maker): the standalone Signal surface, nothing else.
+  if (acc.signalOnly) {
+    return (
+      <CMOSignalShell
+        client={activeClient}
+        email={userEmail}
+        theme={theme}
+        setTheme={setTheme}
+        onSignOut={() => go('__signout')}
+      />
+    );
+  }
+
   let body = null;
-  switch (screen) {
+  switch (safeScreen) {
     case 'dashboard':     body = <Dashboard go={go} enterClient={enterClient} clients={clients} openAddClient={() => setAdding(true)} />; break;
     case 'library':       body = <ModelLibrary go={go} />; break;
     case 'pipeline':      body = <DataPipeline client={activeClient} />; break;
@@ -3934,15 +4033,17 @@ function App() {
   return (
     <div id="app">
       <Sidebar
-        screen={screen}
+        screen={safeScreen}
         go={go}
         activeClient={activeClient}
         clients={clients}
         setActiveClient={setActiveClientId}
+        allowed={allowed}
+        userEmail={userEmail}
       />
       <main className="main">
-        <TopBar screen={screen} activeClient={activeClient} theme={theme} setTheme={setTheme} />
-        <div className="content" data-screen-label={`${SCREEN_META[screen]?.title}`}>{body}</div>
+        <TopBar screen={safeScreen} activeClient={activeClient} theme={theme} setTheme={setTheme} />
+        <div className="content" data-screen-label={`${SCREEN_META[safeScreen]?.title}`}>{body}</div>
         <div className="footer-note">TRIFECTA PLATFORM · PHASE 0 DEMO · GENUINE MERIDIAN OUTPUTS ON FICTIONAL DEMO DATA</div>
       </main>
       {adding ? <AddClientWizard onClose={() => setAdding(false)} onCreate={createClient} /> : null}

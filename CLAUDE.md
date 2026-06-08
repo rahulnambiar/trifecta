@@ -12,9 +12,9 @@ https://platform.trifecta.sg, a custom domain on the `trifecta-platform` Vercel 
 public simulated dataset backs it. Single hardcoded demo client ("Aeon Skincare"),
 read-mostly — but every number on the Results and Signal screens is a genuine Meridian output.
 
-**We are now in Phase 1 — the core loop (`Ingest → Customise → Train → Live`).** The goal is to
-convert the first paying client end-to-end through the platform. The plan of record is
-**`docs/phase1-build-brief.md`** (v2.0) — see the "Phase 1" section below. Work it milestone by
+**We are now in Phase 1 — the core loop (`Ingest → Customise → Train → Sign off → Live`).** The goal
+is to convert the first paying client end-to-end through the platform. The plan of record is
+**`docs/phase1-build-brief.md`** (**v4.0**) — see the "Phase 1" section below. Work it milestone by
 milestone (M1–M7), one milestone per arc, **always on a feature branch** (`feature/M<n>-<slug>`),
 never directly on `main`.
 
@@ -106,41 +106,61 @@ trifecta/
   End-to-end smoke test passed in production (Signal → Claude → MCP on Cloud Run → grounded answer with
   CIs). Badge/footer rebranded as a Phase 0 demo with the "fictional demo data" disclaimer.
 
-## Phase 1 — the core loop (plan of record: `docs/phase1-build-brief.md` v2.0)
+## Phase 1 — the core loop (plan of record: `docs/phase1-build-brief.md` **v4.0**)
 
 Phase 1 turns the read-mostly Phase 0 console into the real control surface and onboards the
-**first paying client** end-to-end. Core loop: **`Ingest → Customise → Train → Live`**. Anything
-not on that line is deferred (ADH, reconciliation, AI mapping, saved-mapping templates,
-auto-controls, vertical taxonomy, auto-QA, portfolio dashboard, run scheduling — see brief §3).
+**first paying client** end-to-end. Core loop (v4.0 adds the **Sign off** gate):
+**`Ingest → Customise → Train → Sign off → Live`**. Anything not on that line is deferred (ADH,
+reconciliation, AI mapping, saved-mapping templates, auto-controls, vertical taxonomy, auto-QA,
+portfolio dashboard, run scheduling, marketplace/panel machinery — see brief §4).
 Capture every "we should build X" temptation in `docs/phase1b-notes.md` instead of building it.
 
+**Four user types** (brief §3b), on `users.role`, scoped to clients by `user_clients` + RLS:
+`in_house` (T1 — Trifecta operator/admin; the only type that creates clients/users; holds
+`can_sign_off`), `expert` (T2 — fractional DS bench, e.g. Kisholoy; assigned clients, fits models),
+`client_upload` (T3 — client ops; own client, ingestion only), `client_signal` (T4 — the CMO;
+**own client's Signal chat ONLY**). The **highest-risk property in the whole build**: a T4 user must
+never reach another client's data via Signal — the MCP server is auth-scoped per request to one
+client's posterior. **Sign-off gate** (brief §3c): `model_versions.status` draft→fitting→in_review→
+signed_off→live; **fitter ≠ reviewer** enforced; Promote-to-Live gated on `signed_off`; lineage table
+records every event. **Export-integrity rule** (brief §2): uncertainty travels with the number —
+every chart and export (image/PDF/Excel) carries the credible interval, the as-of date, and the model
+version. The **CMO Signal surface** (T4, brief §3d) is the hero client-facing product (M6).
+
 Build sequence (order of work, not separate tracks):
-1. **M1 — Auth & multi-tenancy.** Supabase Auth (email/password, 2FA; roles `admin`,
-   `client-viewer`); schema `tenants, clients, users, user_clients` with **row-level security on
-   every query**; per-client BigQuery dataset + GCS prefix; wire the Login screen (Phase 0 left it
-   a hardcoded boolean). *Unblocks everything; the platform URL isn't safely shareable until this lands.*
-2. **M2 — Client onboarding.** "Create client" provisions per-client GCP resources (manual OK for
-   clients 1–2); Client Settings screen functional.
-3. **M3 — Data ingestion** (build whichever path client #1 needs first; see brief §9). **Path A**
-   BigQuery-direct (paste dataset ref → grant read → map tables/cols to canonical schema). **Path C**
-   file upload (signed-URL → GCS → manual column-mapping UI, no AI assist). Mappings persist in
-   Supabase. **Harmonisation SQL** writes canonical weekly tables to the client's BQ dataset.
-4. **M4 — Model config + runner refactor.** Supabase `model_configs, model_versions, training_runs`;
-   refactor `services/meridian-runner` to read config from Supabase by `model_version_id` (not
-   hardcoded Python); translation layer (UI fields → Meridian model spec); `POST /api/model-config`,
-   `POST /api/training-runs` (trigger Vertex job).
-5. **M5 — Editable Model Studio.** Every Channels/Controls/Calibration/Settings input persists via the
-   API; "Train new version" with a **cost-confirmation dialog**; Training Runs shows real
-   queued→running→completed status; "Promote to Live" flips Results + Signal to the new posterior.
-6. **M6 — Multi-tenant Signal + Results.** MCP server loads per-client model from a GCS path encoded
-   in the auth token; every tool call + Results route scoped to one client; no cross-tenant leakage.
-7. **M7 — First client onboarding.** Whole flow on real data; document friction in `docs/phase1b-notes.md`
-   (that file is the Phase 2 priority list).
+1. **M1 — Auth, four user types & multi-tenancy.** Supabase Auth (email/password, 2FA); the four
+   types as `users.role` + `can_sign_off` flag + `clients.lead_ds`; schema `tenants, clients, users,
+   user_clients` with **row-level security on every query**; per-client BigQuery dataset + GCS prefix;
+   **role-aware routing** (T4 lands directly in Signal, nothing else). *Unblocks everything; the
+   platform URL isn't safely shareable until this lands.*
+2. **M2 — Client onboarding & user management.** "Create client" provisions per-client GCP resources
+   (manual OK for clients 1–2); in-house screen to invite/assign T2/T3/T4 and set `lead_ds`; Client
+   Settings functional.
+3. **M3 — Data ingestion** (build whichever path client #1 needs first; see brief §10). **Path A**
+   BigQuery-direct (grant read → map cols to canonical schema). **Path C** file upload (signed-URL →
+   GCS → manual column-mapping UI, no AI assist). Mappings persist in Supabase. **Harmonisation SQL**
+   writes canonical weekly tables to the client's BQ dataset.
+4. **M4 — Model config + runner refactor.** Supabase `model_configs, model_versions, training_runs` +
+   lineage; refactor `services/meridian-runner` to read config from Supabase by `model_version_id`;
+   translation layer (UI fields → Meridian spec); `POST /api/model-config`, `POST /api/training-runs`.
+5. **M5 — Editable Model Studio + sign-off workflow.** Every input persists via the API; "Train new
+   version" with a **cost-confirmation dialog**; Training Runs shows real queued→running→completed;
+   **sign-off flow** (`fitted_by`/`reviewed_by`, system blocks signing off own fit); "Promote to Live"
+   gated on `signed_off`, flips Results + Signal to the new posterior; two rating fields captured.
+6. **M6 — Multi-tenant Results + Signal incl. CMO MVP.** MCP server loads per-client posterior from a
+   path encoded in the auth token; every tool call + Results route scoped to one client. **CMO Signal
+   surface**: persistent chat history, uncertainty-aware charts (every chart shows the interval),
+   share-as-image (PNG with interval + as-of date + logo), freshness indicator. (M6.5 fast-follow:
+   PDF + Excel export with explicit CI columns — not a Phase 1 DoD gate.)
+7. **M7 — First client onboarding.** Whole flow on real data (Kisholoy fits, a senior signs off, the
+   CMO uses Signal); document friction in `docs/phase1b-notes.md` (the Phase 2 priority list).
 
 Conventions for Phase 1: feature branch per milestone; end each session with a working commit on the
-branch; **write tests for the three high-stakes areas** — row-level security (data isolation), the
-translation layer (UI → Meridian spec), and the harmonisation SQL. New env vars land in `apps/web/.env.local`
-(+ Vercel) and Cloud Run; keep `docs/` current as decisions land.
+branch; **write tests for the four high-stakes areas** (brief §9) — (1) cross-tenant isolation + the
+**T4 Signal property**, (2) **fitter ≠ reviewer** + promote-gated-on-sign-off, (3) the translation
+layer (UI → Meridian spec) + harmonisation SQL, (4) **export integrity** (a test that fails if any
+export omits interval/as-of/version). New env vars land in `apps/web/.env.local` (+ Vercel) and
+Cloud Run; keep `docs/` current as decisions land.
 
 ## Phase 0 MCP tools (only what the simulated dataset supports)
 

@@ -24,17 +24,18 @@ on conflict (slug) do nothing;
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- BOOTSTRAP — run ONCE after rajeev@trifecta.sg has signed up via Supabase Auth.
--- The handle_new_user() trigger will have created a 'client-viewer' profile
--- attached to the single tenant; this promotes that profile to operator (admin)
+-- The handle_new_user() trigger will have created a least-privileged
+-- 'client_signal' profile attached to the single tenant; this promotes it to the
+-- in_house operator type, grants sign-off (Rajeev is the day-1 reviewer, brief §8)
 -- and joins them to every demo client. Safe to re-run.
 -- ─────────────────────────────────────────────────────────────────────────────
 
 -- update public.users
---   set role = 'admin', full_name = 'Rajeev Bala'
+--   set role = 'in_house', can_sign_off = true, full_name = 'Rajeev Bala'
 --   where email = 'rajeev@trifecta.sg';
 --
 -- insert into public.user_clients (user_id, client_id, role)
---   select u.id, c.id, 'admin'
+--   select u.id, c.id, 'in_house'
 --   from public.users u
 --   cross join public.clients c
 --   where u.email = 'rajeev@trifecta.sg'
