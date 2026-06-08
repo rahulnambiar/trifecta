@@ -33,7 +33,27 @@ export default function SignalChat({ client }) {
   const [input, setInput] = React.useState('');
   const [busy, setBusy] = React.useState(false);
   const [deep, setDeep] = React.useState(false); // force Opus 4.8
+  // Export-integrity provenance (brief §2): every chart/export carries the interval,
+  // the as-of date and the model version. Sourced from the live model's results meta.
+  const [provenance, setProvenance] = React.useState(null);
   const scrollRef = React.useRef(null);
+
+  React.useEffect(() => {
+    let on = true;
+    fetch('/api/results')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (!on || !j) return;
+        const meta = j.meta || {};
+        setProvenance({
+          modelVersion: client?.version ? `${clientName} · ${client.version}` : 'live model',
+          asOf: meta.generated_at || null,
+          confidenceLevel: typeof meta.confidence_level === 'number' ? meta.confidence_level : 0.9,
+        });
+      })
+      .catch(() => {});
+    return () => { on = false; };
+  }, [clientName, client?.version]);
 
   React.useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -125,7 +145,7 @@ export default function SignalChat({ client }) {
               <div key={i} style={{ display: 'flex', flexDirection: 'column' }}>
                 <Bubble m={m} busy={busy && i === messages.length - 1} />
                 {m.role === 'assistant' && m.artifacts && m.artifacts.length ? (
-                  <div>{m.artifacts.map((a, j) => <SignalArtifact key={j} name={a.name} data={a.data} />)}</div>
+                  <div>{m.artifacts.map((a, j) => <SignalArtifact key={j} name={a.name} data={a.data} provenance={provenance} />)}</div>
                 ) : null}
               </div>
             ))

@@ -1,7 +1,19 @@
 'use client';
 // Inline chat artifact: renders a live chart for an MCP tool result and offers
 // CSV / JSON export. Driven by the structured data the Trifecta MCP tools return.
+// Every export goes through the export-integrity chokepoint (brief v4.0 §2): a chart
+// or file may not leave without its credible interval, as-of date and model version.
 import React from 'react';
+import {
+  ExportIntegrityError,
+  provenanceCaption,
+  toProvenancedCSV,
+  toProvenancedJSON,
+} from '../../lib/exportIntegrity';
+
+// Pure diagnostics (model health) carry no per-figure credible interval, so they are
+// exempt from the interval requirement — they still carry as-of + version.
+const NON_ESTIMATE = new Set(['get_model_health']);
 
 const COLORS = { Meta: '#4f6ef2', YouTube: '#7d9bff', TV: '#e6b052', 'Paid Search': '#37d39b', TikTok: '#c773d6' };
 const FALLBACK = ['#4f6ef2', '#7d9bff', '#e6b052', '#37d39b', '#c773d6', '#c98568', '#b07e3d'];
@@ -56,16 +68,32 @@ const TITLES = {
   get_model_health: 'Model health',
 };
 
-function Toolbar({ name, data, rows }) {
+function Toolbar({ name, data, rows, provenance }) {
   const [copied, setCopied] = React.useState(false);
+  const [err, setErr] = React.useState(null);
+  const requireInterval = !NON_ESTIMATE.has(name);
+
+  const flash = (e) => {
+    // Export integrity blocked the action — surface why instead of shipping a bare number.
+    setErr(e instanceof ExportIntegrityError ? e.message : 'Export failed.');
+    setTimeout(() => setErr(null), 4000);
+  };
+  const exportCSV = () => {
+    try {
+      download(`${name}.csv`, toProvenancedCSV(toCSV(rows), provenance, { rows, requireInterval }), 'text/csv');
+    } catch (e) { flash(e); }
+  };
   const copy = () => {
-    navigator.clipboard?.writeText(JSON.stringify(data, null, 2));
-    setCopied(true); setTimeout(() => setCopied(false), 1200);
+    try {
+      navigator.clipboard?.writeText(toProvenancedJSON(data, provenance));
+      setCopied(true); setTimeout(() => setCopied(false), 1200);
+    } catch (e) { flash(e); }
   };
   return (
     <div className="row-h" style={{ gap: 6, marginLeft: 'auto' }}>
+      {err ? <span className="tag amber" style={{ fontSize: 9.5 }} title={err}>⚠ interval required</span> : null}
       {rows && rows.length ? (
-        <button className="btn ghost small" onClick={() => download(`${name}.csv`, toCSV(rows), 'text/csv')}>CSV</button>
+        <button className="btn ghost small" onClick={exportCSV}>CSV</button>
       ) : null}
       <button className="btn ghost small" onClick={copy}>{copied ? 'Copied' : 'JSON'}</button>
     </div>
@@ -252,7 +280,7 @@ function Caption({ children }) {
   return <div className="faint mono" style={{ fontSize: 10, marginTop: 6, letterSpacing: '0.04em' }}>{children}</div>;
 }
 
-export default function SignalArtifact({ name, data }) {
+export default function SignalArtifact({ name, data, provenance }) {
   if (!data) return null;
   const rowsFor = {
     get_channel_contribution: data.channels,
@@ -271,13 +299,19 @@ export default function SignalArtifact({ name, data }) {
   else if (name === 'get_model_health') body = <Health data={data} />;
   else return null;
 
+  const stamp = provenance ? provenanceCaption(provenance) : null;
   return (
     <div className="card" style={{ marginTop: 8 }}>
       <div className="card-head" style={{ padding: '10px 14px' }}>
         <h3 style={{ fontSize: 13 }}>{TITLES[name] || name}</h3>
-        <Toolbar name={name} data={data} rows={rowsFor[name]} />
+        <Toolbar name={name} data={data} rows={rowsFor[name]} provenance={provenance} />
       </div>
       <div className="card-pad" style={{ padding: 14 }}>{body}</div>
+      {stamp ? (
+        <div className="faint mono" style={{ fontSize: 9.5, padding: '0 14px 10px', letterSpacing: '0.04em' }}>
+          {stamp}
+        </div>
+      ) : null}
     </div>
   );
 }
