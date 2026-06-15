@@ -7,6 +7,7 @@
 import React from 'react';
 import ResultsLive from './_components/ResultsLive';
 import SignalChat from './_components/SignalChat';
+import TeamAccess from './_components/TeamAccess';
 import { getSupabaseBrowser, isSupabaseConfigured } from '../lib/supabase/client';
 
 // ============================== icons.jsx ==============================
@@ -2701,31 +2702,7 @@ const SystemSettings = () => {
         ))}
       </div>
 
-      {tab === 'team' && (
-        <Card>
-          <CardHead title="Team &amp; access" sub="Roles: Admin · Analyst · Client-viewer" icon={<I.Users size={14} />}
-            actions={<Btn small kind="primary" leftIcon={<I.Plus size={12} />}>Invite operator</Btn>} />
-          {d.team.map((u, i) => (
-            <div key={u.email} style={{ padding: '12px 18px', borderTop: '1px solid var(--line)' }}>
-              <div className="between">
-                <div className="row-h" style={{ gap: 12 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 999, background: 'var(--panel3)', border: '1px solid var(--line)', display: 'grid', placeItems: 'center', color: 'var(--sky)', fontSize: 12 }} className="mono">
-                    {u.name.split(' ').map(n => n[0]).join('').slice(0,2)}
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 600 }}>{u.name}</div>
-                    <div className="dim mono" style={{ fontSize: 11.5 }}>{u.email}</div>
-                  </div>
-                </div>
-                <div className="row-h" style={{ gap: 8 }}>
-                  <Tag kind={u.role.includes('Owner') ? 'sky' : 'default'}>{u.role}</Tag>
-                  <Btn small kind="ghost">Manage</Btn>
-                </div>
-              </div>
-            </div>
-          ))}
-        </Card>
-      )}
+      {tab === 'team' && <TeamAccess />}
 
       {tab === 'auth' && (
         <Card>
