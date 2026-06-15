@@ -12,15 +12,18 @@ begin;
 
 set local role postgres;  -- fixtures as table owner (RLS bypassed)
 
+-- Tenant FIRST: the handle_new_user() signup trigger auto-creates a profile only when
+-- exactly ONE tenant exists. Inserting our tenant up front (count > 1 with the seeded
+-- 'Trifecta' tenant present) keeps that trigger out of the way during fixtures.
+insert into public.tenants (id, name) values
+  ('11111111-0000-0000-0000-000000000001'::uuid, 'Tenant A');
+
 -- auth users -------------------------------------------------------------------
 insert into auth.users (id, email) values
   ('aaaaaaaa-0000-0000-0000-0000000000a1', 'operator@test'),  -- in_house, senior (can_sign_off)
   ('eeeeeeee-0000-0000-0000-0000000000e1', 'kisholoy@test'),  -- expert, fitter (not senior)
   ('eeeeeeee-0000-0000-0000-0000000000e2', 'expert2@test'),   -- expert, assigned, NOT senior
   ('cccccccc-0000-0000-0000-0000000000c4', 'cmo@test');       -- client_signal (CMO)
-
-insert into public.tenants (id, name) values
-  ('11111111-0000-0000-0000-000000000001'::uuid, 'Tenant A');
 
 insert into public.users (id, tenant_id, email, role, can_sign_off) values
   ('aaaaaaaa-0000-0000-0000-0000000000a1', '11111111-0000-0000-0000-000000000001', 'operator@test', 'in_house',      true),
