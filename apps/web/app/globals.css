@@ -752,7 +752,24 @@
    Signal — mobile-first CMO surface (the rest of the console stays desktop-width)
    ============================================================================ */
 .signal-wrap { width: 100%; max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
-.signal-card { display: flex; flex-direction: column; height: calc(100dvh - 200px); min-height: 420px; }
+.signal-card { display: flex; flex-direction: column; height: calc(100dvh - 200px); min-height: 420px; position: relative; overflow: hidden; }
+.signal-topbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 12px; border-bottom: 1px solid var(--line); }
+.signal-iconbtn-sm { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel2); color: var(--dim); display: grid; place-items: center; cursor: pointer; }
+.signal-iconbtn-sm:hover { color: var(--text); border-color: var(--line2); }
+.signal-fresh-inline { display: flex; align-items: center; gap: 7px; font-size: 9.5px; letter-spacing: 0.04em; color: var(--faint); font-family: var(--f-mono); text-transform: uppercase; overflow: hidden; white-space: nowrap; }
+.signal-fresh-inline .live-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--mint); box-shadow: 0 0 0 3px rgba(55,211,155,0.18); flex: 0 0 auto; }
+.signal-history-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.42); z-index: 30; display: flex; }
+.signal-history { width: 300px; max-width: 84%; height: 100%; background: var(--panel); border-right: 1px solid var(--line2); display: flex; flex-direction: column; box-shadow: 8px 0 30px rgba(0,0,0,0.3); animation: histIn .2s ease; }
+@keyframes histIn { from { transform: translateX(-14px); opacity: .5 } to { transform: none; opacity: 1 } }
+.signal-history-head { display: flex; align-items: center; justify-content: space-between; padding: 13px 14px; border-bottom: 1px solid var(--line); }
+.signal-history-list { flex: 1; overflow-y: auto; padding: 6px; }
+.signal-history-item { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 10px; cursor: pointer; }
+.signal-history-item:hover { background: var(--panel2); }
+.signal-history-item.active { background: rgba(79,110,242,0.10); }
+.signal-history-item .title { font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.signal-history-item .date { font-size: 10.5px; color: var(--faint); font-family: var(--f-mono); margin-top: 2px; }
+.signal-history-del { width: 24px; height: 24px; border-radius: 6px; border: none; background: transparent; color: var(--faint); cursor: pointer; font-size: 16px; flex: 0 0 auto; }
+.signal-history-del:hover { color: var(--red); background: var(--panel3); }
 .signal-card.cmo { height: 100%; min-height: 0; flex: 1; }
 .signal-msgs { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; -webkit-overflow-scrolling: touch; }
 .signal-foot { border-top: 1px solid var(--line); padding: 12px; }

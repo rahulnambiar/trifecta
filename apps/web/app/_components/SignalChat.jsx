@@ -37,7 +37,40 @@ export default function SignalChat({ client, surface = 'operator' }) {
   const [provenance, setProvenance] = React.useState(null);
   const [listening, setListening] = React.useState(false);
   const [followups, setFollowups] = React.useState([]);
+  const [conversations, setConversations] = React.useState([]);
+  const [convoId, setConvoId] = React.useState(null);
+  const [historyOpen, setHistoryOpen] = React.useState(false);
+  const clientUuid = client?.dbId;
   const scrollRef = React.useRef(null);
+
+  const loadConversations = React.useCallback(async () => {
+    if (!clientUuid) return;
+    try {
+      const r = await fetch(`/api/signal/conversations?client_id=${clientUuid}`);
+      if (r.ok) { const j = await r.json(); setConversations(j.conversations || []); }
+    } catch { /* */ }
+  }, [clientUuid]);
+  React.useEffect(() => { loadConversations(); }, [loadConversations]);
+
+  const newChat = () => { setMessages([]); setConvoId(null); setFollowups([]); setHistoryOpen(false); };
+  const openConversation = async (id) => {
+    try {
+      const r = await fetch(`/api/signal/messages?conversation_id=${id}`);
+      if (!r.ok) return;
+      const j = await r.json();
+      setMessages((j.messages || []).map((m) => ({ role: m.role, text: m.content || '', tools: [], artifacts: m.artifacts || [], model: null })));
+      setConvoId(id); setFollowups([]); setHistoryOpen(false);
+    } catch { /* */ }
+  };
+  const deleteConversation = async (id) => {
+    try { await fetch(`/api/signal/conversations?id=${id}`, { method: 'DELETE' }); } catch { /* */ }
+    if (id === convoId) newChat();
+    loadConversations();
+  };
+  const persistMessage = (cid, role, content, artifacts) => {
+    if (!cid) return;
+    fetch('/api/signal/messages', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ conversation_id: cid, role, content, artifacts: artifacts && artifacts.length ? artifacts : null }) }).catch(() => {});
+  };
   const taRef = React.useRef(null);
   const recRef = React.useRef(null);
   const micSupported = typeof window !== 'undefined' && !!(window.SpeechRecognition || window.webkitSpeechRecognition);
@@ -72,11 +105,23 @@ export default function SignalChat({ client, surface = 'operator' }) {
     setBusy(true);
     setFollowups([]);
     let assistantText = '';
+    let assistantArtifacts = [];
     const history = messages.map((m) => ({ role: m.role, content: m.text }));
     const next = [...messages, { role: 'user', text: q }, { role: 'assistant', text: '', tools: [], artifacts: [], model: null }];
     setMessages(next);
     const aIdx = next.length - 1;
     const update = (fn) => setMessages((cur) => { const c = cur.slice(); c[aIdx] = fn(c[aIdx]); return c; });
+
+    // Ensure a saved conversation exists, then persist the question (history).
+    let cid = convoId;
+    if (clientUuid && !cid) {
+      try {
+        const cr = await fetch('/api/signal/conversations', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ client_id: clientUuid, title: q.slice(0, 80) }) });
+        if (cr.ok) { cid = (await cr.json()).conversation.id; setConvoId(cid); }
+      } catch { /* */ }
+    }
+    if (cid) persistMessage(cid, 'user', q);
+
     try {
       const res = await fetch('/api/signal', {
         method: 'POST', headers: { 'content-type': 'application/json' },
@@ -96,11 +141,12 @@ export default function SignalChat({ client, surface = 'operator' }) {
           let evt; try { evt = JSON.parse(line); } catch { continue; }
           if (evt.type === 'model') update((m) => ({ ...m, model: evt.model, advanced: evt.advanced }));
           else if (evt.type === 'tool') update((m) => ({ ...m, tools: [...(m.tools || []), evt.name] }));
-          else if (evt.type === 'tool_result') { if (evt.data && !evt.is_error) update((m) => ({ ...m, artifacts: [...(m.artifacts || []), { name: evt.name, data: evt.data }] })); }
+          else if (evt.type === 'tool_result') { if (evt.data && !evt.is_error) { assistantArtifacts.push({ name: evt.name, data: evt.data }); update((m) => ({ ...m, artifacts: [...(m.artifacts || []), { name: evt.name, data: evt.data }] })); } }
           else if (evt.type === 'text') { assistantText += evt.text; update((m) => ({ ...m, text: m.text + evt.text })); }
           else if (evt.type === 'error') update((m) => ({ ...m, text: m.text + `\n\n⚠️ ${evt.message}` }));
         }
       }
+      if (cid) { persistMessage(cid, 'assistant', assistantText, assistantArtifacts); loadConversations(); }
       // contextual follow-ups — propose the CMO's next questions
       const convo = [...history, { role: 'user', content: q }, { role: 'assistant', content: assistantText }];
       fetch('/api/signal/followups', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: convo }) })
@@ -135,7 +181,13 @@ export default function SignalChat({ client, surface = 'operator' }) {
     <div className="signal-wrap">
       <div className={'card signal-card' + (cmo ? ' cmo' : '')}>
         {cmo ? (
-          freshness ? <div className="signal-fresh"><span className="live-dot" /> {freshness}</div> : <div className="signal-fresh" />
+          <div className="signal-topbar">
+            <div className="row-h" style={{ gap: 4 }}>
+              <button className="signal-iconbtn-sm" onClick={() => setHistoryOpen(true)} title="Your chats" aria-label="Chats"><ListIcon /></button>
+              <button className="signal-iconbtn-sm" onClick={newChat} title="New chat" aria-label="New chat"><PlusIcon /></button>
+            </div>
+            {freshness ? <div className="signal-fresh-inline"><span className="live-dot" /> {freshness}</div> : <span />}
+          </div>
         ) : (
           <div className="card-head">
             <span className="logomark" style={{ width: 18, height: 18, flexBasis: 18 }} />
@@ -143,11 +195,10 @@ export default function SignalChat({ client, surface = 'operator' }) {
               <h3>Signal · {clientName}</h3>
               <div className="sub">Grounded in the latest Meridian model · answers carry {ciLabel(provenance?.confidenceLevel) || '90% CI'}</div>
             </div>
-            <div className="actions" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 3 }}>
+            <div className="actions" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button className="btn ghost small" onClick={() => setHistoryOpen(true)}>History</button>
+              <button className="btn ghost small" onClick={newChat}>New</button>
               <span className="tag mint">● LIVE{client?.version ? ' · ' + client.version : ''}</span>
-              {provenance?.asOf && formatAsOf(provenance.asOf) ? (
-                <span className="faint mono" style={{ fontSize: 9.5 }}>refreshed {formatAsOf(provenance.asOf)}</span>
-              ) : null}
             </div>
           </div>
         )}
@@ -217,6 +268,28 @@ export default function SignalChat({ client, surface = 'operator' }) {
             <button type="submit" className="signal-icon-btn send" disabled={busy || !input.trim()} aria-label="Send"><SendIcon /></button>
           </form>
         </div>
+
+        {historyOpen ? (
+          <div className="signal-history-backdrop" onClick={() => setHistoryOpen(false)}>
+            <div className="signal-history" onClick={(e) => e.stopPropagation()}>
+              <div className="signal-history-head">
+                <span style={{ fontWeight: 700, fontSize: 14 }}>Your chats</span>
+                <button className="btn primary small" onClick={newChat}>+ New chat</button>
+              </div>
+              <div className="signal-history-list">
+                {conversations.length ? conversations.map((c) => (
+                  <div key={c.id} className={'signal-history-item' + (c.id === convoId ? ' active' : '')} onClick={() => openConversation(c.id)}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div className="title">{c.title || 'Untitled chat'}</div>
+                      <div className="date">{new Date(c.updated_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</div>
+                    </div>
+                    <button className="signal-history-del" onClick={(e) => { e.stopPropagation(); deleteConversation(c.id); }} aria-label="Delete chat">×</button>
+                  </div>
+                )) : <div className="dim" style={{ padding: 14, fontSize: 12.5 }}>No saved chats yet — ask a question to start one.</div>}
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
       {!cmo ? (
         <div className="faint mono signal-hide-sm" style={{ fontSize: 10.5 }}>
@@ -261,4 +334,10 @@ function MicIcon() {
 }
 function SendIcon() {
   return (<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>);
+}
+function ListIcon() {
+  return (<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 6h16M4 12h16M4 18h16" /></svg>);
+}
+function PlusIcon() {
+  return (<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>);
 }
