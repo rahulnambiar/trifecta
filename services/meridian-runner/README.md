@@ -73,17 +73,45 @@ Everything is environment-overridable — see `meridian_runner/config.py`. Key v
 `N_CHAINS`/`N_ADAPT`/`N_BURNIN`/`N_KEEP`, `CONFIDENCE_LEVEL`, `HOLDOUT_WEEKS`,
 `OPTIMIZER_BUDGET`.
 
+## Translation layer — UI config → Meridian spec (Phase 1 · M4)
+
+`translation.py` is the **pure, dependency-free** mapping from the Model Studio fields
+a client config persists (in Supabase `model_configs`, M4) to the numbers Meridian's
+`PriorDistribution` / `ModelSpec` need. It imports no Meridian/TF/numpy, so it is
+unit-tested in isolation — one of the four high-stakes test areas in the Phase 1 brief.
+
+```python
+from meridian_runner.translation import translate
+params = translate(config)          # validates; raises ConfigError on bad input
+#   per-channel ROI prior:   roi_prior_mean → LogNormal median;  prior_strength → sigma
+#   adstock_decay  → Beta retention mean;   saturation_hill → Hill slope mean
+#   calibrations   → geo-holdout result injected as a tighter ROI prior
+```
+
+`train.build_model_from_params(data, params)` is the Meridian-side adapter that turns
+those numbers into the actual tfp distributions + `ModelSpec` (the seam the M4 runner
+refactor calls after loading a config by `model_version_id`).
+
+```bash
+# Run the translation tests (no Meridian / TF needed):
+cd services/meridian-runner && python3 -m unittest discover -s tests
+```
+
 ## Layout
 
 ```
 meridian_runner/
-  config.py   — env-driven config (channels, sampler, GCS paths)
-  data.py     — CSV → Meridian InputData
-  train.py    — model spec + prior, NUTS sampling, save model.pkl
-  results.py  — Analyzer + BudgetOptimizer → results.json (with credible intervals)
-  gcs.py      — artifact upload
-  run.py      — end-to-end entrypoint
+  config.py       — env-driven config (channels, sampler, GCS paths)
+  translation.py  — UI model config → Meridian spec params (pure; unit-tested)
+  data.py         — CSV → Meridian InputData
+  train.py        — model spec + prior, NUTS sampling, save model.pkl
+                    (build_model = Phase 0 scalar; build_model_from_params = M4 per-channel)
+  results.py      — Analyzer + BudgetOptimizer → results.json (with credible intervals)
+  gcs.py          — artifact upload
+  run.py          — end-to-end entrypoint
+tests/
+  test_translation.py — 34 unit tests for the translation layer
 vertex/
-  submit_job.py — Vertex AI custom (GPU) job submission
-Dockerfile      — CUDA image for the Vertex job
+  submit_job.py   — Vertex AI custom (GPU) job submission
+Dockerfile        — CUDA image for the Vertex job
 ```

@@ -34,7 +34,11 @@ def build_holdout_id(data, holdout_weeks: int) -> np.ndarray | None:
 
 
 def build_model(data, cfg: RunnerConfig):
-    """Construct a ``Meridian`` model with a LogNormal ROI prior."""
+    """Construct a ``Meridian`` model with a single LogNormal ROI prior.
+
+    The Phase 0 path: one scalar ROI prior broadcast across channels. The Phase 1
+    path that reads a per-client config from Supabase is ``build_model_from_params``.
+    """
     prior = prior_distribution.PriorDistribution(
         roi_m=tfp.distributions.LogNormal(cfg.roi_mu, cfg.roi_sigma, name=constants.ROI_M)
     )
@@ -46,6 +50,35 @@ def build_model(data, cfg: RunnerConfig):
     model_spec = spec.ModelSpec(**spec_kwargs)
     mmm = model.Meridian(input_data=data, model_spec=model_spec)
     return mmm
+
+
+def build_model_from_params(data, params, *, enable_aks: bool = True):
+    """Construct a ``Meridian`` model from translated UI config (the M4 seam).
+
+    ``params`` is a ``translation.MeridianSpecParams`` — the validated, pure-Python
+    output of ``translation.translate(config)`` (see ``translation.py``). This is the
+    boundary the M4 runner refactor loads by ``model_version_id`` from Supabase
+    instead of hardcoded Python. The translation half is fully unit-tested
+    (``tests/test_translation.py``); this half builds the actual tfp/Meridian objects
+    and is exercised end-to-end when a real config trains on Vertex.
+
+    ROI priors are now **per channel** — a batched LogNormal with one (mu, sigma) per
+    included media channel, in ``params.media_channels`` order. Adstock (``alpha_m``)
+    and Hill saturation (``slope_m``) priors are carried on ``params`` and applied here
+    as the M4 refactor lands; until then Meridian's defaults stand for those two.
+    """
+    roi_m = tfp.distributions.LogNormal(
+        loc=params.roi_m_mu, scale=params.roi_m_sigma, name=constants.ROI_M
+    )
+    prior = prior_distribution.PriorDistribution(roi_m=roi_m)
+
+    spec_kwargs = dict(prior=prior, enable_aks=enable_aks)
+    holdout = build_holdout_id(data, params.holdout_weeks)
+    if holdout is not None:
+        spec_kwargs["holdout_id"] = holdout
+
+    model_spec = spec.ModelSpec(**spec_kwargs)
+    return model.Meridian(input_data=data, model_spec=model_spec)
 
 
 def fit(mmm, cfg: RunnerConfig):
