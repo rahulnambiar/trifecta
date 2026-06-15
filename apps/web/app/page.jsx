@@ -482,7 +482,9 @@ const Dashboard = ({ go, enterClient, openAddClient, clients }) => {
         <div className="tile">
           <div className="lbl">Models live</div>
           <div className="v mono">{clients.filter(c => c.state === 'live').length}</div>
-          <div className="dim" style={{ fontSize: 12 }}>Aeon v3 · Northwind v5 · Vega v4</div>
+          <div className="dim" style={{ fontSize: 12 }}>
+            {clients.filter(c => c.state === 'live').map(c => c.name).join(' · ') || 'none yet'}
+          </div>
         </div>
         <div className="tile">
           <div className="lbl">Open actions</div>
@@ -490,9 +492,9 @@ const Dashboard = ({ go, enterClient, openAddClient, clients }) => {
           <div className="dim" style={{ fontSize: 12 }}>across {clients.filter(c => c.actions).length} clients</div>
         </div>
         <div className="tile">
-          <div className="lbl">Next training run</div>
-          <div className="v mono">28<span className="unit">May</span></div>
-          <div className="dim" style={{ fontSize: 12 }}>Vega Mobility · v4 refresh</div>
+          <div className="lbl">Onboarding</div>
+          <div className="v mono">{clients.filter(c => c.state !== 'live').length}</div>
+          <div className="dim" style={{ fontSize: 12 }}>clients not yet live</div>
         </div>
       </div>
 
@@ -1101,11 +1103,8 @@ const ModelStudio = ({ client }) => {
   const [saving, setSaving] = React.useState(false);
   const [savedAt, setSavedAt] = React.useState(null);
   const tabs = [
-    { id: 'channels',    label: 'Channels & Priors' },
-    { id: 'controls',    label: 'Control Variables' },
-    { id: 'calibration', label: 'Calibration' },
-    { id: 'settings',    label: 'Model Settings' },
-    { id: 'versions',    label: 'Versions' },
+    { id: 'channels', label: 'Channels & Priors' },
+    { id: 'versions', label: 'Versions' },
   ];
 
   // The translation-layer-shaped config persisted to model_configs.
@@ -1154,7 +1153,6 @@ const ModelStudio = ({ client }) => {
 
   return (
     <div>
-      <StudioVersionBar />
       <div className="tabs">
         {tabs.map(t => (
           <div key={t.id} className={'tab' + (tab === t.id ? ' active' : '')} onClick={() => setTab(t.id)}>
@@ -1162,11 +1160,8 @@ const ModelStudio = ({ client }) => {
           </div>
         ))}
       </div>
-      {tab === 'channels'    && <ChannelsAndPriors channels={channels} setChannels={setChannels} onSave={saveConfig} saving={saving} savedAt={savedAt} />}
-      {tab === 'controls'    && <ControlVariables />}
-      {tab === 'calibration' && <Calibration />}
-      {tab === 'settings'    && <ModelSettings />}
-      {tab === 'versions'    && <ModelVersions client={client} config={buildConfig()} configId={configId} />}
+      {tab === 'channels' && <ChannelsAndPriors channels={channels} setChannels={setChannels} onSave={saveConfig} saving={saving} savedAt={savedAt} />}
+      {tab === 'versions' && <ModelVersions client={client} config={buildConfig()} configId={configId} />}
     </div>
   );
 };
@@ -2748,23 +2743,9 @@ const Login = ({ onSignIn }) => {
 
 const SystemSettings = () => {
   const d = TRIFECTA_DATA;
-  const [tab, setTab] = React.useState('team');
-  const tabs = [
-    { id: 'team',    label: 'Team & Access' },
-    { id: 'auth',    label: 'Authentication' },
-    { id: 'infra',   label: 'Infrastructure' },
-    { id: 'billing', label: 'Billing' },
-  ];
+  const tab = 'team';  // only Team & Access is functional; auth/infra/billing are deferred
   return (
     <div>
-      <div className="tabs">
-        {tabs.map(t => (
-          <div key={t.id} className={'tab' + (tab === t.id ? ' active' : '')} onClick={() => setTab(t.id)}>
-            {t.label}
-          </div>
-        ))}
-      </div>
-
       {tab === 'team' && <TeamAccess />}
 
       {tab === 'auth' && (
@@ -3710,19 +3691,17 @@ const SCREEN_META = {
   'system':        { title: 'Settings',         desc: 'Workspace team, authentication, infrastructure and billing.' },
 };
 
+// Only functional surfaces appear in the nav — no placeholders for test users.
 const NAV = {
   workspace: [
-    { id: 'dashboard', label: 'Dashboard',     icon: 'Grid' },
-    { id: 'library',   label: 'Model Library', icon: 'Layers' },
+    { id: 'dashboard', label: 'Dashboard', icon: 'Grid' },
   ],
   client: [
-    { id: 'pipeline',        label: 'Data Pipeline',   icon: 'Database' },
-    { id: 'model-studio',    label: 'Model Studio',    icon: 'Sliders' },
-    { id: 'training',        label: 'Training Runs',   icon: 'Cpu' },
-    { id: 'results',         label: 'Results',         icon: 'Chart' },
-    { id: 'reports',         label: 'Reports',         icon: 'FileText' },
-    { id: 'signal',          label: 'Signal',          icon: 'Signal' },
-    { id: 'client-settings', label: 'Client Settings', icon: 'Settings2' },
+    { id: 'pipeline',     label: 'Data Pipeline', icon: 'Database' },
+    { id: 'model-studio', label: 'Model Studio',  icon: 'Sliders' },
+    { id: 'training',     label: 'Training Runs',  icon: 'Cpu' },
+    { id: 'results',      label: 'Results',        icon: 'Chart' },
+    { id: 'signal',       label: 'Signal',         icon: 'Signal' },
   ],
   system: [
     { id: 'system', label: 'Settings', icon: 'Cog' },
@@ -3732,10 +3711,10 @@ const NAV = {
 // Which surfaces each of the four user types (brief v4.0 §3b) may reach, and where
 // they land on sign-in. RLS scopes WHICH clients they see; this scopes WHICH screens.
 // `signalOnly` collapses the whole console to the standalone CMO Signal surface.
-const ALL_SCREENS = ['dashboard','library','pipeline','model-studio','training','results','reports','signal','client-settings','system'];
+const ALL_SCREENS = ['dashboard','pipeline','model-studio','training','results','signal','system'];
 const ACCESS = {
   in_house:      { screens: ALL_SCREENS, home: 'dashboard' },
-  expert:        { screens: ['dashboard','library','pipeline','model-studio','training','results','reports','signal'], home: 'dashboard' },
+  expert:        { screens: ['dashboard','pipeline','model-studio','training','results','signal'], home: 'dashboard' },
   client_upload: { screens: ['pipeline','results','signal'], home: 'pipeline' },
   client_signal: { screens: ['signal'], home: 'signal', signalOnly: true },
 };

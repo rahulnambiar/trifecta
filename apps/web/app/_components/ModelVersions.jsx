@@ -128,7 +128,7 @@ function VersionRow({ v, me, busy, onAct }) {
         </div>
         <div className="row-h" style={{ gap: 6 }}>
           {v.status === 'draft' && <button className="btn ghost small" disabled={busy} onClick={startFit}>Start fit</button>}
-          {v.status === 'fitting' && <button className="btn ghost small" disabled={busy} onClick={() => patch('complete_fit', { diagnostics: { max_rhat: 1.06 } })}>Mark fit complete</button>}
+          {v.status === 'fitting' && <span className="tag sky" style={{ fontSize: 9.5 }}>training on Vertex…</span>}
           {v.status === 'in_review' && canSignThis && <button className="btn mint small" disabled={busy} onClick={() => patch('sign_off')}>Sign off</button>}
           {v.status === 'in_review' && <button className="btn ghost small" disabled={busy} onClick={() => patch('reject')}>Send back</button>}
           {v.status === 'signed_off' && <button className="btn primary small" disabled={busy} onClick={() => patch('promote')}>Promote to Live</button>}

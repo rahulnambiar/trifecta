@@ -83,19 +83,13 @@ export default function TrainingRunsLive({ client }) {
                   <td><span className={'tag ' + (RUN_TAG[run.status] || 'default')} style={{ fontSize: 9.5 }}>{run.status.toUpperCase()}</span></td>
                   <td className="mono dim" style={{ fontSize: 11.5 }}>{run.started_at ? run.started_at.slice(0, 16).replace('T', ' ') : '—'}</td>
                   <td className="mono dim" style={{ fontSize: 11.5 }}>{run.finished_at ? run.finished_at.slice(0, 16).replace('T', ' ') : '—'}</td>
-                  <td className="mono">{run.diagnostics?.max_rhat ?? '—'}</td>
-                  <td>
-                    {run.status === 'queued' && <button className="btn ghost small" disabled={busy} onClick={() => advance(run)}>Start (simulate)</button>}
-                    {run.status === 'running' && <button className="btn ghost small" disabled={busy} onClick={() => advance(run)}>Complete (simulate)</button>}
-                  </td>
+                  <td className="mono">{run.diagnostics?.max_rhat != null ? Number(run.diagnostics.max_rhat).toFixed(3) : '—'}</td>
+                  <td>{run.vertex_job_id ? <span className="faint mono" style={{ fontSize: 9.5 }}>{run.vertex_job_id.split('/').pop()}</span> : null}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
-        <div className="card-pad faint mono" style={{ fontSize: 10, borderTop: '1px solid var(--line)' }}>
-          “Simulate” stands in for the Vertex job until GCP wiring lands — it advances run + version status so you can walk the full flow.
-        </div>
       </Card>
     </div>
   );
