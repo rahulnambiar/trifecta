@@ -109,6 +109,14 @@ function VersionRow({ v, me, busy, onAct }) {
   const isFitter = me && v.fitted_by === me.id;
   const canSignThis = me && me.can_sign_off && !isFitter; // fitter ≠ reviewer (DB also enforces)
   const patch = (action, extra) => onAct(() => api('/api/model-versions', 'PATCH', { id: v.id, action, ...(extra || {}) }));
+  // Real Vertex fit; fall back to the simulate transition if GCP isn't wired.
+  const startFit = () => onAct(async () => {
+    try { await api('/api/train/submit', 'POST', { version_id: v.id, smoke: false }); }
+    catch (e) {
+      if (String(e.message).includes('not configured')) await api('/api/model-versions', 'PATCH', { id: v.id, action: 'start_fit' });
+      else throw e;
+    }
+  });
 
   return (
     <div style={{ padding: '14px 18px', borderTop: '1px solid var(--line)' }}>
@@ -119,7 +127,7 @@ function VersionRow({ v, me, busy, onAct }) {
           {v.model_configs?.name ? <span className="faint mono" style={{ fontSize: 10.5 }}>{v.model_configs.name}</span> : null}
         </div>
         <div className="row-h" style={{ gap: 6 }}>
-          {v.status === 'draft' && <button className="btn ghost small" disabled={busy} onClick={() => patch('start_fit')}>Start fit</button>}
+          {v.status === 'draft' && <button className="btn ghost small" disabled={busy} onClick={startFit}>Start fit</button>}
           {v.status === 'fitting' && <button className="btn ghost small" disabled={busy} onClick={() => patch('complete_fit', { diagnostics: { max_rhat: 1.06 } })}>Mark fit complete</button>}
           {v.status === 'in_review' && canSignThis && <button className="btn mint small" disabled={busy} onClick={() => patch('sign_off')}>Sign off</button>}
           {v.status === 'in_review' && <button className="btn ghost small" disabled={busy} onClick={() => patch('reject')}>Send back</button>}
