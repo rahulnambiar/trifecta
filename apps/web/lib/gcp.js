@@ -45,6 +45,9 @@ export async function submitTrainingJob({ versionId, smoke }) {
     { name: 'SUPABASE_SECRET_KEY', value: process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY },
     { name: 'GCS_BUCKET', value: bucket },
     { name: 'SMOKE', value: smoke ? '1' : '0' },
+    // Phase 0/1 interim: train on the public simulated dataset (the client's harmonised
+    // BigQuery table becomes the source once harmonisation runs). Reads a URL fine.
+    { name: 'TRAINING_CSV', value: process.env.TRAINING_CSV || 'https://raw.githubusercontent.com/google/meridian/refs/heads/main/meridian/data/simulated_data/csv/geo_all_channels.csv' },
   ];
   const body = {
     displayName: `trifecta-${versionId.slice(0, 8)}${smoke ? '-smoke' : ''}`,
