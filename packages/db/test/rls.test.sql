@@ -13,14 +13,17 @@ begin;
 -- Fixtures are inserted as the table owner (RLS bypassed) ------------------------
 set local role postgres;
 
+-- Tenants FIRST: the handle_new_user() signup trigger auto-creates a profile only
+-- when exactly ONE tenant exists. Inserting our two test tenants up front keeps the
+-- count > 1 so the trigger stays out of the way (also robust to a seeded DB).
+insert into public.tenants (id, name) values
+  ('11111111-0000-0000-0000-000000000001', 'Tenant A'),
+  ('22222222-0000-0000-0000-000000000002', 'Tenant B');
+
 insert into auth.users (id, email) values
   ('aaaaaaaa-0000-0000-0000-000000000001', 'operator-a@test'),
   ('bbbbbbbb-0000-0000-0000-000000000002', 'cmo-b@test'),
   ('cccccccc-0000-0000-0000-000000000003', 'cmo-a2@test');
-
-insert into public.tenants (id, name) values
-  ('11111111-0000-0000-0000-000000000001', 'Tenant A'),
-  ('22222222-0000-0000-0000-000000000002', 'Tenant B');
 
 insert into public.users (id, tenant_id, email, role, can_sign_off) values
   ('aaaaaaaa-0000-0000-0000-000000000001', '11111111-0000-0000-0000-000000000001', 'operator-a@test', 'in_house',      true),
