@@ -7,3 +7,6 @@ google-cloud-aiplatform>=1.60
 pandas>=2.0
 numpy>=1.26
 xarray>=2024.0
+# Pin matplotlib: arviz (pulled by meridian.analysis) uses matplotlib.style.core,
+# which was removed in matplotlib 3.10+. Without this, a fresh build breaks on import.
+matplotlib>=3.7,<3.10
