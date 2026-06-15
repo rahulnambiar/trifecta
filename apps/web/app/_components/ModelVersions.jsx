@@ -23,7 +23,7 @@ async function api(path, method, body) {
   return j;
 }
 
-export default function ModelVersions({ client }) {
+export default function ModelVersions({ client, config, configId }) {
   const clientUuid = client?.dbId;
   const [versions, setVersions] = React.useState([]);
   const [me, setMe] = React.useState(null); // { id, can_sign_off }
@@ -59,11 +59,10 @@ export default function ModelVersions({ client }) {
 
   const train = () => act(async () => {
     const n = versions.length + 1;
-    await api('/api/model-versions', 'POST', {
-      client_id: clientUuid, label: `v${n}`,
-      config_name: `v${n} config`,
-      config: { channels: [], controls: [], settings: { holdout_weeks: 8 }, note: 'Captured from Model Studio' },
-    });
+    const body = { client_id: clientUuid, label: `v${n}` };
+    if (configId) body.config_id = configId;                 // use the saved working config
+    else { body.config = config || { settings: { holdout_weeks: 8 } }; body.config_name = `v${n} config`; }
+    await api('/api/model-versions', 'POST', body);
     setConfirmTrain(false);
   });
 

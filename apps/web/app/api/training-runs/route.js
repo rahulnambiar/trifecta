@@ -12,11 +12,13 @@ export async function GET(req) {
   if (ctx.error) return ctx.error;
   const url = new URL(req.url);
   const versionId = url.searchParams.get('version_id');
+  const clientId = url.searchParams.get('client_id');
   let q = ctx.supabase
     .from('training_runs')
-    .select('id, version_id, status, vertex_job_id, started_at, finished_at, diagnostics, error, created_at')
+    .select('id, version_id, status, vertex_job_id, started_at, finished_at, diagnostics, error, created_at, model_versions!inner(label, client_id)')
     .order('created_at', { ascending: false });
   if (versionId) q = q.eq('version_id', versionId);
+  if (clientId) q = q.eq('model_versions.client_id', clientId);
   const { data, error } = await q;
   if (error) return json({ error: error.message }, 400);
   return json({ runs: data });

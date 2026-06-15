@@ -10,6 +10,7 @@ import SignalChat from './_components/SignalChat';
 import TeamAccess from './_components/TeamAccess';
 import DataPipelineLive from './_components/DataPipelineLive';
 import ModelVersions from './_components/ModelVersions';
+import TrainingRunsLive from './_components/TrainingRunsLive';
 import { getSupabaseBrowser, isSupabaseConfigured } from '../lib/supabase/client';
 
 // ============================== icons.jsx ==============================
@@ -124,6 +125,19 @@ const Slider = ({ value, min = 0, max = 1, fmt }) => {
     </div>
   );
 };
+
+// Editable prior — a draggable range input bound to value/onChange (used in Model Studio).
+const PriorEdit = ({ label, help, value, min, max, step, fmt, onChange }) => (
+  <div>
+    <div className="mono faint" style={{ fontSize: 10, letterSpacing: '0.14em' }}>{label}</div>
+    <div className="dim" style={{ fontSize: 11.5, marginBottom: 8 }}>{help}</div>
+    <div className="row-h" style={{ gap: 10 }}>
+      <input type="range" min={min} max={max} step={step} value={value}
+        onChange={e => onChange(parseFloat(e.target.value))} style={{ flex: 1 }} />
+      <span className="mono" style={{ fontSize: 12, minWidth: 78, textAlign: 'right' }}>{fmt ? fmt(value) : value}</span>
+    </div>
+  </div>
+);
 
 const Field = ({ label, value, mono = false, children, style }) => (
   <div className="field" style={style}>
@@ -856,14 +870,14 @@ const StudioVersionBar = () => (
   </div>
 );
 
-const ChannelsAndPriors = () => {
-  const d = TRIFECTA_DATA;
-  const [selected, setSelected] = React.useState('meta');
-  const [chans, setChans] = React.useState(d.channels);
+const ChannelsAndPriors = ({ channels, setChannels, onSave, saving, savedAt }) => {
+  const chans = channels;
+  const [selected, setSelected] = React.useState(chans[0]?.id || 'meta');
 
   const sel = chans.find(c => c.id === selected) || chans[0];
 
-  const toggle = (id) => setChans(prev => prev.map(c => c.id === id ? { ...c, on: !c.on } : c));
+  const toggle = (id) => setChannels(prev => prev.map(c => c.id === id ? { ...c, on: !c.on } : c));
+  const editSel = (key, val) => setChannels(prev => prev.map(c => c.id === sel.id ? { ...c, [key]: val } : c));
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -877,9 +891,16 @@ const ChannelsAndPriors = () => {
       <Card>
         <CardHead
           title="Channels &amp; priors"
-          sub="9 channels · 8 included · 1 excluded"
+          sub={`${chans.length} channels · ${chans.filter(c => c.on).length} included · ${chans.filter(c => !c.on).length} excluded`}
           icon={<I.Sliders size={14} />}
-          actions={<Btn small kind="ghost" leftIcon={<I.Plus size={12} />}>Add channel</Btn>}
+          actions={
+            <>
+              {savedAt ? <span className="faint mono" style={{ fontSize: 10 }}>saved {savedAt}</span> : null}
+              <Btn small kind="primary" leftIcon={<I.Check size={12} />} onClick={onSave} disabled={saving}>
+                {saving ? 'Saving…' : 'Save configuration'}
+              </Btn>
+            </>
+          }
         />
         <table className="tbl">
           <thead>
@@ -939,21 +960,12 @@ const ChannelsAndPriors = () => {
         />
         <div className="card-pad" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 22 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-            <div>
-              <div className="mono faint" style={{ fontSize: 10, letterSpacing: '0.14em' }}>ROI PRIOR (μ)</div>
-              <div className="dim" style={{ fontSize: 11.5, marginBottom: 8 }}>The model’s starting belief about revenue per $1 spent on this channel.</div>
-              <Slider value={sel.roi} min={0} max={5} fmt={v => `${v.toFixed(2)}x`} />
-            </div>
-            <div>
-              <div className="mono faint" style={{ fontSize: 10, letterSpacing: '0.14em' }}>PRIOR STRENGTH (σ)</div>
-              <div className="dim" style={{ fontSize: 11.5, marginBottom: 8 }}>How hard the brand’s own data can override this belief.</div>
-              <Slider value={sel.strengthN} min={0} max={1} fmt={v => `${sel.strength} · σ ${(1 - v).toFixed(2)}`} />
-            </div>
-            <div>
-              <div className="mono faint" style={{ fontSize: 10, letterSpacing: '0.14em' }}>ADSTOCK / CARRY-OVER DECAY</div>
-              <div className="dim" style={{ fontSize: 11.5, marginBottom: 8 }}>How long this channel’s effect lingers after spend.</div>
-              <Slider value={sel.adstock} min={0} max={1} fmt={v => v.toFixed(2)} />
-            </div>
+            <PriorEdit label="ROI PRIOR (μ)" help="The model’s starting belief about revenue per $1 spent on this channel."
+              value={sel.roi} min={0} max={5} step={0.1} fmt={v => `${v.toFixed(2)}x`} onChange={v => editSel('roi', v)} />
+            <PriorEdit label="PRIOR STRENGTH (σ)" help="How hard the brand’s own data can override this belief (higher = tighter prior)."
+              value={sel.strengthN} min={0} max={1} step={0.05} fmt={v => `${v.toFixed(2)} · σ ${(1 - v).toFixed(2)}`} onChange={v => editSel('strengthN', v)} />
+            <PriorEdit label="ADSTOCK / CARRY-OVER DECAY" help="How long this channel’s effect lingers after spend."
+              value={sel.adstock} min={0} max={1} step={0.05} fmt={v => v.toFixed(2)} onChange={v => editSel('adstock', v)} />
             <div className="row-h" style={{ gap: 8, paddingTop: 8 }}>
               <Tag kind="sky">media type · {sel.medium.toLowerCase()}</Tag>
               {sel.priorSource.toLowerCase().includes('geo') || sel.priorSource.toLowerCase().includes('calibrated')
@@ -1084,6 +1096,10 @@ const Versions = () => {
 
 const ModelStudio = ({ client }) => {
   const [tab, setTab] = React.useState('channels');
+  const [channels, setChannels] = React.useState(TRIFECTA_DATA.channels);
+  const [configId, setConfigId] = React.useState(null);
+  const [saving, setSaving] = React.useState(false);
+  const [savedAt, setSavedAt] = React.useState(null);
   const tabs = [
     { id: 'channels',    label: 'Channels & Priors' },
     { id: 'controls',    label: 'Control Variables' },
@@ -1091,6 +1107,51 @@ const ModelStudio = ({ client }) => {
     { id: 'settings',    label: 'Model Settings' },
     { id: 'versions',    label: 'Versions' },
   ];
+
+  // The translation-layer-shaped config persisted to model_configs.
+  const buildConfig = () => ({
+    channels: channels.map(c => ({
+      id: c.id, name: c.name, include: !!c.on,
+      roi_prior_mean: c.roi, prior_strength: c.strengthN, adstock_decay: c.adstock, medium: c.medium,
+    })),
+    settings: { holdout_weeks: 8, confidence_level: 0.9 },
+  });
+
+  // Load the client's saved working configuration and merge its priors back in.
+  React.useEffect(() => {
+    if (!client?.dbId) return;
+    let on = true;
+    fetch(`/api/model-config?client_id=${client.dbId}`).then(r => r.ok ? r.json() : null).then(j => {
+      if (!on || !j?.configs?.length) return;
+      const saved = j.configs.find(c => c.name === 'Working configuration') || j.configs[0];
+      if (!saved?.config?.channels?.length) return;
+      setConfigId(saved.id);
+      setChannels(prev => prev.map(c => {
+        const s = saved.config.channels.find(x => x.id === c.id);
+        return s ? { ...c, on: s.include, roi: s.roi_prior_mean ?? c.roi, strengthN: s.prior_strength ?? c.strengthN, adstock: s.adstock_decay ?? c.adstock } : c;
+      }));
+    }).catch(() => {});
+    return () => { on = false; };
+  }, [client?.dbId]);
+
+  const saveConfig = async () => {
+    if (!client?.dbId) { alert('This client isn’t backed by the live database yet.'); return; }
+    setSaving(true);
+    try {
+      const cfg = buildConfig();
+      if (configId) {
+        const r = await fetch('/api/model-config', { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: configId, config: cfg }) });
+        if (!r.ok) throw new Error((await r.json()).error || 'save failed');
+      } else {
+        const r = await fetch('/api/model-config', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ client_id: client.dbId, name: 'Working configuration', config: cfg }) });
+        const j = await r.json(); if (!r.ok) throw new Error(j.error || 'save failed');
+        setConfigId(j.config.id);
+      }
+      setSavedAt(new Date().toISOString().slice(11, 16));
+    } catch (e) { alert('Could not save: ' + e.message); }
+    finally { setSaving(false); }
+  };
+
   return (
     <div>
       <StudioVersionBar />
@@ -1101,11 +1162,11 @@ const ModelStudio = ({ client }) => {
           </div>
         ))}
       </div>
-      {tab === 'channels'    && <ChannelsAndPriors />}
+      {tab === 'channels'    && <ChannelsAndPriors channels={channels} setChannels={setChannels} onSave={saveConfig} saving={saving} savedAt={savedAt} />}
       {tab === 'controls'    && <ControlVariables />}
       {tab === 'calibration' && <Calibration />}
       {tab === 'settings'    && <ModelSettings />}
-      {tab === 'versions'    && <ModelVersions client={client} />}
+      {tab === 'versions'    && <ModelVersions client={client} config={buildConfig()} configId={configId} />}
     </div>
   );
 };
@@ -4031,7 +4092,7 @@ function App() {
     case 'library':       body = <ModelLibrary go={go} />; break;
     case 'pipeline':      body = <DataPipelineLive client={activeClient} />; break;
     case 'model-studio':  body = <ModelStudio client={activeClient} />; break;
-    case 'training':      body = <TrainingRuns client={activeClient} />; break;
+    case 'training':      body = <TrainingRunsLive client={activeClient} />; break;
     case 'results':       body = <ResultsLive client={activeClient} />; break;
     case 'reports':       body = <ReportsScreen client={activeClient} />; break;
     case 'signal':        body = <SignalChat client={activeClient} />; break;
