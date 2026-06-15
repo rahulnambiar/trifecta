@@ -7,19 +7,17 @@ import { createBrowserClient } from '@supabase/ssr';
 
 let _client = null;
 
+// Accept both the new Supabase key scheme (sb_publishable_…) and the legacy anon JWT.
+const PUBLISHABLE_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
 export function isSupabaseConfigured() {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && PUBLISHABLE_KEY);
 }
 
 export function getSupabaseBrowser() {
   if (!isSupabaseConfigured()) return null;
   if (_client) return _client;
-  _client = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
+  _client = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL, PUBLISHABLE_KEY);
   return _client;
 }

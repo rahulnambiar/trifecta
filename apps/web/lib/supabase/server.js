@@ -8,11 +8,14 @@ import { createServerClient } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
+// New Supabase key scheme (sb_publishable_… / sb_secret_…) with legacy fallback.
+const PUBLISHABLE_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const SECRET_KEY =
+  process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+
 export function isSupabaseConfigured() {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && PUBLISHABLE_KEY);
 }
 
 export function getSupabaseServer() {
@@ -20,7 +23,7 @@ export function getSupabaseServer() {
   const cookieStore = cookies();
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    PUBLISHABLE_KEY,
     {
       cookies: {
         getAll() {
@@ -41,9 +44,8 @@ export function getSupabaseServer() {
 }
 
 export function getSupabaseAdmin() {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !key) return null;
-  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, key, {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !SECRET_KEY) return null;
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, SECRET_KEY, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 }
