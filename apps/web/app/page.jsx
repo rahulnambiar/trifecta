@@ -3563,18 +3563,18 @@ const AddClientWizard = ({ onClose, onCreate }) => {
     const channels = Object.keys(form.channels).filter(c => form.channels[c]);
     const apiCount = channels.filter(c => form.methods[c] === 'API').length;
     const readiness = Math.min(100, Math.round(20 + (apiCount / Math.max(1, channels.length)) * 50));
-    const newClient = {
+    onCreate({
       id: slug(form.displayName) || ('client-' + Date.now()),
       name: form.displayName || 'New client',
       readiness,
+      data_residency: (form.residency || '').split(' ')[0] || 'asia-southeast1',
       version: 'v0',
       state: 'draft',
       run: 'Onboarding',
       actions: channels.length - apiCount,
       status: 'Onboarding',
       steps: { data: 'active', config: 'pending', train: 'pending', results: 'pending', signal: 'pending' },
-    };
-    onCreate(newClient);
+    });
   };
 
   return (
@@ -3888,6 +3888,17 @@ function App() {
     return () => { mounted = false; sub.subscription.unsubscribe(); };
   }, []);
 
+  // Fetch the RLS-scoped client portfolio; reused on load and after creating a client.
+  const loadClients = React.useCallback(async () => {
+    const sb = getSupabaseBrowser();
+    if (!sb) return null;
+    const { data, error } = await sb.from('clients').select('*').order('created_at', { ascending: true });
+    if (error || !data || !data.length) return null;
+    const mapped = mapDbClients(data);
+    setClients(mapped);
+    return mapped;
+  }, []);
+
   // Load the signed-in user's profile (role → surface access) and the portfolio
   // they're allowed to see (RLS-scoped). Both are scoped server-side by RLS.
   React.useEffect(() => {
@@ -3903,14 +3914,12 @@ function App() {
         if (p && p.email) setUserEmail(p.email);
       });
     });
-    sb.from('clients').select('*').order('created_at', { ascending: true }).then(({ data, error }) => {
-      if (!mounted || error || !data || !data.length) return;
-      const mapped = mapDbClients(data);
-      setClients(mapped);
+    loadClients().then((mapped) => {
+      if (!mounted || !mapped) return;
       setActiveClientId(prev => (mapped.find(c => c.id === prev) ? prev : mapped[0].id));
     });
     return () => { mounted = false; };
-  }, [authed]);
+  }, [authed, loadClients]);
 
   // When the role resolves, land the user on their permitted home surface.
   React.useEffect(() => {
@@ -3939,9 +3948,30 @@ function App() {
     window.scrollTo({ top: 0 });
   };
 
-  const createClient = (c) => {
-    // Avoid id collisions
-    let id = c.id;
+  const createClient = async (c) => {
+    // Persist via the in-house admin API when Supabase is live; the wizard payload
+    // carries { name, readiness, data_residency }.
+    if (isSupabaseConfigured()) {
+      try {
+        const res = await fetch('/api/admin/clients', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ name: c.name, readiness: c.readiness, data_residency: c.data_residency }),
+        });
+        const j = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(j.error || `HTTP ${res.status}`);
+        await loadClients();
+        setAdding(false);
+        if (j.client?.slug) setActiveClientId(j.client.slug);
+        setScreen('pipeline');
+        window.scrollTo({ top: 0 });
+      } catch (e) {
+        alert('Could not create client: ' + e.message);
+      }
+      return;
+    }
+    // Demo fallback (no Supabase): keep it local.
+    let id = c.id || slug(c.name) || ('client-' + Date.now());
     if (clients.find(x => x.id === id)) id = id + '-' + (clients.length + 1);
     const next = { ...c, id };
     setClients([...clients, next]);

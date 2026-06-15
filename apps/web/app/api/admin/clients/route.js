@@ -24,16 +24,16 @@ export async function POST(req) {
   const ctx = await requireInHouse();
   if (ctx.error) return ctx.error;
   const { supabase, profile } = ctx;
-  const { name } = await req.json();
+  const { name, readiness, data_residency } = await req.json();
   if (!name || !name.trim()) return json({ error: 'name required' }, 400);
   const slug = slugify(name);
   if (!slug) return json({ error: 'could not derive a slug from name' }, 400);
 
-  const { data, error } = await supabase
-    .from('clients')
-    .insert({ tenant_id: profile.tenant_id, name: name.trim(), slug, state: 'onboarding', status: 'Onboarding' })
-    .select()
-    .single();
+  const row = { tenant_id: profile.tenant_id, name: name.trim(), slug, state: 'onboarding', status: 'Onboarding' };
+  if (Number.isInteger(readiness)) row.readiness = Math.max(0, Math.min(100, readiness));
+  if (data_residency) row.data_residency = String(data_residency).slice(0, 40);
+
+  const { data, error } = await supabase.from('clients').insert(row).select().single();
   if (error) {
     if (error.code === '23505') return json({ error: `a client with slug "${slug}" already exists` }, 409);
     return json({ error: error.message }, 400);
