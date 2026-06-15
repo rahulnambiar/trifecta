@@ -6,9 +6,27 @@ role joins. Marketing data lives in BigQuery; fitted models in GCS (see
 security on every table**, not by application code.
 
 ## Files
-- `schema.sql` — tables, helper functions, the signup trigger, RLS policies, grants. Idempotent.
+- `schema.sql` — M1 tables (tenants/clients/users/user_clients), helper functions, the signup
+  trigger, RLS policies, grants. Idempotent.
+- `model_schema.sql` — M4/M5 tables (`model_configs`, `model_versions`, `training_runs`,
+  `model_lineage`) + the in-database **sign-off gate**. Apply AFTER `schema.sql`. Idempotent.
 - `seed.sql` — the Trifecta tenant + demo client portfolio, plus a one-time operator bootstrap block.
 - `test/rls.test.sql` — proves no cross-tenant leakage. Runs in a transaction and rolls back.
+- `test/signoff.test.sql` — proves the sign-off gate (fitter ≠ reviewer, seniors-only sign-off,
+  promote-gated-on-sign-off, one-live-per-client, and that T3/T4 users can't see model internals).
+
+## The sign-off gate (`model_versions`)
+
+`model_versions.status` flows **draft → fitting → in_review → signed_off → live** (then `archived`),
+enforced by a trigger so the rule lives in the database, not just the app:
+- Promote-to-Live is an **illegal transition** before `signed_off` — no model reaches Results/Signal unsigned.
+- A `reviewer` can **never** be the `fitter` (table CHECK + trigger).
+- Only a **senior** (`users.can_sign_off`) may sign off, and the sign-off must be performed **by that
+  reviewer themselves** (anti-spoof on `auth.uid()`).
+- At most **one live version per client** (partial unique index).
+- Model internals (`model_configs`/`model_versions`/`training_runs`/`model_lineage`) are visible to
+  **in_house + assigned experts only** (`can_operate_client()`), never to T3/T4 client users.
+- `model_lineage` is append-only (select + insert grants only).
 
 ## Apply (one-time, per Supabase project)
 
@@ -16,7 +34,8 @@ security on every table**, not by application code.
    into `apps/web/.env.local` (see `apps/web/.env.local.example`) and Vercel.
 2. Apply the schema and seed (Supabase SQL editor, or `psql`):
    ```bash
-   psql "$SUPABASE_DB_URL" -f packages/db/schema.sql
+   psql "$SUPABASE_DB_URL" -f packages/db/schema.sql        # M1 — auth & tenancy
+   psql "$SUPABASE_DB_URL" -f packages/db/model_schema.sql  # M4/M5 — model + sign-off
    psql "$SUPABASE_DB_URL" -f packages/db/seed.sql
    ```
 3. Create the operator auth user `rajeev@trifecta.sg` via Supabase Auth
@@ -29,7 +48,8 @@ security on every table**, not by application code.
 ## Test
 
 ```bash
-psql "$SUPABASE_DB_URL" -f packages/db/test/rls.test.sql   # prints "RLS TEST PASSED"
+psql "$SUPABASE_DB_URL" -f packages/db/test/rls.test.sql      # prints "RLS TEST PASSED"
+psql "$SUPABASE_DB_URL" -f packages/db/test/signoff.test.sql  # prints "SIGN-OFF TEST PASSED"
 ```
 
 ## User types (brief v4.0 §3b) — `users.role`
