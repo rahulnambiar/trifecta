@@ -70,18 +70,19 @@ const TITLES = {
   get_model_health: 'Model health',
 };
 
-// Presentational toolbar — all handlers + state live in SignalArtifact.
-function Toolbar({ hasRows, canShare, sharing, copied, err, onCSV, onJSON, onShare }) {
+// Presentational toolbar — all handlers + state live in SignalArtifact. On the CMO
+// surface only "Share" is shown (CSV/JSON are operator/dev exports).
+function Toolbar({ hasRows, canShare, sharing, copied, err, cmo, onCSV, onJSON, onShare }) {
   return (
     <div className="row-h" style={{ gap: 6, marginLeft: 'auto' }}>
-      {err ? <span className="tag amber" style={{ fontSize: 9.5 }} title={err}>⚠ interval required</span> : null}
+      {err ? <span className="tag amber" style={{ fontSize: 9.5 }} title={err}>⚠ {err.length > 40 ? 'export blocked' : err}</span> : null}
       {canShare ? (
         <button className="btn ghost small" onClick={onShare} disabled={sharing} title="Share this chart as an image — interval, date and model version baked in">
           {sharing ? '…' : 'Share'}
         </button>
       ) : null}
-      {hasRows ? <button className="btn ghost small" onClick={onCSV}>CSV</button> : null}
-      <button className="btn ghost small" onClick={onJSON}>{copied ? 'Copied' : 'JSON'}</button>
+      {!cmo && hasRows ? <button className="btn ghost small" onClick={onCSV}>CSV</button> : null}
+      {!cmo ? <button className="btn ghost small" onClick={onJSON}>{copied ? 'Copied' : 'JSON'}</button> : null}
     </div>
   );
 }
@@ -266,7 +267,7 @@ function Caption({ children }) {
   return <div className="faint mono" style={{ fontSize: 10, marginTop: 6, letterSpacing: '0.04em' }}>{children}</div>;
 }
 
-export default function SignalArtifact({ name, data, provenance }) {
+export default function SignalArtifact({ name, data, provenance, cmo }) {
   const bodyRef = React.useRef(null);
   const [copied, setCopied] = React.useState(false);
   const [sharing, setSharing] = React.useState(false);
@@ -301,10 +302,9 @@ export default function SignalArtifact({ name, data, provenance }) {
   const requireInterval = !NON_ESTIMATE.has(name);
   const stamp = provenance ? provenanceCaption(provenance) : null;
 
-  const flash = (e) => {
-    // Export integrity blocked the action — surface why instead of shipping a bare number.
-    setErr(e instanceof ExportIntegrityError ? e.message : 'Export failed.');
-    setTimeout(() => setErr(null), 4000);
+  const flash = (msg) => {
+    setErr(typeof msg === 'string' ? msg : (msg?.message || 'Export failed.'));
+    setTimeout(() => setErr(null), 4500);
   };
   const onCSV = () => {
     try { download(`${name}.csv`, toProvenancedCSV(toCSV(rows), provenance, { rows, requireInterval }), 'text/csv'); }
@@ -317,15 +317,19 @@ export default function SignalArtifact({ name, data, provenance }) {
     } catch (e) { flash(e); }
   };
   const onShare = async () => {
+    if (!provenance) { flash('Still loading the model details — try again in a moment.'); return; }
     setSharing(true);
     try {
       assertProvenance(provenance);  // an image must carry interval + date + version too
       const svg = bodyRef.current && bodyRef.current.querySelector('svg');
       if (!svg) throw new Error('no chart to share');
       const blob = await chartSvgToPng(svg, { title: TITLES[name] || name, stamp });
-      await sharePng(blob, `trifecta-${name}.png`, `${TITLES[name] || name} — Trifecta Signal`);
-    } catch (e) { flash(e); }
-    finally { setSharing(false); }
+      if (!blob) throw new Error('could not render the image');
+      const result = await sharePng(blob, `trifecta-${name}.png`, `${TITLES[name] || name} — Trifecta Signal`);
+      if (result === 'downloaded') flash('Saved the chart image to your device.');
+    } catch (e) {
+      flash(e instanceof ExportIntegrityError ? 'Chart not ready — its interval is still loading.' : ('Share failed: ' + (e?.message || e)));
+    } finally { setSharing(false); }
   };
 
   return (
@@ -334,7 +338,7 @@ export default function SignalArtifact({ name, data, provenance }) {
         <h3 style={{ fontSize: 13 }}>{TITLES[name] || name}</h3>
         <Toolbar
           hasRows={!!(rows && rows.length)} canShare={canShare} sharing={sharing}
-          copied={copied} err={err} onCSV={onCSV} onJSON={onJSON} onShare={onShare}
+          copied={copied} err={err} cmo={cmo} onCSV={onCSV} onJSON={onJSON} onShare={onShare}
         />
       </div>
       <div className="card-pad signal-artifact-scroll" style={{ padding: 14 }} ref={bodyRef}>{body}</div>
