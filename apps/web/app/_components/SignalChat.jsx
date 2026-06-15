@@ -28,7 +28,7 @@ const MODEL_LABELS = {
   'claude-opus-4-8': 'Opus 4.8',
 };
 
-export default function SignalChat({ client }) {
+export default function SignalChat({ client, surface = 'operator' }) {
   const clientName = client?.name || 'Aeon Skincare';
   const [messages, setMessages] = React.useState([]); // {role, text, tools?: []}
   const [input, setInput] = React.useState('');
@@ -124,8 +124,8 @@ export default function SignalChat({ client }) {
   const empty = messages.length === 0;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 860 }}>
-      <div className="card" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 200px)', minHeight: 420 }}>
+    <div className="signal-wrap">
+      <div className={'card signal-card' + (surface === 'cmo' ? ' cmo' : '')}>
         <div className="card-head">
           <span className="logomark" style={{ width: 18, height: 18, flexBasis: 18 }} />
           <div>
@@ -142,7 +142,7 @@ export default function SignalChat({ client }) {
           </div>
         </div>
 
-        <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div ref={scrollRef} className="signal-msgs">
           {empty ? (
             <div className="dim" style={{ margin: 'auto', textAlign: 'center', maxWidth: 460 }}>
               <div className="display" style={{ fontSize: 18, color: 'var(--text)', marginBottom: 6 }}>Ask about your marketing performance</div>
@@ -160,8 +160,8 @@ export default function SignalChat({ client }) {
           )}
         </div>
 
-        <div style={{ borderTop: '1px solid var(--line)', padding: 12 }}>
-          <div className="between" style={{ marginBottom: 10, gap: 8 }}>
+        <div className="signal-foot">
+          <div className="between" style={{ marginBottom: 10, gap: 8, flexWrap: 'wrap' }}>
             <div className="row-h" style={{ gap: 8, flexWrap: 'wrap' }}>
               {SUGGESTIONS.map((s) => (
                 <button key={s} className="btn ghost small" onClick={() => ask(s)} disabled={busy}>{s}</button>
@@ -188,7 +188,7 @@ export default function SignalChat({ client }) {
           </form>
         </div>
       </div>
-      <div className="faint mono" style={{ fontSize: 10.5 }}>
+      <div className="faint mono signal-hide-sm" style={{ fontSize: 10.5 }}>
         Powered by Claude + the Trifecta MCP server · genuine Meridian outputs · fictional demo data.
       </div>
     </div>
@@ -199,7 +199,7 @@ function Bubble({ m, busy }) {
   const isUser = m.role === 'user';
   return (
     <div style={{ display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start' }}>
-      <div style={{ maxWidth: '78%' }}>
+      <div className="signal-bubble-row">
         {!isUser && m.tools && m.tools.length > 0 ? (
           <div className="row-h" style={{ gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
             {m.tools.map((t, i) => (

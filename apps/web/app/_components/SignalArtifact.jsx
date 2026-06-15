@@ -337,7 +337,7 @@ export default function SignalArtifact({ name, data, provenance }) {
           copied={copied} err={err} onCSV={onCSV} onJSON={onJSON} onShare={onShare}
         />
       </div>
-      <div className="card-pad" style={{ padding: 14 }} ref={bodyRef}>{body}</div>
+      <div className="card-pad signal-artifact-scroll" style={{ padding: 14 }} ref={bodyRef}>{body}</div>
       {stamp ? (
         <div className="faint mono" style={{ fontSize: 9.5, padding: '0 14px 10px', letterSpacing: '0.04em' }}>
           {stamp}

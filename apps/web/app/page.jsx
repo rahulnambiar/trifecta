@@ -3873,23 +3873,21 @@ function mapDbClients(rows) {
 // guarantees the isolation — a Type-4 user simply cannot reach anything else.
 function CMOSignalShell({ client, email, theme, setTheme, onSignOut }) {
   return (
-    <div className="cmo-shell" style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', flexDirection: 'column' }}>
-      <header style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderBottom: '1px solid var(--line)' }}>
+    <div className="cmo-shell">
+      <header className="cmo-shell-head">
         <Logo size={22} />
-        <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2, minWidth: 0 }}>
           <span className="wordmark" style={{ fontWeight: 700, letterSpacing: '0.08em' }}>SIGNAL</span>
-          <span className="faint mono" style={{ fontSize: 10 }}>{client?.name || ''}</span>
+          <span className="faint mono" style={{ fontSize: 10, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{client?.name || ''}</span>
         </div>
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
           <ThemeToggle theme={theme} setTheme={setTheme} />
-          {email ? <span className="faint mono" style={{ fontSize: 11 }}>{email}</span> : null}
+          {email ? <span className="faint mono signal-hide-sm" style={{ fontSize: 11 }}>{email}</span> : null}
           <button className="btn ghost small" onClick={onSignOut}>Sign out</button>
         </div>
       </header>
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: 18 }}>
-        <div style={{ width: '100%', maxWidth: 880 }}>
-          <SignalChat client={client} />
-        </div>
+      <div className="cmo-shell-body">
+        <SignalChat client={client} surface="cmo" />
       </div>
     </div>
   );

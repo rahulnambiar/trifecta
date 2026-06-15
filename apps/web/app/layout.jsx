@@ -6,9 +6,11 @@ export const metadata = {
     'Marketing Mix Modelling as a managed service. Operator console for configuring, training and explaining Bayesian MMM (Google Meridian) models across a portfolio of clients.',
 };
 
-// The design is a fixed-width (1280px) desktop instrument — match the prototype.
+// Device-width so the CMO Signal surface is mobile-first (CMOs open it on a phone).
+// The operator console is still a wide desktop instrument; it scrolls on small screens.
 export const viewport = {
-  width: 1280,
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }) {
