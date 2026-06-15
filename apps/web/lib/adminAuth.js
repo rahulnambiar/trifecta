@@ -30,4 +30,17 @@ export async function requireInHouse() {
   return { supabase, user, profile };
 }
 
+// Lighter guard for surfaces beyond in-house (e.g. ingestion, which T3 client-upload
+// users drive for their own client). Just resolves the authenticated user + profile;
+// per-client authorization is left to row-level security on the table.
+export async function requireUser() {
+  const supabase = getSupabaseServer();
+  if (!supabase) return { error: json({ error: 'Supabase not configured' }, 500) };
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: json({ error: 'Not authenticated' }, 401) };
+  const { data: profile } = await supabase
+    .from('users').select('id, tenant_id, role').eq('id', user.id).single();
+  return { supabase, user, profile };
+}
+
 export { getSupabaseAdmin };

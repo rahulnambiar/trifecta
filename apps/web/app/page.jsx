@@ -8,6 +8,7 @@ import React from 'react';
 import ResultsLive from './_components/ResultsLive';
 import SignalChat from './_components/SignalChat';
 import TeamAccess from './_components/TeamAccess';
+import DataPipelineLive from './_components/DataPipelineLive';
 import { getSupabaseBrowser, isSupabaseConfigured } from '../lib/supabase/client';
 
 // ============================== icons.jsx ==============================
@@ -3812,6 +3813,7 @@ function mapDbClients(rows) {
     const demo = bySlug[r.slug] || {};
     return {
       id: r.slug,
+      dbId: r.id,        // real client UUID — needed by the ingestion/admin APIs
       name: r.name,
       readiness: r.readiness ?? demo.readiness ?? 0,
       version: r.version || demo.version || 'v1',
@@ -4026,7 +4028,7 @@ function App() {
   switch (safeScreen) {
     case 'dashboard':     body = <Dashboard go={go} enterClient={enterClient} clients={clients} openAddClient={() => setAdding(true)} />; break;
     case 'library':       body = <ModelLibrary go={go} />; break;
-    case 'pipeline':      body = <DataPipeline client={activeClient} />; break;
+    case 'pipeline':      body = <DataPipelineLive client={activeClient} />; break;
     case 'model-studio':  body = <ModelStudio client={activeClient} />; break;
     case 'training':      body = <TrainingRuns client={activeClient} />; break;
     case 'results':       body = <ResultsLive client={activeClient} />; break;
