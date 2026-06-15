@@ -797,6 +797,13 @@
 .md th { background: var(--panel3); font-weight: 600; }
 .md hr { border: 0; border-top: 1px solid var(--line); margin: 10px 0; }
 
+/* contextual follow-ups — proposed next questions */
+.signal-followups { display: flex; flex-direction: column; gap: 7px; margin-top: 2px; align-items: flex-start; animation: fuIn .25s ease; }
+.signal-followup { text-align: left; padding: 9px 13px; border-radius: 999px; border: 1px solid var(--line2); background: transparent; color: var(--sky); font-size: 13px; cursor: pointer; transition: background .15s, border-color .15s; max-width: 100%; }
+.signal-followup:hover { background: rgba(125,155,255,0.10); border-color: var(--sky); }
+.signal-followup .fu-arrow { color: var(--faint); margin-right: 4px; }
+@keyframes fuIn { from { opacity: 0; transform: translateY(4px) } to { opacity: 1; transform: none } }
+
 /* composer */
 .signal-input { display: flex; gap: 8px; align-items: flex-end; }
 .signal-input textarea { flex: 1; resize: none; min-height: 42px; max-height: 140px; font-size: 14px; line-height: 1.4; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel2); color: var(--text); font-family: var(--f-body); outline: none; }

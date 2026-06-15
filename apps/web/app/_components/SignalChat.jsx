@@ -36,6 +36,7 @@ export default function SignalChat({ client, surface = 'operator' }) {
   const [deep, setDeep] = React.useState(false);
   const [provenance, setProvenance] = React.useState(null);
   const [listening, setListening] = React.useState(false);
+  const [followups, setFollowups] = React.useState([]);
   const scrollRef = React.useRef(null);
   const taRef = React.useRef(null);
   const recRef = React.useRef(null);
@@ -69,6 +70,8 @@ export default function SignalChat({ client, surface = 'operator' }) {
     if (!q || busy) return;
     setInput('');
     setBusy(true);
+    setFollowups([]);
+    let assistantText = '';
     const history = messages.map((m) => ({ role: m.role, content: m.text }));
     const next = [...messages, { role: 'user', text: q }, { role: 'assistant', text: '', tools: [], artifacts: [], model: null }];
     setMessages(next);
@@ -94,10 +97,16 @@ export default function SignalChat({ client, surface = 'operator' }) {
           if (evt.type === 'model') update((m) => ({ ...m, model: evt.model, advanced: evt.advanced }));
           else if (evt.type === 'tool') update((m) => ({ ...m, tools: [...(m.tools || []), evt.name] }));
           else if (evt.type === 'tool_result') { if (evt.data && !evt.is_error) update((m) => ({ ...m, artifacts: [...(m.artifacts || []), { name: evt.name, data: evt.data }] })); }
-          else if (evt.type === 'text') update((m) => ({ ...m, text: m.text + evt.text }));
+          else if (evt.type === 'text') { assistantText += evt.text; update((m) => ({ ...m, text: m.text + evt.text })); }
           else if (evt.type === 'error') update((m) => ({ ...m, text: m.text + `\n\n⚠️ ${evt.message}` }));
         }
       }
+      // contextual follow-ups — propose the CMO's next questions
+      const convo = [...history, { role: 'user', content: q }, { role: 'assistant', content: assistantText }];
+      fetch('/api/signal/followups', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: convo }) })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((j) => { if (j && Array.isArray(j.followups) && j.followups.length) setFollowups(j.followups); })
+        .catch(() => {});
     } catch (e) {
       update((m) => ({ ...m, text: m.text || `⚠️ ${String(e.message || e)}` }));
     } finally { setBusy(false); }
@@ -168,6 +177,15 @@ export default function SignalChat({ client, surface = 'operator' }) {
               </div>
             ))
           )}
+          {!empty && !busy && followups.length ? (
+            <div className="signal-followups">
+              {followups.map((f, i) => (
+                <button key={i} className="signal-followup" onClick={() => ask(f)}>
+                  <span className="fu-arrow">↳</span> {f}
+                </button>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <div className="signal-foot">
