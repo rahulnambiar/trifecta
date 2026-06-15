@@ -9,6 +9,7 @@ import ResultsLive from './_components/ResultsLive';
 import SignalChat from './_components/SignalChat';
 import TeamAccess from './_components/TeamAccess';
 import DataPipelineLive from './_components/DataPipelineLive';
+import ModelVersions from './_components/ModelVersions';
 import { getSupabaseBrowser, isSupabaseConfigured } from '../lib/supabase/client';
 
 // ============================== icons.jsx ==============================
@@ -1081,7 +1082,7 @@ const Versions = () => {
   );
 };
 
-const ModelStudio = () => {
+const ModelStudio = ({ client }) => {
   const [tab, setTab] = React.useState('channels');
   const tabs = [
     { id: 'channels',    label: 'Channels & Priors' },
@@ -1104,7 +1105,7 @@ const ModelStudio = () => {
       {tab === 'controls'    && <ControlVariables />}
       {tab === 'calibration' && <Calibration />}
       {tab === 'settings'    && <ModelSettings />}
-      {tab === 'versions'    && <Versions />}
+      {tab === 'versions'    && <ModelVersions client={client} />}
     </div>
   );
 };
