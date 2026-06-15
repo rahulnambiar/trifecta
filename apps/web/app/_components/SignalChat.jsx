@@ -27,7 +27,7 @@ function getRecognition() {
   return SR ? new SR() : null;
 }
 
-export default function SignalChat({ client, surface = 'operator' }) {
+export default function SignalChat({ client, surface = 'operator', email, theme, setTheme, onSignOut }) {
   const cmo = surface === 'cmo';
   const clientName = client?.name || 'Aeon Skincare';
   const [messages, setMessages] = React.useState([]);
@@ -181,13 +181,24 @@ export default function SignalChat({ client, surface = 'operator' }) {
     <div className="signal-wrap">
       <div className={'card signal-card' + (cmo ? ' cmo' : '')}>
         {cmo ? (
-          <div className="signal-topbar">
-            <div className="row-h" style={{ gap: 4 }}>
-              <button className="signal-iconbtn-sm" onClick={() => setHistoryOpen(true)} title="Your chats" aria-label="Chats"><ListIcon /></button>
-              <button className="signal-iconbtn-sm" onClick={newChat} title="New chat" aria-label="New chat"><PlusIcon /></button>
-            </div>
-            {freshness ? <div className="signal-fresh-inline"><span className="live-dot" /> {freshness}</div> : <span />}
-          </div>
+          <>
+            <header className="signal-header">
+              <div className="signal-brand">
+                <span className="logomark" style={{ width: 26, height: 26, flexBasis: 26 }} />
+                <div className="signal-brand-text">
+                  <div className="bn">Trifecta</div>
+                  <div className="bf">Signal · {clientName}</div>
+                </div>
+              </div>
+              <div className="signal-header-actions">
+                <button className="signal-iconbtn-sm" onClick={() => setHistoryOpen(true)} title="Your chats" aria-label="Chats"><ListIcon /></button>
+                <button className="signal-iconbtn-sm" onClick={newChat} title="New chat" aria-label="New chat"><PlusIcon /></button>
+                {setTheme ? <button className="signal-iconbtn-sm" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} title="Theme" aria-label="Theme">{theme === 'dark' ? '☀' : '☾'}</button> : null}
+                {onSignOut ? <button className="signal-iconbtn-sm" onClick={onSignOut} title="Sign out" aria-label="Sign out"><SignOutIcon /></button> : null}
+              </div>
+            </header>
+            {freshness ? <div className="signal-fresh-line"><span className="live-dot" /> {freshness}</div> : null}
+          </>
         ) : (
           <div className="card-head">
             <span className="logomark" style={{ width: 18, height: 18, flexBasis: 18 }} />
@@ -340,4 +351,7 @@ function ListIcon() {
 }
 function PlusIcon() {
   return (<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>);
+}
+function SignOutIcon() {
+  return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" /></svg>);
 }

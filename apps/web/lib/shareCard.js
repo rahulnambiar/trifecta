@@ -25,8 +25,9 @@ function token(name, fallback) {
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const img = new Image();
+    img.decoding = 'async';
     img.onload = () => resolve(img);
-    img.onerror = reject;
+    img.onerror = () => reject(new Error('chart image failed to load'));
     img.src = src;
   });
 }
@@ -49,8 +50,13 @@ export async function chartSvgToPng(svgEl, { title = '', stamp = '', scale = 2 }
   clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   clone.setAttribute('width', String(w));
   clone.setAttribute('height', String(h));
-  const markup = resolveCssVars(new XMLSerializer().serializeToString(clone));
-  const img = await loadImage('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(markup));
+  let markup = resolveCssVars(new XMLSerializer().serializeToString(clone));
+  if (!markup.startsWith('<?xml')) markup = '<?xml version="1.0" encoding="UTF-8"?>\n' + markup;
+  // Blob URL (not data URL) — iOS Safari loads SVG-into-<img> far more reliably this way.
+  const url = URL.createObjectURL(new Blob([markup], { type: 'image/svg+xml;charset=utf-8' }));
+  let img;
+  try { img = await loadImage(url); }
+  finally { setTimeout(() => URL.revokeObjectURL(url), 4000); }
 
   const padX = 28;
   const headerH = title ? 52 : 20;
