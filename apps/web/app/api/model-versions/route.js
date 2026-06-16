@@ -20,7 +20,7 @@ export async function GET(req) {
   const clientId = new URL(req.url).searchParams.get('client_id');
   let q = ctx.supabase
     .from('model_versions')
-    .select('id, client_id, config_id, label, status, fitted_by, reviewed_by, signed_off_at, diagnostics, client_satisfaction_rating, technical_quality_rating, created_at, updated_at, model_configs(name)')
+    .select('id, client_id, config_id, label, status, fitted_by, reviewed_by, signed_off_at, diagnostics, review_notes, client_satisfaction_rating, technical_quality_rating, created_at, updated_at, model_configs(name), model_reviews(verdict, reason, technical_quality_rating, created_at)')
     .order('created_at', { ascending: false });
   if (clientId) q = q.eq('client_id', clientId);
   const { data, error } = await q;
@@ -68,7 +68,7 @@ export async function PATCH(req) {
   const { data: v, error: vErr } = await supabase.from('model_versions').select('*').eq('id', id).single();
   if (vErr || !v) return json({ error: 'version not found' }, 404);
 
-  let patch = null, event = null, runQueued = false;
+  let patch = null, event = null, runQueued = false, review = null;
   switch (action) {
     case 'start_fit': patch = { status: 'fitting' }; event = 'fit_started'; runQueued = true; break;
     case 'complete_fit':
@@ -76,8 +76,20 @@ export async function PATCH(req) {
       if (b.diagnostics) patch.diagnostics = b.diagnostics;
       if (b.gcs_posterior_path) patch.gcs_posterior_path = b.gcs_posterior_path;
       event = 'fit_completed'; break;
-    case 'reject': patch = { status: 'draft' }; event = 'review_rejected'; break;
-    case 'sign_off': patch = { status: 'signed_off', reviewed_by: user.id }; event = 'signed_off'; break;
+    case 'reject': {
+      // Send back with a REASON the fitter must rework against; record it durably.
+      const reason = (b.reason || '').trim();
+      if (!reason) return json({ error: 'a reason is required to send a model back' }, 400);
+      patch = { status: 'draft', review_notes: reason };
+      review = { verdict: 'changes_requested', reason, technical_quality_rating: Number.isInteger(b.technical_quality_rating) ? b.technical_quality_rating : null };
+      event = 'changes_requested';
+      break;
+    }
+    case 'sign_off':
+      patch = { status: 'signed_off', reviewed_by: user.id, review_notes: null };
+      review = { verdict: 'approved', reason: (b.reason || '').trim() || null, technical_quality_rating: Number.isInteger(b.technical_quality_rating) ? b.technical_quality_rating : null };
+      if (review.technical_quality_rating) patch.technical_quality_rating = review.technical_quality_rating;
+      event = 'signed_off'; break;
     case 'archive': patch = { status: 'archived' }; event = 'archived'; break;
     case 'rate':
       patch = {};
@@ -97,7 +109,15 @@ export async function PATCH(req) {
     // surface the DB gate's reason (fitter≠reviewer, sign-off authority, illegal transition…)
     return json({ error: error.message.replace(/^.*?:\s*/, '') }, 400);
   }
-  await lineage(supabase, v.client_id, id, user.id, event, { action });
+  await lineage(supabase, v.client_id, id, user.id, event, { action, reason: review?.reason || undefined });
+
+  // Durable review record (the learning log) on approve / changes-requested.
+  if (review) {
+    await supabase.from('model_reviews').insert({
+      version_id: id, client_id: v.client_id, reviewer: user.id,
+      verdict: review.verdict, reason: review.reason, technical_quality_rating: review.technical_quality_rating,
+    });
+  }
 
   if (runQueued) {
     // Record a training run. Submitting the actual Vertex job is the GCP step (M4 wiring).

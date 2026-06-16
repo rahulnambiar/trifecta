@@ -108,8 +108,13 @@ function VersionRow({ v, me, busy, onAct }) {
   const st = STATUS[v.status] || { tag: 'default', label: v.status };
   const isFitter = me && v.fitted_by === me.id;
   const canSignThis = me && me.can_sign_off && !isFitter; // fitter ≠ reviewer (DB also enforces)
+  const [showReject, setShowReject] = React.useState(false);
+  const [reason, setReason] = React.useState('');
+  const [rating, setRating] = React.useState('');
+  const [showReviews, setShowReviews] = React.useState(false);
+  const reviews = [...(v.model_reviews || [])].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
   const patch = (action, extra) => onAct(() => api('/api/model-versions', 'PATCH', { id: v.id, action, ...(extra || {}) }));
-  // Real Vertex fit; fall back to the simulate transition if GCP isn't wired.
   const startFit = () => onAct(async () => {
     try { await api('/api/train/submit', 'POST', { version_id: v.id, smoke: false }); }
     catch (e) {
@@ -117,6 +122,11 @@ function VersionRow({ v, me, busy, onAct }) {
       else throw e;
     }
   });
+  const submitReject = () => {
+    if (!reason.trim()) return;
+    patch('reject', { reason: reason.trim(), technical_quality_rating: rating ? Number(rating) : undefined });
+    setShowReject(false); setReason(''); setRating('');
+  };
 
   return (
     <div style={{ padding: '14px 18px', borderTop: '1px solid var(--line)' }}>
@@ -127,33 +137,80 @@ function VersionRow({ v, me, busy, onAct }) {
           {v.model_configs?.name ? <span className="faint mono" style={{ fontSize: 10.5 }}>{v.model_configs.name}</span> : null}
         </div>
         <div className="row-h" style={{ gap: 6 }}>
-          {v.status === 'draft' && <button className="btn ghost small" disabled={busy} onClick={startFit}>Start fit</button>}
+          {v.status === 'draft' && <button className="btn ghost small" disabled={busy} onClick={startFit}>{v.review_notes ? 'Re-fit' : 'Start fit'}</button>}
           {v.status === 'fitting' && <span className="tag sky" style={{ fontSize: 9.5 }}>training on Vertex…</span>}
           {v.status === 'in_review' && canSignThis && <button className="btn mint small" disabled={busy} onClick={() => patch('sign_off')}>Sign off</button>}
-          {v.status === 'in_review' && <button className="btn ghost small" disabled={busy} onClick={() => patch('reject')}>Send back</button>}
+          {v.status === 'in_review' && <button className="btn ghost small" disabled={busy} onClick={() => setShowReject(true)}>Send back</button>}
           {v.status === 'signed_off' && <button className="btn primary small" disabled={busy} onClick={() => patch('promote')}>Promote to Live</button>}
           {(v.status === 'live' || v.status === 'signed_off') && <button className="btn ghost small" disabled={busy} onClick={() => patch('archive')}>Archive</button>}
         </div>
       </div>
 
-      {/* flow + provenance */}
       <div className="row-h" style={{ gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
         {FLOW.map((s, i) => {
           const reached = FLOW.indexOf(v.status) >= i || v.status === 'archived';
           return <span key={s} className="mono" style={{ fontSize: 9.5, color: reached ? 'var(--mint)' : 'var(--faint)' }}>{i ? '→ ' : ''}{s}</span>;
         })}
       </div>
+
+      {/* reviewer feedback the fitter must act on before re-fitting */}
+      {v.status === 'draft' && v.review_notes ? (
+        <div style={{ marginTop: 10, background: 'rgba(230,176,82,0.12)', border: '1px solid rgba(230,176,82,0.4)', borderRadius: 8, padding: '9px 12px' }}>
+          <div className="mono" style={{ fontSize: 9.5, color: 'var(--amber)', letterSpacing: '0.06em' }}>↩ SENT BACK FOR REWORK</div>
+          <div style={{ fontSize: 12.5, marginTop: 3, color: 'var(--text)', lineHeight: 1.45 }}>{v.review_notes}</div>
+          <div className="faint" style={{ fontSize: 10.5, marginTop: 4 }}>Adjust the config in Channels &amp; Priors, then “Re-fit”.</div>
+        </div>
+      ) : null}
+
       <div className="faint mono" style={{ fontSize: 10, marginTop: 8 }}>
         fitted by {isFitter ? 'you' : (v.fitted_by ? v.fitted_by.slice(0, 8) : '—')}
         {v.reviewed_by ? ` · reviewed by ${me && v.reviewed_by === me.id ? 'you' : v.reviewed_by.slice(0, 8)}` : ''}
         {v.signed_off_at ? ` · signed ${new Date(v.signed_off_at).toISOString().slice(0, 10)}` : ''}
       </div>
-      {v.status === 'in_review' && isFitter && !me?.can_sign_off
-        ? <div className="faint" style={{ fontSize: 11, marginTop: 6 }}>Awaiting a senior reviewer — you can’t sign off your own fit.</div>
-        : null}
       {v.status === 'in_review' && isFitter && me?.can_sign_off
         ? <div className="faint" style={{ fontSize: 11, marginTop: 6 }}>You fitted this version, so it must be signed off by another senior.</div>
         : null}
+
+      {reviews.length ? (
+        <div style={{ marginTop: 8 }}>
+          <button className="btn ghost small" onClick={() => setShowReviews((s) => !s)}>{showReviews ? 'Hide' : 'Show'} review history ({reviews.length})</button>
+          {showReviews ? (
+            <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {reviews.map((r, i) => (
+                <div key={i} style={{ borderLeft: '2px solid var(--line2)', paddingLeft: 10 }}>
+                  <div className="row-h" style={{ gap: 8 }}>
+                    <span className={'tag ' + (r.verdict === 'approved' ? 'mint' : 'amber')} style={{ fontSize: 9 }}>{r.verdict === 'approved' ? 'approved' : 'changes requested'}</span>
+                    <span className="faint mono" style={{ fontSize: 10 }}>{new Date(r.created_at).toISOString().slice(0, 10)}{r.technical_quality_rating ? ` · ${r.technical_quality_rating}/5` : ''}</span>
+                  </div>
+                  {r.reason ? <div style={{ fontSize: 12, color: 'var(--dim)', marginTop: 3, lineHeight: 1.4 }}>{r.reason}</div> : null}
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {showReject ? (
+        <Modal onClose={() => setShowReject(false)}>
+          <h3 style={{ marginTop: 0 }}>Send back for rework</h3>
+          <p className="dim" style={{ fontSize: 13, lineHeight: 1.5 }}>
+            Give {v.fitted_by && me && v.fitted_by !== me.id ? 'the fitter' : 'the data scientist'} a specific reason to act on. It's shown on the draft and recorded in the review log for future learning.
+          </p>
+          <textarea className="input" rows={4} style={{ width: '100%', resize: 'vertical', fontFamily: 'var(--f-body)' }}
+            placeholder="e.g. TV ROI prior too tight vs the geo-holdout — widen σ and re-fit. knot_values R-hat borderline; raise adapt steps."
+            value={reason} onChange={(e) => setReason(e.target.value)} />
+          <div className="row-h" style={{ gap: 8, marginTop: 10, alignItems: 'center' }}>
+            <span className="faint mono" style={{ fontSize: 10 }}>TECHNICAL QUALITY (optional)</span>
+            <select className="input" value={rating} onChange={(e) => setRating(e.target.value)} style={{ height: 32, width: 90 }}>
+              <option value="">—</option>{[1, 2, 3, 4, 5].map((n) => <option key={n} value={n}>{n} / 5</option>)}
+            </select>
+          </div>
+          <div className="row-h" style={{ justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
+            <button className="btn ghost" onClick={() => setShowReject(false)}>Cancel</button>
+            <button className="btn primary" disabled={busy || !reason.trim()} onClick={submitReject}>Send back</button>
+          </div>
+        </Modal>
+      ) : null}
     </div>
   );
 }
