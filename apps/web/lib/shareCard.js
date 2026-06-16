@@ -120,14 +120,34 @@ export async function chartSvgToPng(svgEl, { title = '', stamp = '', scale = 2 }
   return await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
 }
 
+// Force a download of a Blob. The anchor MUST be in the DOM before .click() —
+// Safari and Firefox on desktop silently ignore a click on a detached anchor,
+// which looks like "share does nothing".
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.rel = 'noopener';
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 1000);
+}
+
 /**
- * Hand a PNG Blob to the native share sheet; fall back to a download.
+ * Hand a PNG Blob to the native share sheet on touch devices (phones — where
+ * sharing to WhatsApp etc. is the point); download it on desktop.
  * @returns {'shared'|'cancelled'|'downloaded'}
  */
 export async function sharePng(blob, filename, shareText) {
   if (!blob) throw new Error('nothing to share');
   const file = new File([blob], filename, { type: 'image/png' });
-  if (typeof navigator !== 'undefined' && navigator.canShare && navigator.canShare({ files: [file] })) {
+  // Only reach for the native share sheet on touch devices; on desktop the
+  // sheet is flaky/absent, so a download is the predictable, expected outcome.
+  const touch = typeof window !== 'undefined' && window.matchMedia
+    && window.matchMedia('(pointer: coarse)').matches;
+  if (touch && typeof navigator !== 'undefined' && navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
       await navigator.share({ files: [file], text: shareText });
       return 'shared';
@@ -136,11 +156,6 @@ export async function sharePng(blob, filename, shareText) {
       // fall through to download on any share failure
     }
   }
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
+  downloadBlob(blob, filename);
   return 'downloaded';
 }

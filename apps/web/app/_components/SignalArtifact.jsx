@@ -57,8 +57,10 @@ function download(name, text, type) {
   const blob = new Blob([text], { type: type || 'text/plain' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = name; a.click();
-  URL.revokeObjectURL(url);
+  a.href = url; a.download = name; a.style.display = 'none';
+  document.body.appendChild(a); // Safari/Firefox ignore .click() on a detached anchor
+  a.click();
+  setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 1000);
 }
 
 const TITLES = {
