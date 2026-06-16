@@ -153,6 +153,9 @@ function VersionRow({ v, me, busy, onAct }) {
         })}
       </div>
 
+      {/* data integrity — what went IN vs what got MODELLED (no silent drops) */}
+      {v.diagnostics?.data_guardrails ? <DataManifest guard={v.diagnostics.data_guardrails} /> : null}
+
       {/* reviewer feedback the fitter must act on before re-fitting */}
       {v.status === 'draft' && v.review_notes ? (
         <div style={{ marginTop: 10, background: 'rgba(230,176,82,0.12)', border: '1px solid rgba(230,176,82,0.4)', borderRadius: 8, padding: '9px 12px' }}>
@@ -211,6 +214,40 @@ function VersionRow({ v, me, busy, onAct }) {
           </div>
         </Modal>
       ) : null}
+    </div>
+  );
+}
+
+// The data manifest the reviewer sees at sign-off: what was configured vs what the
+// model actually fit. A blocking guardrail can't reach in_review (the run aborts),
+// so this is the visible proof that no channel/geo/week was silently dropped.
+function DataManifest({ guard }) {
+  const m = guard?.manifest;
+  if (!m) return null;
+  const errs = (guard.violations || []).filter((v) => v.severity === 'error');
+  const warns = (guard.violations || []).filter((v) => v.severity === 'warn');
+  const tone = errs.length ? 'red' : warns.length ? 'amber' : 'mint';
+  const bg = errs.length ? 'rgba(229,72,77,0.10)' : warns.length ? 'rgba(230,176,82,0.10)' : 'rgba(55,211,155,0.10)';
+  const bd = errs.length ? 'rgba(229,72,77,0.4)' : warns.length ? 'rgba(230,176,82,0.4)' : 'rgba(55,211,155,0.35)';
+  return (
+    <div style={{ marginTop: 10, background: bg, border: `1px solid ${bd}`, borderRadius: 8, padding: '10px 12px' }}>
+      <div className="between">
+        <span className="mono" style={{ fontSize: 9.5, letterSpacing: '0.06em', color: `var(--${tone})` }}>DATA INTEGRITY · IN vs MODELLED</span>
+        <span className={'tag ' + tone} style={{ fontSize: 9 }}>{errs.length ? `${errs.length} blocking` : warns.length ? `${warns.length} to review` : 'no drops'}</span>
+      </div>
+      <div className="row-h" style={{ gap: 14, marginTop: 6, fontSize: 12, flexWrap: 'wrap' }}>
+        <span><b>{m.channels_modelled}/{m.channels_in_config}</b> channels with spend</span>
+        <span><b>{m.geos}</b> geos</span>
+        <span><b>{m.weeks}</b> weeks</span>
+      </div>
+      {errs.length || warns.length ? (
+        <ul style={{ margin: '8px 0 0', paddingLeft: 16, fontSize: 11.5, lineHeight: 1.45 }}>
+          {errs.map((v, i) => <li key={'e' + i} style={{ color: 'var(--red)' }}>{v.detail}</li>)}
+          {warns.map((v, i) => <li key={'w' + i} style={{ color: 'var(--amber)' }}>{v.detail}</li>)}
+        </ul>
+      ) : (
+        <div className="faint" style={{ fontSize: 11, marginTop: 5 }}>Every configured channel carried spend; no geo or week was dropped to fit.</div>
+      )}
     </div>
   );
 }

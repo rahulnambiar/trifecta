@@ -169,5 +169,109 @@ class TestExecuteOnSqlite(unittest.TestCase):
         self.assertGreater(self.db.execute(checks["no_null_keys"]).fetchone()[0], 0)
 
 
+class TestGuardrailsAndManifest(unittest.TestCase):
+    """The no-silent-drop guardrails (brief §9): a dropped channel, an unmapped
+    campaign, or thin coverage must each make a check FAIL — executed on sqlite."""
+
+    # generous thresholds so the tiny fixture itself isn't flagged; we override
+    # per-test to assert the coverage gates fire.
+    LOOSE = {"min_geos": 1, "min_weeks": 1, "min_nonzero_weeks_per_channel": 1}
+
+    def setUp(self):
+        self.db = sqlite3.connect(":memory:")
+        c = self.db.cursor()
+        c.executescript("""
+          CREATE TABLE raw_spend(day TEXT, region TEXT, channel_name TEXT, cost REAL);
+          CREATE TABLE raw_sales(day TEXT, region TEXT, orders REAL, pop REAL);
+        """)
+        c.executemany("INSERT INTO raw_spend VALUES (?,?,?,?)", [
+            ("2026-01-05", "north", "Meta", 100),
+            ("2026-01-12", "north", "Meta", 200),          # Meta total = 300
+            ("2026-01-05", "north", "Paid Search", 80),    # Paid Search total = 80
+            ("2026-01-12", "south", "TV", 300),            # TV total = 300
+            ("2026-01-05", "south", "Affiliates", 500),    # UNMAPPED — must be caught
+        ])
+        c.executemany("INSERT INTO raw_sales VALUES (?,?,?,?)", [
+            ("2026-01-05", "north", 10, 1000), ("2026-01-12", "north", 5, 1000),
+            ("2026-01-05", "south", 7, 500),   ("2026-01-12", "south", 3, 500),
+        ])
+        self.db.commit()
+
+    def tearDown(self):
+        self.db.close()
+
+    def _mapping(self, **ov):
+        m = {
+            "media": {"table": "raw_spend", "date": "day", "geo": "region",
+                      "channel": "channel_name", "spend": "cost"},
+            "kpi": {"table": "raw_sales", "date": "day", "geo": "region",
+                    "kpi": "orders", "population": "pop"},
+            "channels": ["Meta", "Paid Search", "TV"],
+        }
+        m.update(ov)
+        return m
+
+    def _build(self, mapping):
+        self.db.execute(H.render_harmonisation_sql(mapping, "sqlite", create_table="canonical_weekly"))
+        self.db.commit()
+
+    def _violations(self, mapping, thresholds):
+        return {c["name"]: (self.db.execute(c["sql"]).fetchone()[0], c["severity"])
+                for c in H.render_guardrail_checks(mapping, "sqlite", thresholds=thresholds)}
+
+    def test_unmapped_campaign_is_caught(self):
+        # Affiliates spend ($500) is not mapped to any modelled channel → reconciliation fails.
+        m = self._mapping()
+        self._build(m)
+        v = self._violations(m, self.LOOSE)
+        self.assertGreater(v["spend_reconciled"][0], 0, "unmapped Affiliates spend must fail reconciliation")
+
+    def test_acknowledged_unmapped_passes(self):
+        # explicitly out-of-scope → reconciliation passes (deliberate, not silent).
+        m = self._mapping(allow_unmapped_channels=["Affiliates"])
+        self._build(m)
+        v = self._violations(m, self.LOOSE)
+        self.assertEqual(v["spend_reconciled"][0], 0, "acknowledged exclusion should reconcile")
+
+    def test_all_zero_channel_is_caught(self):
+        # a channel in the config with no spend anywhere (a mapping miss) → hard fail.
+        m = self._mapping(channels=["Meta", "Paid Search", "TV", "TikTok"],
+                          allow_unmapped_channels=["Affiliates"])
+        self._build(m)
+        v = self._violations(m, self.LOOSE)
+        self.assertGreater(v["channel_not_all_zero_tiktok"][0], 0)
+        self.assertEqual(v["channel_not_all_zero_tiktok"][1], "error")
+        self.assertEqual(v["channel_not_all_zero_meta"][0], 0)        # real channel is fine
+
+    def test_thin_coverage_is_caught(self):
+        m = self._mapping(allow_unmapped_channels=["Affiliates"])
+        self._build(m)
+        v = self._violations(m, {"min_geos": 5, "min_weeks": 52, "min_nonzero_weeks_per_channel": 10})
+        self.assertGreater(v["enough_geos"][0], 0)     # only 2 geos
+        self.assertGreater(v["enough_weeks"][0], 0)    # only 2 weeks
+        self.assertGreater(v["channel_enough_signal_tv"][0], 0)  # TV has 1 nonzero week
+
+    def test_clean_mapping_passes_all_gates(self):
+        m = self._mapping(allow_unmapped_channels=["Affiliates"])
+        self._build(m)
+        for name, (n, sev) in self._violations(m, self.LOOSE).items():
+            self.assertEqual(n, 0, f"clean mapping should pass {name}, got {n}")
+
+    def test_manifest_shows_in_vs_modelled(self):
+        m = self._mapping(allow_unmapped_channels=["Affiliates"])
+        self._build(m)
+        mq = H.coverage_manifest_queries(m, "sqlite")
+        scalar = lambda sql: self.db.execute(sql).fetchone()[0]
+        self.assertEqual(scalar(mq["scalars"]["rows"]), 4)        # 2 geos x 2 weeks
+        self.assertEqual(scalar(mq["scalars"]["geos"]), 2)
+        self.assertEqual(scalar(mq["scalars"]["weeks"]), 2)
+        self.assertEqual(scalar(mq["scalars"]["raw_spend_total"]), 1180)     # 680 mapped + 500 Affiliates
+        self.assertEqual(scalar(mq["scalars"]["mapped_spend_total"]), 680)   # Meta 300 + PaidSearch 80 + TV 300
+        self.assertEqual(scalar(mq["per_channel"]["Meta"]["spend_total"]), 300)
+        self.assertEqual(scalar(mq["per_channel"]["TV"]["nonzero_weeks"]), 1)
+        raw = dict(self.db.execute(mq["raw_per_channel_sql"]).fetchall())
+        self.assertEqual(raw["Affiliates"], 500)   # the dropped spend is visible in the manifest
+
+
 if __name__ == "__main__":
     unittest.main()

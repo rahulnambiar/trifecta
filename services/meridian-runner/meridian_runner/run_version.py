@@ -29,9 +29,9 @@ import urllib.error
 def _now() -> str:
     return datetime.datetime.now(datetime.timezone.utc).isoformat()
 
-from . import gcs, results as results_mod, train
+from . import gcs, guardrails, results as results_mod, train
 from .config import RunnerConfig, quick_smoke
-from .data import load_input_data
+from .data import load_input_data, read_training_frame
 from . import translation
 
 log = logging.getLogger(__name__)
@@ -135,12 +135,18 @@ def main() -> int:
         model_local = os.path.join(cfg.out_dir, "model.pkl")
         results_local = os.path.join(cfg.out_dir, "results.json")
 
-        # 4. data → fit → save
-        data = load_input_data(cfg)
+        # 4. data → GUARDRAILS (no silent channel/geo drops) → fit → save.
+        #    A hard guardrail violation raises here, so the version is sent back to
+        #    'draft' by the except below — it never reaches the sign-off queue.
+        df = read_training_frame(cfg)
+        guard = guardrails.enforce(df, cfg.media_channels, display=cfg.display_name)
+        data = load_input_data(cfg, df=df)
         mmm = train.build_model(data, cfg)
         mmm = train.fit(mmm, cfg)
         train.save_model(mmm, model_local)
         results = results_mod.build_results(mmm, data, cfg)
+        if isinstance(results, dict):
+            results["data_guardrails"] = guard
         results_mod.write_results(results, results_local)
 
         # 5. upload to a per-version GCS path
@@ -150,8 +156,12 @@ def main() -> int:
         gcs.upload_file(results_local, bucket, f"{base}/results.json")
         posterior_path = f"gs://{bucket}/{base}/results.json"
 
-        # 6. diagnostics → Supabase; run completed; version → in_review (sign-off gate)
+        # 6. diagnostics → Supabase; run completed; version → in_review (sign-off gate).
+        #    Carry the data manifest so the sign-off screen shows what went in vs
+        #    what got modelled (no silent drops).
         diag = (results.get("model_health") or {}) if isinstance(results, dict) else {}
+        if isinstance(diag, dict):
+            diag = {**diag, "data_guardrails": guard}
         if run_id:
             supa.patch(f"/rest/v1/training_runs?id=eq.{run_id}",
                        {"status": "completed", "finished_at": _now(), "diagnostics": diag})

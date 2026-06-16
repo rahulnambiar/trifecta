@@ -239,3 +239,140 @@ def render_validation_checks(mapping: dict, dialect: str = "bigquery", canonical
     for c in checks:
         c["expect_zero"] = True
     return checks
+
+
+# ── Coverage / no-silent-drop guardrails ─────────────────────────────────────
+# render_validation_checks above guards row *integrity*. These guard against the
+# "stupid errors" a fit must never make on its own (brief §9): a channel modelled
+# as all-zero (a mapping miss), a geo/week set too thin to identify the model, or
+# raw spend that silently fell out of the model because a channel/campaign wasn't
+# mapped. They run on the canonical table BEFORE training; any violation stops it.
+DEFAULT_THRESHOLDS = {
+    "min_geos": 1,                        # national (1 geo) is valid; 0 is not
+    "min_weeks": 52,                      # at least a year of weekly data
+    "min_nonzero_weeks_per_channel": 4,   # a channel needs signal to be identifiable
+    "reconciliation_rel_tol": 0.005,      # ≤0.5% of raw spend may be unaccounted (float noise)
+    "reconciliation_abs_tol": 1.0,
+}
+
+
+def _gate(name, sql, *, severity="error", detail=""):
+    return {"name": name, "sql": sql, "expect_zero": True, "severity": severity, "detail": detail}
+
+
+def _mapped_total_sql(mapping: dict, canonical: str, q) -> str:
+    chans = mapping.get("channels") or []
+    terms = " + ".join(f"COALESCE(SUM({q(slug(ch) + '_spend')}),0)" for ch in chans)
+    return f"SELECT {terms} FROM {canonical}"
+
+
+def render_guardrail_checks(mapping: dict, dialect: str = "bigquery",
+                            canonical: str = "canonical_weekly", thresholds: dict | None = None) -> list[dict]:
+    """Coverage + reconciliation gates — each returns >0 ⇒ STOP before training.
+
+    Returns [{name, sql, expect_zero, severity, detail}]. ``severity`` is 'error'
+    (a hard stop) or 'warn' (surface, let the operator decide). Never silently
+    drops a channel/geo/campaign — it makes the loss *visible* and blocks the run.
+    """
+    if dialect not in SUPPORTED_DIALECTS:
+        raise MappingError(f"dialect must be one of {SUPPORTED_DIALECTS}, got {dialect!r}")
+    t = {**DEFAULT_THRESHOLDS, **(thresholds or {})}
+    q = lambda n: _qident(n, dialect)
+    chans = mapping.get("channels") or []
+    if not chans:
+        raise MappingError("mapping.channels must be a non-empty list")
+    media = mapping.get("media") or {}
+    m_tbl = _require(media, "table", "media")
+    m_spend = _require(media, "spend", "media")
+    m_chan = _require(media, "channel", "media")
+
+    checks: list[dict] = []
+    for ch in chans:
+        col = slug(ch) + "_spend"
+        # a modelled channel that is entirely zero is almost always a mapping miss
+        checks.append(_gate(
+            f"channel_not_all_zero_{slug(ch)}",
+            f"SELECT CASE WHEN (SELECT COALESCE(SUM({q(col)}),0) FROM {canonical}) <= 0 THEN 1 ELSE 0 END",
+            detail=f"channel '{ch}' has zero total spend — likely an unmapped or mislabelled source",
+        ))
+        # …and it needs enough weeks with spend to be identifiable
+        checks.append(_gate(
+            f"channel_enough_signal_{slug(ch)}",
+            f"SELECT CASE WHEN (SELECT COUNT(DISTINCT time) FROM {canonical} WHERE {q(col)} > 0)"
+            f" < {int(t['min_nonzero_weeks_per_channel'])} THEN 1 ELSE 0 END",
+            severity="warn",
+            detail=f"channel '{ch}' has fewer than {t['min_nonzero_weeks_per_channel']} weeks with spend",
+        ))
+
+    checks.append(_gate(
+        "enough_geos",
+        f"SELECT CASE WHEN (SELECT COUNT(DISTINCT geo) FROM {canonical}) < {int(t['min_geos'])} THEN 1 ELSE 0 END",
+        detail=f"fewer than {t['min_geos']} geo(s) in the modelling table",
+    ))
+    checks.append(_gate(
+        "enough_weeks",
+        f"SELECT CASE WHEN (SELECT COUNT(DISTINCT time) FROM {canonical}) < {int(t['min_weeks'])} THEN 1 ELSE 0 END",
+        severity="warn",
+        detail=f"fewer than {t['min_weeks']} weeks of data",
+    ))
+
+    # Reconciliation — every raw dollar must reach a modelled channel, or be
+    # explicitly acknowledged as out of scope (mapping.allow_unmapped_channels).
+    # This is the gate that catches a campaign/channel silently dropped at mapping.
+    ack = mapping.get("allow_unmapped_channels") or []
+    where = ""
+    if ack:
+        lst = ", ".join("'" + str(a).replace("'", "''") + "'" for a in ack)
+        where = f" WHERE {m_chan} NOT IN ({lst})"
+    raw_total = f"(SELECT COALESCE(SUM({m_spend}),0) FROM {m_tbl}{where})"
+    mapped_total = f"({_mapped_total_sql(mapping, canonical, q)})"
+    rel = float(t["reconciliation_rel_tol"]); ab = float(t["reconciliation_abs_tol"])
+    checks.append(_gate(
+        "spend_reconciled",
+        f"SELECT CASE WHEN ABS({raw_total} - {mapped_total}) > {rel} * {raw_total} + {ab} THEN 1 ELSE 0 END",
+        detail="raw spend is not fully accounted for by the modelled channels "
+               "(an unmapped channel/campaign?). Map it, or list it in allow_unmapped_channels.",
+    ))
+    return checks
+
+
+def coverage_manifest_queries(mapping: dict, dialect: str = "bigquery",
+                              canonical: str = "canonical_weekly") -> dict:
+    """Scalar queries that build the run manifest the reviewer sees at sign-off:
+    what went IN vs what got MODELLED, so a dropped channel/geo/campaign is visible.
+
+    Returns {scalars:{name:sql}, per_channel:{channel:{spend_total,nonzero_weeks}},
+             raw_per_channel_sql, channels}. The runner executes these and stores the
+            resulting numbers alongside the posterior.
+    """
+    if dialect not in SUPPORTED_DIALECTS:
+        raise MappingError(f"dialect must be one of {SUPPORTED_DIALECTS}, got {dialect!r}")
+    q = lambda n: _qident(n, dialect)
+    chans = mapping.get("channels") or []
+    if not chans:
+        raise MappingError("mapping.channels must be a non-empty list")
+    media = mapping.get("media") or {}
+    m_tbl = _require(media, "table", "media")
+    m_spend = _require(media, "spend", "media")
+    m_chan = _require(media, "channel", "media")
+
+    scalars = {
+        "rows": f"SELECT COUNT(*) FROM {canonical}",
+        "geos": f"SELECT COUNT(DISTINCT geo) FROM {canonical}",
+        "weeks": f"SELECT COUNT(DISTINCT time) FROM {canonical}",
+        "raw_spend_total": f"SELECT COALESCE(SUM({m_spend}),0) FROM {m_tbl}",
+        "mapped_spend_total": _mapped_total_sql(mapping, canonical, q),
+    }
+    per_channel = {}
+    for ch in chans:
+        col = slug(ch) + "_spend"
+        per_channel[ch] = {
+            "spend_total": f"SELECT COALESCE(SUM({q(col)}),0) FROM {canonical}",
+            "nonzero_weeks": f"SELECT COUNT(DISTINCT time) FROM {canonical} WHERE {q(col)} > 0",
+        }
+    raw_per_channel_sql = (
+        f"SELECT {m_chan} AS channel, COALESCE(SUM({m_spend}),0) AS spend "
+        f"FROM {m_tbl} GROUP BY {m_chan}"
+    )
+    return {"scalars": scalars, "per_channel": per_channel,
+            "raw_per_channel_sql": raw_per_channel_sql, "channels": list(chans)}

@@ -13,9 +13,9 @@ import argparse
 import logging
 import os
 
-from . import gcs, results as results_mod, train
+from . import gcs, guardrails, results as results_mod, train
 from .config import RunnerConfig, quick_smoke
-from .data import load_input_data
+from .data import load_input_data, read_training_frame
 
 log = logging.getLogger(__name__)
 
@@ -40,14 +40,18 @@ def main() -> int:
     model_local = os.path.join(cfg.out_dir, "model.pkl")
     results_local = os.path.join(cfg.out_dir, "results.json")
 
-    # 1. data -> 2. fit -> 3. save model
-    data = load_input_data(cfg)
+    # 1. data → guardrails (no silent channel/geo drops) → 2. fit → 3. save model
+    df = read_training_frame(cfg)
+    guard = guardrails.enforce(df, cfg.media_channels, display=cfg.display_name)  # raises → aborts
+    data = load_input_data(cfg, df=df)
     mmm = train.build_model(data, cfg)
     mmm = train.fit(mmm, cfg)
     train.save_model(mmm, model_local)
 
-    # 4. derive + write results bundle
+    # 4. derive + write results bundle (carry the data manifest for sign-off review)
     results = results_mod.build_results(mmm, data, cfg)
+    if isinstance(results, dict):
+        results["data_guardrails"] = guard
     results_mod.write_results(results, results_local)
 
     # 5. upload to GCS

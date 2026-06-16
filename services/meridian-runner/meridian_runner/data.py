@@ -16,10 +16,15 @@ from .config import RunnerConfig
 log = logging.getLogger(__name__)
 
 
-def load_input_data(cfg: RunnerConfig):
-    """Read ``cfg.csv_path`` and assemble Meridian ``InputData``."""
+def read_training_frame(cfg: RunnerConfig) -> "pd.DataFrame":
+    """Read the training CSV into a DataFrame (shared by the guardrails + the builder)."""
     log.info("Reading training CSV: %s", cfg.csv_path)
-    df = pd.read_csv(cfg.csv_path)
+    return pd.read_csv(cfg.csv_path)
+
+
+def load_input_data(cfg: RunnerConfig, df: "pd.DataFrame | None" = None):
+    """Assemble Meridian ``InputData`` from the training frame (read it if not given)."""
+    df = read_training_frame(cfg) if df is None else df
 
     builder = dfb.DataFrameInputDataBuilder(
         kpi_type=cfg.kpi_type,
