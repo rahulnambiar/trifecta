@@ -6,6 +6,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import SignalArtifact from './SignalArtifact';
+import SignalOverview from './SignalOverview';
 import { formatAsOf, ciLabel } from '../../lib/exportIntegrity';
 
 const SUGGESTIONS = [
@@ -216,17 +217,18 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
 
         <div ref={scrollRef} className="signal-msgs">
           {empty ? (
-            <div className="signal-empty">
-              <div className="display" style={{ fontSize: cmo ? 22 : 18, color: 'var(--text)', marginBottom: 8 }}>
-                {cmo ? `Ask about ${clientName}'s growth` : 'Ask about your marketing performance'}
-              </div>
-              <div className="dim" style={{ fontSize: 13.5, lineHeight: 1.5, maxWidth: 420 }}>
-                Signal reads the fitted marketing-mix model — what's driving revenue, where the next dollar works hardest, and what happens if you move budget. Every answer carries the model's uncertainty.
-              </div>
-              <div className="signal-starters">
-                {SUGGESTIONS.map((s) => (
-                  <button key={s} className="signal-starter" onClick={() => ask(s)} disabled={busy}>{s}</button>
-                ))}
+            <div className="signal-landing">
+              <SignalOverview clientName={clientName} />
+              <div className="signal-ask-cue">
+                <div className="display" style={{ fontSize: 16, color: 'var(--text)', marginBottom: 4 }}>Ask {clientName}'s model anything</div>
+                <div className="dim" style={{ fontSize: 12.5, marginBottom: 12, lineHeight: 1.5 }}>
+                  Grounded in the live model — every answer carries its 90% credible interval.
+                </div>
+                <div className="signal-starters">
+                  {SUGGESTIONS.map((s) => (
+                    <button key={s} className="signal-starter" onClick={() => ask(s)} disabled={busy}>{s}</button>
+                  ))}
+                </div>
               </div>
             </div>
           ) : (

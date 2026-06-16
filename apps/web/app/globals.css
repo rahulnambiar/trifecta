@@ -816,6 +816,39 @@
 .md th { background: var(--panel3); font-weight: 600; }
 .md hr { border: 0; border-top: 1px solid var(--line); margin: 10px 0; }
 
+/* Signal Overview — a model snapshot the CMO lands on (challenges a Tableau dashboard) */
+.signal-landing { display: flex; flex-direction: column; gap: 18px; }
+.signal-overview { display: flex; flex-direction: column; gap: 10px; }
+.ov-title { font-family: var(--f-display); font-weight: 800; font-size: 16px; color: var(--text); }
+.ov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ov-card { background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-width: 0; }
+.ov-skeleton { height: 132px; animation: ovpulse 1.4s ease infinite; }
+@keyframes ovpulse { 0%,100%{opacity:.5} 50%{opacity:.85} }
+.ov-card-head { margin-bottom: 10px; }
+.ov-card-title { font-weight: 700; font-size: 12.5px; color: var(--text); }
+.ov-card-sub { font-size: 9px; color: var(--faint); font-family: var(--f-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
+.ov-bars { display: flex; flex-direction: column; gap: 7px; }
+.ov-bar-row { display: grid; grid-template-columns: 60px 1fr auto; align-items: center; gap: 7px; }
+.ov-bar-label { font-size: 10.5px; color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ov-bar-track { position: relative; height: 9px; background: var(--panel3); border-radius: 999px; overflow: hidden; }
+.ov-bar-fill { height: 100%; border-radius: 999px; }
+.ov-bar-val { font-size: 10px; font-family: var(--f-mono); color: var(--text); white-space: nowrap; }
+.ov-stat { display: flex; flex-direction: column; gap: 7px; }
+.ov-stat-big { font-family: var(--f-display); font-weight: 800; font-size: 30px; line-height: 1; color: var(--text); }
+.ov-stat-big.mint { color: var(--mint); }
+.ov-stat-sub { font-size: 11px; color: var(--dim); line-height: 1.45; }
+.ov-stat-row { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--dim); }
+.ov-stat-row b { color: var(--text); font-family: var(--f-mono); }
+.ov-stat-row b.mint { color: var(--mint); }
+.ov-tiles { display: flex; gap: 8px; }
+.ov-tile { flex: 1; background: var(--panel3); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+.ov-tile .t-lbl { font-size: 9px; color: var(--faint); font-family: var(--f-mono); text-transform: uppercase; letter-spacing: 0.04em; }
+.ov-tile .t-val { font-size: 17px; font-weight: 700; color: var(--text); margin-top: 2px; }
+.ov-tile .t-val.mint { color: var(--mint); } .ov-tile .t-val.amber { color: var(--amber); } .ov-tile .t-val.red { color: var(--red); }
+.ov-tile .t-sub { font-size: 9.5px; color: var(--faint); margin-top: 1px; }
+.signal-ask-cue { border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 640px) { .ov-grid { grid-template-columns: 1fr; } }
+
 /* contextual follow-ups — proposed next questions */
 .signal-followups { display: flex; flex-direction: column; gap: 7px; margin-top: 2px; align-items: flex-start; animation: fuIn .25s ease; }
 .signal-followup { text-align: left; padding: 9px 13px; border-radius: 999px; border: 1px solid var(--line2); background: transparent; color: var(--sky); font-size: 13px; cursor: pointer; transition: background .15s, border-color .15s; max-width: 100%; }
