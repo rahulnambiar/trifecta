@@ -50,14 +50,14 @@ function Card({ title, sub, children }) {
   );
 }
 
-export default function SignalOverview({ clientName }) {
+export default function SignalOverview({ clientName, slug }) {
   const [r, setR] = React.useState(null);
   const [failed, setFailed] = React.useState(false);
   React.useEffect(() => {
     let on = true;
-    fetch('/api/results').then((x) => (x.ok ? x.json() : null)).then((j) => { if (on) (j ? setR(j) : setFailed(true)); }).catch(() => on && setFailed(true));
+    fetch('/api/results?slug=' + encodeURIComponent(slug || 'aeon')).then((x) => (x.ok ? x.json() : null)).then((j) => { if (on) (j ? setR(j) : setFailed(true)); }).catch(() => on && setFailed(true));
     return () => { on = false; };
-  }, []);
+  }, [slug]);
 
   if (failed) return null;
   if (!r) return <div className="ov-grid">{[0, 1, 2, 3].map((i) => <div key={i} className="ov-card ov-skeleton" />)}</div>;

@@ -25,6 +25,26 @@ function credentials() {
   return JSON.parse(Buffer.from(process.env.GCP_SA_KEY_B64, 'base64').toString('utf8'));
 }
 
+// Read a JSON object from the artifacts bucket (e.g. a client's live posterior).
+export async function gcsReadJson(objectPath) {
+  const { bucket } = gcp();
+  const token = await getAccessToken();
+  const url = `https://storage.googleapis.com/storage/v1/b/${bucket}/o/${encodeURIComponent(objectPath)}?alt=media`;
+  const r = await fetch(url, { headers: { Authorization: 'Bearer ' + token }, cache: 'no-store' });
+  if (!r.ok) throw new Error(`gcs read ${objectPath} → ${r.status}`);
+  return r.json();
+}
+
+// Server-side copy within the bucket (used to point a client's "live" path at a version).
+export async function gcsCopy(srcPath, dstPath) {
+  const { bucket } = gcp();
+  const token = await getAccessToken();
+  const url = `https://storage.googleapis.com/storage/v1/b/${bucket}/o/${encodeURIComponent(srcPath)}/copyTo/b/${bucket}/o/${encodeURIComponent(dstPath)}`;
+  const r = await fetch(url, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Length': '0' } });
+  if (!r.ok) throw new Error(`gcs copy ${srcPath}→${dstPath} → ${r.status}`);
+  return true;
+}
+
 export async function getAccessToken() {
   const auth = new GoogleAuth({
     credentials: credentials(),

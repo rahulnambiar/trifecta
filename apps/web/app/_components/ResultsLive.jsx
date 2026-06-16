@@ -385,13 +385,13 @@ const TABS = [
   { id: 'optimiser', label: 'Budget optimiser' },
 ];
 
-export default function ResultsLive() {
+export default function ResultsLive({ client }) {
   const [bundle, setBundle] = React.useState(null);
   const [err, setErr] = React.useState(null);
   const [tab, setTab] = React.useState('contribution');
 
   React.useEffect(() => {
-    fetch('/api/results', { cache: 'no-store' })
+    fetch('/api/results?slug=' + encodeURIComponent(client?.id || 'aeon'), { cache: 'no-store' })
       .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(setBundle)
       .catch((e) => setErr(String(e)));

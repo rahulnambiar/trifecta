@@ -5,6 +5,7 @@
 // route performs the requested transition and lets the DB accept or reject it, and
 // records each event in model_lineage.
 import { requireUser, json } from '@/lib/adminAuth';
+import { gcpConfigured, gcsCopy } from '@/lib/gcp';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -109,6 +110,21 @@ export async function PATCH(req) {
     // surface the DB gate's reason (fitter≠reviewer, sign-off authority, illegal transition…)
     return json({ error: error.message.replace(/^.*?:\s*/, '') }, 400);
   }
+  // Promote-to-Live points the client's stable "live" GCS path at this version's
+  // posterior — so Signal, the overview and Results switch to it automatically.
+  if (action === 'promote' && gcpConfigured() && v.gcs_posterior_path) {
+    try {
+      const obj = v.gcs_posterior_path.replace(/^gs:\/\/[^/]+\//, ''); // <slug>/versions/<id>/results.json
+      const slug = obj.split('/')[0];
+      await gcsCopy(obj, `${slug}/live/results.json`);
+      const pkl = obj.replace(/results\.json$/, 'model.pkl');
+      await gcsCopy(pkl, `${slug}/live/model.pkl`).catch(() => {});
+    } catch (e) {
+      // non-fatal: the version is live in the DB; surface a soft warning
+      await lineage(supabase, v.client_id, id, user.id, 'live_posterior_copy_failed', { error: String(e).slice(0, 200) });
+    }
+  }
+
   await lineage(supabase, v.client_id, id, user.id, event, { action, reason: review?.reason || undefined });
 
   // Durable review record (the learning log) on approve / changes-requested.

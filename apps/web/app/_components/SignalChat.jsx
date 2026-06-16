@@ -79,7 +79,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
 
   React.useEffect(() => {
     let on = true;
-    fetch('/api/results').then((r) => (r.ok ? r.json() : null)).then((j) => {
+    fetch('/api/results?slug=' + encodeURIComponent(client?.id || 'aeon')).then((r) => (r.ok ? r.json() : null)).then((j) => {
       if (!on || !j) return;
       const meta = j.meta || {};
       setProvenance({
@@ -221,7 +221,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
         <div ref={scrollRef} className="signal-msgs">
           {empty ? (
             <div className="signal-landing">
-              <SignalOverview clientName={clientName} />
+              <SignalOverview clientName={clientName} slug={client?.id} />
               <div className="signal-ask-cue">
                 <div className="display" style={{ fontSize: 16, color: 'var(--text)', marginBottom: 4 }}>Ask {clientName}'s model anything</div>
                 <div className="dim" style={{ fontSize: 12.5, marginBottom: 12, lineHeight: 1.5 }}>
@@ -292,7 +292,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
                 <span style={{ fontWeight: 700, fontSize: 14 }}>Marketing snapshot</span>
                 <button className="signal-iconbtn-sm" onClick={() => setOverviewOpen(false)} aria-label="Close"><CloseIcon /></button>
               </div>
-              <div className="signal-sheet-body"><SignalOverview clientName={clientName} /></div>
+              <div className="signal-sheet-body"><SignalOverview clientName={clientName} slug={client?.id} /></div>
             </div>
           </div>
         ) : null}
