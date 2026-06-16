@@ -41,6 +41,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
   const [conversations, setConversations] = React.useState([]);
   const [convoId, setConvoId] = React.useState(null);
   const [historyOpen, setHistoryOpen] = React.useState(false);
+  const [overviewOpen, setOverviewOpen] = React.useState(false);
   const clientUuid = client?.dbId;
   const scrollRef = React.useRef(null);
 
@@ -192,6 +193,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
                 </div>
               </div>
               <div className="signal-header-actions">
+                <button className="signal-iconbtn-sm" onClick={() => setOverviewOpen(true)} title="Snapshot" aria-label="Snapshot"><ChartIcon /></button>
                 <button className="signal-iconbtn-sm" onClick={() => setHistoryOpen(true)} title="Your chats" aria-label="Chats"><ListIcon /></button>
                 <button className="signal-iconbtn-sm" onClick={newChat} title="New chat" aria-label="New chat"><PlusIcon /></button>
                 {setTheme ? <button className="signal-iconbtn-sm" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} title="Theme" aria-label="Theme">{theme === 'dark' ? '☀' : '☾'}</button> : null}
@@ -208,6 +210,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
               <div className="sub">Grounded in the latest Meridian model · answers carry {ciLabel(provenance?.confidenceLevel) || '90% CI'}</div>
             </div>
             <div className="actions" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button className="btn ghost small" onClick={() => setOverviewOpen(true)}>Snapshot</button>
               <button className="btn ghost small" onClick={() => setHistoryOpen(true)}>History</button>
               <button className="btn ghost small" onClick={newChat}>New</button>
               <span className="tag mint">● LIVE{client?.version ? ' · ' + client.version : ''}</span>
@@ -281,6 +284,18 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
             <button type="submit" className="signal-icon-btn send" disabled={busy || !input.trim()} aria-label="Send"><SendIcon /></button>
           </form>
         </div>
+
+        {overviewOpen ? (
+          <div className="signal-sheet-backdrop" onClick={() => setOverviewOpen(false)}>
+            <div className="signal-sheet" onClick={(e) => e.stopPropagation()}>
+              <div className="signal-sheet-head">
+                <span style={{ fontWeight: 700, fontSize: 14 }}>Marketing snapshot</span>
+                <button className="signal-iconbtn-sm" onClick={() => setOverviewOpen(false)} aria-label="Close"><CloseIcon /></button>
+              </div>
+              <div className="signal-sheet-body"><SignalOverview clientName={clientName} /></div>
+            </div>
+          </div>
+        ) : null}
 
         {historyOpen ? (
           <div className="signal-history-backdrop" onClick={() => setHistoryOpen(false)}>
@@ -356,4 +371,10 @@ function PlusIcon() {
 }
 function SignOutIcon() {
   return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" /></svg>);
+}
+function ChartIcon() {
+  return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18M8 17V9M13 17V5M18 17v-6" /></svg>);
+}
+function CloseIcon() {
+  return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>);
 }

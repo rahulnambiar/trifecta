@@ -20,16 +20,18 @@ const money = (n) => {
 const xN = (n, d = 1) => (n == null || isNaN(n) ? '—' : Number(n).toFixed(d));
 
 function MiniBars({ items }) {
+  const [sel, setSel] = React.useState(null);
   const max = Math.max(0.0001, ...items.map((i) => i.hi ?? i.value ?? 0));
   return (
     <div className="ov-bars">
       {items.map((it, i) => (
-        <div key={i} className="ov-bar-row">
+        <div key={i} className="ov-bar-row" style={{ cursor: 'pointer' }} title={it.ci || ''}
+          onClick={() => setSel(sel === i ? null : i)}>
           <div className="ov-bar-label">{it.label}</div>
           <div className="ov-bar-track">
-            <div className="ov-bar-fill" style={{ width: Math.max(2, (Math.max(0, it.value) / max) * 100) + '%', background: it.color }} />
+            <div className="ov-bar-fill" style={{ width: Math.max(2, (Math.max(0, it.value) / max) * 100) + '%', background: it.color, opacity: sel != null && sel !== i ? 0.45 : 1 }} />
           </div>
-          <div className="ov-bar-val">{it.valueLabel}</div>
+          <div className="ov-bar-val">{sel === i && it.ci ? it.ci : it.valueLabel}</div>
         </div>
       ))}
     </div>
@@ -61,15 +63,21 @@ export default function SignalOverview({ clientName }) {
   if (!r) return <div className="ov-grid">{[0, 1, 2, 3].map((i) => <div key={i} className="ov-card ov-skeleton" />)}</div>;
 
   const contrib = [...(r.channel_contribution || [])].sort((a, b) => (b.incremental_outcome?.median || 0) - (a.incremental_outcome?.median || 0));
-  const contribItems = contrib.map((c, i) => ({
-    label: c.channel, color: colorFor(c.channel, i),
-    value: c.incremental_outcome?.median, lo: c.incremental_outcome?.ci_lo, hi: c.incremental_outcome?.ci_hi,
-    valueLabel: `${money(c.incremental_outcome?.median)} · ${xN(c.contribution_pct, 0)}%`,
-  }));
-  const roiItems = [...contrib].sort((a, b) => (b.roi?.median || 0) - (a.roi?.median || 0)).map((c, i) => ({
-    label: c.channel, color: colorFor(c.channel, i),
-    value: c.roi?.median, lo: c.roi?.ci_lo, hi: c.roi?.ci_hi, valueLabel: `${xN(c.roi?.median, 1)}x`,
-  }));
+  const contribItems = contrib.map((c, i) => {
+    const io = c.incremental_outcome || {};
+    return {
+      label: c.channel, color: colorFor(c.channel, i), value: io.median, lo: io.ci_lo, hi: io.ci_hi,
+      valueLabel: `${money(io.median)} · ${xN(c.contribution_pct, 0)}%`,
+      ci: io.ci_lo != null ? `${money(io.ci_lo)}–${money(io.ci_hi)}` : null,
+    };
+  });
+  const roiItems = [...contrib].sort((a, b) => (b.roi?.median || 0) - (a.roi?.median || 0)).map((c, i) => {
+    const ro = c.roi || {};
+    return {
+      label: c.channel, color: colorFor(c.channel, i), value: ro.median, lo: ro.ci_lo, hi: ro.ci_hi,
+      valueLabel: `${xN(ro.median, 1)}x`, ci: ro.ci_lo != null ? `${xN(ro.ci_lo, 1)}–${xN(ro.ci_hi, 1)}x` : null,
+    };
+  });
 
   // budget opportunity
   const opt = (r.budget_optimization?.optimized || []).filter((x) => x.metric === 'mean');

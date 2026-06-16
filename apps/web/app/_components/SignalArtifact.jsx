@@ -87,22 +87,26 @@ function Toolbar({ hasRows, canShare, sharing, copied, err, cmo, onCSV, onJSON, 
   );
 }
 
-// ---- shared bar chart ----
-function HBars({ items, max, unit }) {
-  const W = 560, rowH = 26, padL = 96, padR = 56, padT = 6, padB = 6;
+// ---- shared interactive bar chart ----
+function HBars({ items, max, unit, active, onSelect }) {
+  const W = 560, rowH = 28, padL = 96, padR = 56, padT = 6, padB = 6;
   const H = items.length * rowH + padT + padB;
   const iw = W - padL - padR;
   const xT = (v) => padL + (Math.max(0, v) / max) * iw;
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: H, display: 'block' }} fontFamily="var(--f-mono)" fontSize="10" fill="var(--faint)">
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: H, display: 'block', touchAction: 'manipulation' }} fontFamily="var(--f-mono)" fontSize="10" fill="var(--faint)">
       {items.map((d, i) => {
-        const y = padT + i * rowH + 5;
+        const y = padT + i * rowH + 6;
+        const isActive = active === i;
         return (
-          <g key={d.label}>
-            <text x={padL - 8} y={y + 12} textAnchor="end" fill="var(--text)" fontFamily="var(--f-body)" fontSize="11.5">{d.label}</text>
-            <rect x={padL} y={y} width={Math.max(0, (d.value / max) * iw)} height="13" fill={d.color} opacity="0.82" rx="2" />
+          <g key={d.label} style={{ cursor: 'pointer' }} opacity={active != null && !isActive ? 0.45 : 1}
+            onMouseEnter={() => onSelect && onSelect(i)} onMouseLeave={() => onSelect && onSelect(null)}
+            onClick={() => onSelect && onSelect(isActive ? null : i)}>
+            <rect x="0" y={y - 6} width={W} height={rowH - 1} fill="transparent" />
+            <text x={padL - 8} y={y + 11} textAnchor="end" fill="var(--text)" fontFamily="var(--f-body)" fontSize="11.5" fontWeight={isActive ? 700 : 400}>{d.label}</text>
+            <rect x={padL} y={y} width={Math.max(2, (d.value / max) * iw)} height="13" fill={d.color} opacity={isActive ? 1 : 0.82} rx="2" />
             {d.lo != null && d.hi != null ? (
-              <g stroke="var(--text)" strokeWidth="1" opacity="0.65">
+              <g stroke="var(--text)" strokeWidth="1" opacity={isActive ? 0.85 : 0.55}>
                 <line x1={xT(d.lo)} x2={xT(d.hi)} y1={y + 6.5} y2={y + 6.5} />
                 <line x1={xT(d.lo)} x2={xT(d.lo)} y1={y + 3} y2={y + 10} />
                 <line x1={xT(d.hi)} x2={xT(d.hi)} y1={y + 3} y2={y + 10} />
@@ -116,30 +120,48 @@ function HBars({ items, max, unit }) {
   );
 }
 
+function DetailLine({ item, fallback }) {
+  if (!item) return <Caption>{fallback}</Caption>;
+  return (
+    <div className="signal-chart-detail">
+      <span className="dot" style={{ background: item.color }} />
+      <b>{item.label}</b> · {item.valueLabel}
+      {item.ci ? <span>&nbsp;·&nbsp;<span className="dim">90% CI</span> {item.ci}</span> : null}
+    </div>
+  );
+}
+
 // ---- per-tool renderers ----
 function Contribution({ data }) {
+  const [sel, setSel] = React.useState(null);
   const rows = [...(data.channels || [])].sort((a, b) => (b.incremental_outcome?.median || 0) - (a.incremental_outcome?.median || 0));
   const max = niceMax(Math.max(...rows.map((r) => r.incremental_outcome?.ci_hi || r.incremental_outcome?.median || 0)));
-  const items = rows.map((r, i) => ({
-    label: r.channel, color: colorFor(r.channel, i),
-    value: r.incremental_outcome?.median, lo: r.incremental_outcome?.ci_lo, hi: r.incremental_outcome?.ci_hi,
-    valueLabel: `${money(r.incremental_outcome?.median)} · ${xN(r.contribution_pct, 0)}%`,
-  }));
-  return <><HBars items={items} max={max} /><Caption>Incremental revenue · 90% credible interval · ROI in the model</Caption></>;
+  const items = rows.map((r, i) => {
+    const io = r.incremental_outcome || {};
+    return {
+      label: r.channel, color: colorFor(r.channel, i), value: io.median, lo: io.ci_lo, hi: io.ci_hi,
+      valueLabel: `${money(io.median)} · ${xN(r.contribution_pct, 0)}%`,
+      ci: io.ci_lo != null ? `${money(io.ci_lo)} – ${money(io.ci_hi)}` : null,
+    };
+  });
+  return <><HBars items={items} max={max} active={sel} onSelect={setSel} /><DetailLine item={sel != null ? items[sel] : null} fallback="Incremental revenue · 90% credible interval · tap a bar" /></>;
 }
 
 function ROIBars({ data, unit = 'x' }) {
+  const [sel, setSel] = React.useState(null);
   const rows = data.channels || [];
   const max = niceMax(Math.max(1, ...rows.map((r) => r.ci_hi || r.median || r.roi?.median || 0)));
-  const items = rows.map((r, i) => ({
-    label: r.channel, color: colorFor(r.channel, i),
-    value: r.median ?? r.roi?.median, lo: r.ci_lo ?? r.roi?.ci_lo, hi: r.ci_hi ?? r.roi?.ci_hi,
-  }));
-  return <><HBars items={items} max={max} unit={unit} /><Caption>Return per $1 · 90% credible interval</Caption></>;
+  const items = rows.map((r, i) => {
+    const med = r.median ?? r.roi?.median, lo = r.ci_lo ?? r.roi?.ci_lo, hi = r.ci_hi ?? r.roi?.ci_hi;
+    return { label: r.channel, color: colorFor(r.channel, i), value: med, lo, hi, valueLabel: `${xN(med, 1)}x`, ci: lo != null ? `${xN(lo, 1)}–${xN(hi, 1)}x` : null };
+  });
+  return <><HBars items={items} max={max} unit={unit} active={sel} onSelect={setSel} /><DetailLine item={sel != null ? items[sel] : null} fallback="Return per $1 · 90% credible interval · tap a bar" /></>;
 }
 
 function ResponseCurve({ data }) {
   const pts = (data.points || []).filter((p) => p.incremental_outcome != null).sort((a, b) => a.spend - b.spend);
+  const svgRef = React.useRef(null);
+  const [aIdx, setAIdx] = React.useState(null);
   if (!pts.length) return <div className="dim">No curve points.</div>;
   const W = 560, H = 200, pad = { t: 12, r: 16, b: 26, l: 56 };
   const iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
@@ -150,9 +172,23 @@ function ResponseCurve({ data }) {
   const line = (key) => pts.map((p, i) => `${i ? 'L' : 'M'} ${px(p.spend)} ${py(p[key] ?? p.incremental_outcome)}`).join(' ');
   const band = line('ci_hi') + ' ' + pts.slice().reverse().map((p) => `L ${px(p.spend)} ${py(p.ci_lo ?? p.incremental_outcome)}`).join(' ') + ' Z';
   const op = pts.find((p) => Math.abs(p.spend_multiplier - 1) < 1e-6);
+
+  const onMove = (e) => {
+    const svg = svgRef.current; if (!svg) return;
+    const rect = svg.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const sx = Math.max(0, Math.min(xmax, ((((clientX - rect.left) / rect.width) * W) - pad.l) / iw * xmax));
+    let best = 0, bd = Infinity;
+    pts.forEach((p, i) => { const d = Math.abs(p.spend - sx); if (d < bd) { bd = d; best = i; } });
+    setAIdx(best);
+  };
+  const ap = aIdx != null ? pts[aIdx] : null;
+
   return (
     <>
-      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: H, display: 'block' }} fontFamily="var(--f-mono)" fontSize="9.5" fill="var(--faint)">
+      <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: H, display: 'block', touchAction: 'none', cursor: 'crosshair' }}
+        fontFamily="var(--f-mono)" fontSize="9.5" fill="var(--faint)"
+        onMouseMove={onMove} onMouseLeave={() => setAIdx(null)} onTouchStart={onMove} onTouchMove={onMove}>
         {[0, 0.5, 1].map((t) => (
           <g key={t}><line x1={pad.l} x2={W - pad.r} y1={pad.t + (1 - t) * ih} y2={pad.t + (1 - t) * ih} stroke="var(--line)" strokeDasharray="2 3" />
             <text x={pad.l - 6} y={pad.t + (1 - t) * ih + 3} textAnchor="end">{money(t * ymax)}</text></g>
@@ -161,12 +197,19 @@ function ResponseCurve({ data }) {
         <g transform={`translate(${pad.l} ${pad.t})`}>
           <path d={band} fill={color} opacity="0.14" />
           <path d={line('incremental_outcome')} fill="none" stroke={color} strokeWidth="2" />
-          {op ? <g><line x1={px(op.spend)} x2={px(op.spend)} y1={0} y2={ih} stroke="var(--sky)" strokeDasharray="3 3" opacity="0.7" /><circle cx={px(op.spend)} cy={py(op.incremental_outcome)} r="4" fill="var(--sky)" /></g> : null}
+          {op ? <g><line x1={px(op.spend)} x2={px(op.spend)} y1={0} y2={ih} stroke="var(--sky)" strokeDasharray="3 3" opacity="0.6" /><circle cx={px(op.spend)} cy={py(op.incremental_outcome)} r="3.5" fill="var(--sky)" /></g> : null}
+          {ap ? <g><line x1={px(ap.spend)} x2={px(ap.spend)} y1={0} y2={ih} stroke="var(--text)" strokeDasharray="2 3" opacity="0.55" /><circle cx={px(ap.spend)} cy={py(ap.incremental_outcome)} r="5" fill={color} stroke="var(--panel)" strokeWidth="1.5" /></g> : null}
         </g>
         <text x={pad.l} y={H - 6}>spend →</text>
-        <text x={W - pad.r} y={H - 6} textAnchor="end" fill="var(--sky)">current spend {money(op?.spend)}</text>
+        <text x={W - pad.r} y={H - 6} textAnchor="end" fill="var(--sky)">current {money(op?.spend)}</text>
       </svg>
-      <Caption>{data.channel} saturation · incremental revenue vs spend (90% band)</Caption>
+      {ap ? (
+        <div className="signal-chart-detail">
+          <span className="dot" style={{ background: color }} />
+          <b>{money(ap.spend)} spend</b> → {money(ap.incremental_outcome)} incremental
+          {ap.ci_lo != null ? <span>&nbsp;·&nbsp;<span className="dim">90% CI</span> {money(ap.ci_lo)}–{money(ap.ci_hi)}</span> : null}
+        </div>
+      ) : <Caption>{data.channel} saturation · drag across the curve to read any spend level</Caption>}
     </>
   );
 }
