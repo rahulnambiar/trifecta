@@ -78,11 +78,7 @@ function Toolbar({ hasRows, canShare, sharing, copied, err, cmo, onCSV, onJSON, 
   return (
     <div className="row-h" style={{ gap: 6, marginLeft: 'auto' }}>
       {err ? <span className="tag amber" style={{ fontSize: 9.5 }} title={err}>⚠ {err.length > 40 ? 'export blocked' : err}</span> : null}
-      {canShare ? (
-        <button className="btn ghost small" onClick={onShare} disabled={sharing} title="Share this chart as an image — interval, date and model version baked in">
-          {sharing ? '…' : 'Share'}
-        </button>
-      ) : null}
+      {/* Share temporarily disabled — share-as-image is buggy; hidden until fixed. */}
       {!cmo && hasRows ? <button className="btn ghost small" onClick={onCSV}>CSV</button> : null}
       {!cmo ? <button className="btn ghost small" onClick={onJSON}>{copied ? 'Copied' : 'JSON'}</button> : null}
     </div>
