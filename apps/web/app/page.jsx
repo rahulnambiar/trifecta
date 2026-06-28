@@ -4060,7 +4060,7 @@ function App() {
     case 'training':      body = <TrainingRunsLive client={activeClient} />; break;
     case 'results':       body = <ResultsLive client={activeClient} />; break;
     case 'reports':       body = <ReportsScreen client={activeClient} />; break;
-    case 'signal':        body = <SignalChat client={activeClient} />; break;
+    case 'signal':        body = <SignalChat client={activeClient} email={userEmail} />; break;
     case 'client-settings': body = <ClientSettings client={activeClient} />; break;
     case 'system':        body = <SystemSettings />; break;
     default:              body = <Dashboard go={go} enterClient={enterClient} clients={clients} openAddClient={() => setAdding(true)} />;
