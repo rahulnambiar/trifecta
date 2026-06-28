@@ -42,8 +42,21 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
   const [convoId, setConvoId] = React.useState(null);
   const [historyOpen, setHistoryOpen] = React.useState(false);
   const [overviewOpen, setOverviewOpen] = React.useState(false);
+  const [guideOpen, setGuideOpen] = React.useState(false);
   const clientUuid = client?.dbId;
   const scrollRef = React.useRef(null);
+
+  // First-run guide: show a one-time welcome the first time a user opens Signal.
+  // Remembered per user in the browser, so it never nags on return visits.
+  const guideKey = `trifecta.signalGuide.v1.${email || 'anon'}`;
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try { if (!window.localStorage.getItem(guideKey)) setGuideOpen(true); } catch { /* */ }
+  }, [guideKey]);
+  const dismissGuide = () => {
+    try { window.localStorage.setItem(guideKey, '1'); } catch { /* */ }
+    setGuideOpen(false);
+  };
 
   const loadConversations = React.useCallback(async () => {
     if (!clientUuid) return;
@@ -195,6 +208,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
               <div className="signal-header-actions">
                 <button className="signal-iconbtn-sm" onClick={() => setOverviewOpen(true)} title="Snapshot" aria-label="Snapshot"><ChartIcon /></button>
                 <button className="signal-iconbtn-sm" onClick={() => setHistoryOpen(true)} title="Your chats" aria-label="Chats"><ListIcon /></button>
+                <button className="signal-iconbtn-sm" onClick={() => setGuideOpen(true)} title="How to use Signal" aria-label="Help">?</button>
                 <button className="signal-iconbtn-sm" onClick={newChat} title="New chat" aria-label="New chat"><PlusIcon /></button>
                 {setTheme ? <button className="signal-iconbtn-sm" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} title="Theme" aria-label="Theme">{theme === 'dark' ? '☀' : '☾'}</button> : null}
                 {onSignOut ? <button className="signal-iconbtn-sm" onClick={onSignOut} title="Sign out" aria-label="Sign out"><SignOutIcon /></button> : null}
@@ -210,6 +224,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
               <div className="sub">Grounded in the latest Meridian model · answers carry {ciLabel(provenance?.confidenceLevel) || '90% CI'}</div>
             </div>
             <div className="actions" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button className="btn ghost small" onClick={() => setGuideOpen(true)}>Guide</button>
               <button className="btn ghost small" onClick={() => setOverviewOpen(true)}>Snapshot</button>
               <button className="btn ghost small" onClick={() => setHistoryOpen(true)}>History</button>
               <button className="btn ghost small" onClick={newChat}>New</button>
@@ -284,6 +299,43 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
             <button type="submit" className="signal-icon-btn send" disabled={busy || !input.trim()} aria-label="Send"><SendIcon /></button>
           </form>
         </div>
+
+        {guideOpen ? (
+          <div
+            onClick={dismissGuide}
+            style={{ position: 'absolute', inset: 0, zIndex: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, background: 'rgba(8,12,20,0.55)', backdropFilter: 'blur(2px)' }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{ width: 'min(440px, 100%)', background: 'var(--panel)', border: '1px solid var(--line, rgba(140,150,170,0.22))', borderRadius: 16, padding: '22px 22px 18px', boxShadow: '0 24px 60px rgba(0,0,0,0.32)' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                <span className="logomark" style={{ width: 22, height: 22, flexBasis: 22 }} />
+                <div className="display" style={{ fontSize: 17, color: 'var(--text)' }}>Welcome to Signal</div>
+              </div>
+              <div className="dim" style={{ fontSize: 12.5, marginBottom: 16, lineHeight: 1.5 }}>
+                Ask {clientName}'s model anything. Here is how it works.
+              </div>
+              {[
+                ['1', 'Ask in plain language', 'Type a question like "Which channels drive revenue?", or tap a suggested prompt. No dashboards to learn.'],
+                ['2', 'Answers you can trust', 'Every reply reads your live model and shows the number with its 90% confidence range, plus the chart behind it.'],
+                ['3', 'Your chats are saved', 'Reopen any past chat from the chats list and continue right where you left off.'],
+              ].map(([n, h, b]) => (
+                <div key={n} style={{ display: 'flex', gap: 11, marginBottom: 13 }}>
+                  <span style={{ flexShrink: 0, width: 22, height: 22, borderRadius: 7, background: 'var(--blue)', color: '#fff', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{n}</span>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{h}</div>
+                    <div className="dim" style={{ fontSize: 12, lineHeight: 1.45 }}>{b}</div>
+                  </div>
+                </div>
+              ))}
+              <div style={{ display: 'flex', gap: 8, marginTop: 18 }}>
+                <button className="btn primary small" style={{ flex: 1 }} onClick={() => { dismissGuide(); ask(SUGGESTIONS[0]); }}>Try an example</button>
+                <button className="btn ghost small" onClick={dismissGuide}>Explore on my own</button>
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         {overviewOpen ? (
           <div className="signal-sheet-backdrop" onClick={() => setOverviewOpen(false)}>
