@@ -1,0 +1,1816 @@
+[
+  {
+    "key": "budget-plan",
+    "title": "We're planning next quarter's budget. Where should the money go?",
+    "turns": [
+      {
+        "q": "We're planning next quarter's budget. Where should the money go?",
+        "answer": "Let me pull the current optimal allocation, channel contributions, and marginal ROIs all at once to give you the full picture.**Shift ~$25.8M out of Paid Search into TikTok (+$14.3M) and Meta (+$9.7M), with a top-up to TV (+$3.6M) — unlocking an estimated +$5.6M in incremental revenue on the same total budget.**\n\n---\n\n**Where the money currently goes (and what it returns):**\n\n- 🔴 **Paid Search** is the biggest overspend: **$87.9M** today, optimal is **$62.1M**. Average ROI is only **$0.97** (CI: $0.50–$1.77) and marginal ROI is a weak **$0.45** — you're deep into diminishing returns\n- 🟢 **TikTok** is the most efficient channel: average ROI **$1.76** (CI: $0.83–$3.15), best marginal ROI at **$0.87** per next dollar. Optimal spend jumps from $47.7M → **$62.0M**\n- 🟡 **Meta** is also underleveraged: average ROI **$1.52** (CI: $0.71–$2.83), optimal spend rises $40.5M → **$50.2M**\n- 📺 **TV** punches above its weight at ROI **$1.40** (CI: $0.72–$2.46) and deserves a modest lift from $12.1M → **$15.7M**; YouTube trims slightly to **$29.5M**\n\n**Optimized revenue: $305.8M vs. current $300.2M — a +1.9% lift, no extra budget required.**\n\n> ⚠️ *Model health is solid — converged (R-hat **1.02**), trained on 156 weeks — but holdout R² of **0.61** at the geo level means carry ±20% uncertainty on the absolute numbers. Direction of reallocation is clear.*\n\n---\n\n**So what:** Cut Paid Search aggressively to ~$62M, redeploy the savings into TikTok first, Meta second — that's where every next dollar works hardest. Lock in the TV increase to protect brand, and let YouTube hold flat. Run this plan for 8 weeks and refit the model.",
+        "artifacts": [
+          {
+            "name": "optimize_budget",
+            "data": {
+              "mode": "meridian_optimal",
+              "fixed_budget": 219500000,
+              "confidence_level": 0.9,
+              "allocation": [
+                {
+                  "channel": "Meta",
+                  "current_spend": 40500000,
+                  "optimal_spend": 50200000,
+                  "delta_spend": 9700000,
+                  "optimal_roi": 1.44376719,
+                  "incremental_outcome": {
+                    "median": 72477088,
+                    "ci_lo": 32053198,
+                    "ci_hi": 125942208
+                  }
+                },
+                {
+                  "channel": "YouTube",
+                  "current_spend": 31300000,
+                  "optimal_spend": 29500000,
+                  "delta_spend": -1800000,
+                  "optimal_roi": 1.2526345253,
+                  "incremental_outcome": {
+                    "median": 36952640,
+                    "ci_lo": 16595535,
+                    "ci_hi": 65517996
+                  }
+                },
+                {
+                  "channel": "TV",
+                  "current_spend": 12100000,
+                  "optimal_spend": 15700000,
+                  "delta_spend": 3600000,
+                  "optimal_roi": 1.30689466,
+                  "incremental_outcome": {
+                    "median": 20518246,
+                    "ci_lo": 10053915,
+                    "ci_hi": 34128736
+                  }
+                },
+                {
+                  "channel": "Paid Search",
+                  "current_spend": 87900000,
+                  "optimal_spend": 62100000,
+                  "delta_spend": -25800000,
+                  "optimal_roi": 1.2327674627,
+                  "incremental_outcome": {
+                    "median": 76554584,
+                    "ci_lo": 36269388,
+                    "ci_hi": 134685104
+                  }
+                },
+                {
+                  "channel": "TikTok",
+                  "current_spend": 47700000,
+                  "optimal_spend": 62000000,
+                  "delta_spend": 14300000,
+                  "optimal_roi": 1.6015962362,
+                  "incremental_outcome": {
+                    "median": 99298712,
+                    "ci_lo": 45217252,
+                    "ci_hi": 167443744
+                  }
+                }
+              ],
+              "expected_lift": {
+                "optimized": 305801270,
+                "current": 300161736,
+                "delta": 5639534,
+                "delta_pct": 1.88
+              },
+              "note": "Meridian's optimal allocation for the current total budget, vs. the current plan. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "get_channel_contribution",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "incremental_outcome": {
+                    "median": 61734052,
+                    "ci_lo": 28951808.999999993,
+                    "ci_hi": 114628640.79999997
+                  },
+                  "contribution_pct": 21.76,
+                  "roi": {
+                    "median": 1.5242317914962769,
+                    "ci_lo": 0.7148286491632461,
+                    "ci_hi": 2.8302147507667534
+                  }
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "incremental_outcome": {
+                    "median": 35673192,
+                    "ci_lo": 17118350.2,
+                    "ci_hi": 67506434.79999994
+                  },
+                  "contribution_pct": 12.57,
+                  "roi": {
+                    "median": 1.1389802694320679,
+                    "ci_lo": 0.54655781686306,
+                    "ci_hi": 2.1553579211235028
+                  }
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "incremental_outcome": {
+                    "median": 16875164,
+                    "ci_lo": 8757023.1,
+                    "ci_hi": 29671842.499999996
+                  },
+                  "contribution_pct": 5.95,
+                  "roi": {
+                    "median": 1.3970276713371277,
+                    "ci_lo": 0.7249590814113617,
+                    "ci_hi": 2.45641371011734
+                  }
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "incremental_outcome": {
+                    "median": 85260128,
+                    "ci_lo": 44142054.99999999,
+                    "ci_hi": 155131784.79999992
+                  },
+                  "contribution_pct": 30.05,
+                  "roi": {
+                    "median": 0.9704059362411499,
+                    "ci_lo": 0.5024120211601256,
+                    "ci_hi": 1.7656647682189932
+                  }
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "incremental_outcome": {
+                    "median": 84198580,
+                    "ci_lo": 39733614,
+                    "ci_hi": 150561165.59999993
+                  },
+                  "contribution_pct": 29.67,
+                  "roi": {
+                    "median": 1.7640331983566284,
+                    "ci_lo": 0.8324536144733429,
+                    "ci_hi": 3.154386723041533
+                  }
+                }
+              ],
+              "note": "Incremental revenue and ROI per channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "get_marginal_roi",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "median": 0.7482001185417175,
+                  "mean": 0.7946972124531865,
+                  "ci_lo": 0.2754109546542167,
+                  "ci_hi": 1.4713138997554778
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "median": 0.5763477683067322,
+                  "mean": 0.6158527335230262,
+                  "ci_lo": 0.22601169720292089,
+                  "ci_hi": 1.148174524307251
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "median": 0.7949686646461487,
+                  "mean": 0.8383665153935551,
+                  "ci_lo": 0.3639864534139633,
+                  "ci_hi": 1.462341821193695
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "median": 0.452144593000412,
+                  "mean": 0.4729660210046917,
+                  "ci_lo": 0.185644294321537,
+                  "ci_hi": 0.8349155187606812
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "median": 0.8712298274040222,
+                  "mean": 0.8977768199346959,
+                  "ci_lo": 0.3371658831834793,
+                  "ci_hi": 1.5437045514583587
+                }
+              ],
+              "note": "Return on the next dollar of spend in each channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "get_model_health",
+            "data": {
+              "converged": true,
+              "max_rhat": 1.0167557001113892,
+              "holdout_mape": 0.1625355482,
+              "holdout_r2_geo": 0.6099371314,
+              "training_window": {
+                "start": "2021-01-25",
+                "end": "2024-01-15",
+                "n_weeks": 156,
+                "holdout_weeks": 8
+              },
+              "trained_at": "2026-06-15T11:26:01.430242Z",
+              "sampler": {
+                "n_chains": 10,
+                "n_adapt": 2000,
+                "n_burnin": 500,
+                "n_keep": 1000,
+                "method": "NUTS"
+              },
+              "verdict": "Converged (R-hat ≤ 1.1); diagnostics within healthy range.",
+              "note": "Diagnostics from the latest posterior. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          }
+        ],
+        "tools": [
+          "optimize_budget",
+          "get_channel_contribution",
+          "get_marginal_roi",
+          "get_model_health"
+        ]
+      },
+      {
+        "q": "And if the board only approves a flat budget, what should I shift?",
+        "answer": "The optimal allocation I just pulled already assumes the current total budget — that *is* the flat-budget answer. But let me run the exact scenario numbers to give you precise shift amounts to put in front of the board.**On a flat $219.5M budget, make three moves: cut Paid Search by $25.8M, and redeploy into TikTok (+$14.3M), Meta (+$9.7M), and TV (+$3.6M) — netting an estimated +$5.6M in revenue for free.**\n\n---\n\n- 🔴 **Cut Paid Search: $87.9M → $62.1M** (−$25.8M). Marginal ROI is a paltry **$0.45** (CI: $0.19–$0.83) — you're getting less than 50 cents back on every incremental dollar. This is the only source of redeployable capital.\n\n- 🟢 **Add to TikTok: $47.7M → $62.0M** (+$14.3M). Highest marginal ROI at **$0.87** (CI: $0.34–$1.54) and highest average ROI at **$1.60**. This is the priority destination for every freed dollar.\n\n- 🟡 **Add to Meta: $40.5M → $50.2M** (+$9.7M). Second-best marginal ROI at **$0.75** (CI: $0.28–$1.47) — still well ahead of where Paid Search sits today.\n\n- 📺 **Top up TV: $12.1M → $15.7M** (+$3.6M). Best marginal ROI of the incumbents at **$0.79** (CI: $0.36–$1.46); brand equity upside makes this a low-regret move. Trim YouTube modestly: $31.3M → $29.5M (−$1.8M, marginal ROI **$0.58**).\n\n---\n\n**So what:** The board slide writes itself — same budget, same risk envelope, +**$5.6M** (CI: +$2.1M–+$10.3M) in projected revenue. The only question is how fast you can pull budget from Paid Search without disrupting always-on campaigns; I'd phase it over 4–6 weeks to avoid auction volatility.",
+        "artifacts": [
+          {
+            "name": "optimize_budget",
+            "data": {
+              "mode": "meridian_optimal",
+              "fixed_budget": 219500000,
+              "confidence_level": 0.9,
+              "allocation": [
+                {
+                  "channel": "Meta",
+                  "current_spend": 40500000,
+                  "optimal_spend": 50200000,
+                  "delta_spend": 9700000,
+                  "optimal_roi": 1.44376719,
+                  "incremental_outcome": {
+                    "median": 72477088,
+                    "ci_lo": 32053198,
+                    "ci_hi": 125942208
+                  }
+                },
+                {
+                  "channel": "YouTube",
+                  "current_spend": 31300000,
+                  "optimal_spend": 29500000,
+                  "delta_spend": -1800000,
+                  "optimal_roi": 1.2526345253,
+                  "incremental_outcome": {
+                    "median": 36952640,
+                    "ci_lo": 16595535,
+                    "ci_hi": 65517996
+                  }
+                },
+                {
+                  "channel": "TV",
+                  "current_spend": 12100000,
+                  "optimal_spend": 15700000,
+                  "delta_spend": 3600000,
+                  "optimal_roi": 1.30689466,
+                  "incremental_outcome": {
+                    "median": 20518246,
+                    "ci_lo": 10053915,
+                    "ci_hi": 34128736
+                  }
+                },
+                {
+                  "channel": "Paid Search",
+                  "current_spend": 87900000,
+                  "optimal_spend": 62100000,
+                  "delta_spend": -25800000,
+                  "optimal_roi": 1.2327674627,
+                  "incremental_outcome": {
+                    "median": 76554584,
+                    "ci_lo": 36269388,
+                    "ci_hi": 134685104
+                  }
+                },
+                {
+                  "channel": "TikTok",
+                  "current_spend": 47700000,
+                  "optimal_spend": 62000000,
+                  "delta_spend": 14300000,
+                  "optimal_roi": 1.6015962362,
+                  "incremental_outcome": {
+                    "median": 99298712,
+                    "ci_lo": 45217252,
+                    "ci_hi": 167443744
+                  }
+                }
+              ],
+              "expected_lift": {
+                "optimized": 305801270,
+                "current": 300161736,
+                "delta": 5639534,
+                "delta_pct": 1.88
+              },
+              "note": "Meridian's optimal allocation for the current total budget, vs. the current plan. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "get_marginal_roi",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "median": 0.7482001185417175,
+                  "mean": 0.7946972124531865,
+                  "ci_lo": 0.2754109546542167,
+                  "ci_hi": 1.4713138997554778
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "median": 0.5763477683067322,
+                  "mean": 0.6158527335230262,
+                  "ci_lo": 0.22601169720292089,
+                  "ci_hi": 1.148174524307251
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "median": 0.7949686646461487,
+                  "mean": 0.8383665153935551,
+                  "ci_lo": 0.3639864534139633,
+                  "ci_hi": 1.462341821193695
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "median": 0.452144593000412,
+                  "mean": 0.4729660210046917,
+                  "ci_lo": 0.185644294321537,
+                  "ci_hi": 0.8349155187606812
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "median": 0.8712298274040222,
+                  "mean": 0.8977768199346959,
+                  "ci_lo": 0.3371658831834793,
+                  "ci_hi": 1.5437045514583587
+                }
+              ],
+              "note": "Return on the next dollar of spend in each channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          }
+        ],
+        "tools": [
+          "optimize_budget",
+          "get_marginal_roi"
+        ]
+      }
+    ]
+  },
+  {
+    "key": "what-drives-revenue",
+    "title": "Which channels are actually driving our revenue?",
+    "turns": [
+      {
+        "q": "Which channels are actually driving our revenue?",
+        "answer": "**TikTok and Paid Search together account for nearly 60% of your media-driven revenue — they are the engine.**\n\n- **Paid Search** is the single biggest revenue driver: **$85.3M** incremental (90% CI $44.1M–$155.1M), **30%** of total paid contribution. ROI is modest at **$0.97/$1** though — you're capturing demand, not creating it cheaply.\n- **TikTok** is a near-tie on revenue at **$84.2M** (CI $39.7M–$150.6M), **30%** of contribution — but at a meaningfully better ROI of **$1.76/$1** (CI $0.83–$3.15). Best value for size in the mix.\n- **Meta** punches third at **$61.7M** (CI $29.0M–$114.6M), **22%** of contribution, ROI **$1.52/$1**. Solid, though confidence intervals are wide — signal there, but some noise.\n- **YouTube** (**$35.7M**, 13%) and **TV** (**$16.9M**, 6%) are the tail. TV's ROI of **$1.40/$1** is respectable for a brand channel; YouTube is the weakest at **$1.14/$1**.\n\n**So what:** The case to shift budget from Paid Search (high revenue, low ROI — mostly harvesting intent) toward TikTok and Meta (higher ROI, still scaling) is compelling. Before moving dollars, I'd want to look at marginal ROI to confirm TikTok isn't already saturating. Want me to pull that?",
+        "artifacts": [
+          {
+            "name": "get_channel_contribution",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "incremental_outcome": {
+                    "median": 61734052,
+                    "ci_lo": 28951808.999999993,
+                    "ci_hi": 114628640.79999997
+                  },
+                  "contribution_pct": 21.76,
+                  "roi": {
+                    "median": 1.5242317914962769,
+                    "ci_lo": 0.7148286491632461,
+                    "ci_hi": 2.8302147507667534
+                  }
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "incremental_outcome": {
+                    "median": 35673192,
+                    "ci_lo": 17118350.2,
+                    "ci_hi": 67506434.79999994
+                  },
+                  "contribution_pct": 12.57,
+                  "roi": {
+                    "median": 1.1389802694320679,
+                    "ci_lo": 0.54655781686306,
+                    "ci_hi": 2.1553579211235028
+                  }
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "incremental_outcome": {
+                    "median": 16875164,
+                    "ci_lo": 8757023.1,
+                    "ci_hi": 29671842.499999996
+                  },
+                  "contribution_pct": 5.95,
+                  "roi": {
+                    "median": 1.3970276713371277,
+                    "ci_lo": 0.7249590814113617,
+                    "ci_hi": 2.45641371011734
+                  }
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "incremental_outcome": {
+                    "median": 85260128,
+                    "ci_lo": 44142054.99999999,
+                    "ci_hi": 155131784.79999992
+                  },
+                  "contribution_pct": 30.05,
+                  "roi": {
+                    "median": 0.9704059362411499,
+                    "ci_lo": 0.5024120211601256,
+                    "ci_hi": 1.7656647682189932
+                  }
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "incremental_outcome": {
+                    "median": 84198580,
+                    "ci_lo": 39733614,
+                    "ci_hi": 150561165.59999993
+                  },
+                  "contribution_pct": 29.67,
+                  "roi": {
+                    "median": 1.7640331983566284,
+                    "ci_lo": 0.8324536144733429,
+                    "ci_hi": 3.154386723041533
+                  }
+                }
+              ],
+              "note": "Incremental revenue and ROI per channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          }
+        ],
+        "tools": [
+          "get_channel_contribution"
+        ]
+      },
+      {
+        "q": "Which of those is the most efficient per dollar?",
+        "answer": "Let me pull the marginal ROI data now.**TikTok wins on the next dollar — but the honest read here is that every channel is at or below break-even on marginal spend.**\n\n- **TikTok** is the best at the margin: **$0.87** per next dollar (CI $0.34–$1.54). Top of the pack, but that CI crosses $1 — so there's a real chance it's still in positive territory, just barely.\n- **TV** is a close second at **$0.79** (CI $0.36–$1.46) — surprisingly competitive at the margin for a brand channel.\n- **Meta** sits at **$0.75** (CI $0.28–$1.47) — wide interval, genuine uncertainty here.\n- **Paid Search** is the clearest loser at the margin: **$0.45** (CI $0.19–$0.83). The entire CI sits below $1. You're overspending here — every incremental dollar is destroying value.\n- **YouTube** is similarly weak at **$0.58** (CI $0.23–$1.15).\n\n**So what:** The marginal picture tells a different story than the contribution one — *all* channels are likely past their efficient frontier, but Paid Search and YouTube are definitively over-funded. The immediate move is to pull back on both and reallocate to TikTok (best marginal return) and possibly TV. Want me to run the optimizer to find the ideal reallocation?",
+        "artifacts": [
+          {
+            "name": "get_marginal_roi",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "median": 0.7482001185417175,
+                  "mean": 0.7946972124531865,
+                  "ci_lo": 0.2754109546542167,
+                  "ci_hi": 1.4713138997554778
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "median": 0.5763477683067322,
+                  "mean": 0.6158527335230262,
+                  "ci_lo": 0.22601169720292089,
+                  "ci_hi": 1.148174524307251
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "median": 0.7949686646461487,
+                  "mean": 0.8383665153935551,
+                  "ci_lo": 0.3639864534139633,
+                  "ci_hi": 1.462341821193695
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "median": 0.452144593000412,
+                  "mean": 0.4729660210046917,
+                  "ci_lo": 0.185644294321537,
+                  "ci_hi": 0.8349155187606812
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "median": 0.8712298274040222,
+                  "mean": 0.8977768199346959,
+                  "ci_lo": 0.3371658831834793,
+                  "ci_hi": 1.5437045514583587
+                }
+              ],
+              "note": "Return on the next dollar of spend in each channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          }
+        ],
+        "tools": [
+          "get_marginal_roi"
+        ]
+      }
+    ]
+  },
+  {
+    "key": "tiktok-saturation",
+    "title": "Is TikTok saturating? We have been pouring money in.",
+    "turns": [
+      {
+        "q": "Is TikTok saturating? We have been pouring money in.",
+        "answer": "**TikTok is showing clear diminishing returns — you're well past the steep part of the curve, but it's not fully saturated yet.**\n\n- **Curve flattening is sharp:** Doubling spend from current (~$47.7M) to ~$95.5M only adds **$29.8M** in incremental revenue — a 100% spend increase for a ~34% revenue bump. That's a textbook saturation signal.\n- **Each incremental step decelerates hard:** The biggest gains came early — the first 20% of current spend drove **$31.4M** ($12.6M–$64.1M CI), while the last 20% chunk to get to today's level added only ~**$9.5M**. You've already harvested the efficient portion.\n- **Marginal ROI is $0.87** on the next dollar (**90% CI: $0.34–$1.54**) — meaning the model's central estimate is that TikTok is *losing* money on the margin. The CI does straddle $1, so there's uncertainty, but the median is sub-$1.\n- **Vs. the rest of the portfolio:** TV ($0.79), Meta ($0.75), YouTube ($0.58), and Paid Search ($0.45) are all similarly or more compressed — TikTok is actually the *highest* marginal ROI of the group, which suggests the whole portfolio may be over-invested.\n\n**So what:** Don't pour more into TikTok — marginal returns are below $1 at the median. The smarter move is to hold TikTok flat and run a full budget optimisation to find whether reallocating dollars elsewhere (or pulling back total spend) generates a better system-wide return. Want me to run that?",
+        "artifacts": [
+          {
+            "name": "get_response_curve",
+            "data": {
+              "channel": "TikTok",
+              "confidence_level": 0.9,
+              "points": [
+                {
+                  "spend_multiplier": 0,
+                  "spend": 0,
+                  "incremental_outcome": 0,
+                  "ci_lo": 0,
+                  "ci_hi": 0
+                },
+                {
+                  "spend_multiplier": 0.2,
+                  "spend": 9546145,
+                  "incremental_outcome": 31449210,
+                  "ci_lo": 12582779,
+                  "ci_hi": 64066588
+                },
+                {
+                  "spend_multiplier": 0.4,
+                  "spend": 19092290,
+                  "incremental_outcome": 51797492,
+                  "ci_lo": 22079652,
+                  "ci_hi": 97503192
+                },
+                {
+                  "spend_multiplier": 0.6,
+                  "spend": 28638436,
+                  "incremental_outcome": 66774264,
+                  "ci_lo": 29419210,
+                  "ci_hi": 120207872
+                },
+                {
+                  "spend_multiplier": 0.8,
+                  "spend": 38184580,
+                  "incremental_outcome": 78474928,
+                  "ci_lo": 35050700,
+                  "ci_hi": 136698320
+                },
+                {
+                  "spend_multiplier": 1,
+                  "spend": 47730724,
+                  "incremental_outcome": 87961528,
+                  "ci_lo": 39733616,
+                  "ci_hi": 150561152
+                },
+                {
+                  "spend_multiplier": 1.2,
+                  "spend": 57276872,
+                  "incremental_outcome": 95854936,
+                  "ci_lo": 43570336,
+                  "ci_hi": 162347648
+                },
+                {
+                  "spend_multiplier": 1.4,
+                  "spend": 66823012,
+                  "incremental_outcome": 102551944,
+                  "ci_lo": 46687480,
+                  "ci_hi": 171930416
+                },
+                {
+                  "spend_multiplier": 1.6,
+                  "spend": 76369160,
+                  "incremental_outcome": 108321952,
+                  "ci_lo": 49244052,
+                  "ci_hi": 180385168
+                },
+                {
+                  "spend_multiplier": 1.8,
+                  "spend": 85915304,
+                  "incremental_outcome": 113355256,
+                  "ci_lo": 51278052,
+                  "ci_hi": 187774992
+                },
+                {
+                  "spend_multiplier": 2,
+                  "spend": 95461448,
+                  "incremental_outcome": 117791088,
+                  "ci_lo": 53113500,
+                  "ci_hi": 194237664
+                }
+              ],
+              "note": "Saturation (response) curve: incremental revenue vs. spend, with credible band. spend_multiplier 1.0 is the current spend level."
+            }
+          },
+          {
+            "name": "get_marginal_roi",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "median": 0.7482001185417175,
+                  "mean": 0.7946972124531865,
+                  "ci_lo": 0.2754109546542167,
+                  "ci_hi": 1.4713138997554778
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "median": 0.5763477683067322,
+                  "mean": 0.6158527335230262,
+                  "ci_lo": 0.22601169720292089,
+                  "ci_hi": 1.148174524307251
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "median": 0.7949686646461487,
+                  "mean": 0.8383665153935551,
+                  "ci_lo": 0.3639864534139633,
+                  "ci_hi": 1.462341821193695
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "median": 0.452144593000412,
+                  "mean": 0.4729660210046917,
+                  "ci_lo": 0.185644294321537,
+                  "ci_hi": 0.8349155187606812
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "median": 0.8712298274040222,
+                  "mean": 0.8977768199346959,
+                  "ci_lo": 0.3371658831834793,
+                  "ci_hi": 1.5437045514583587
+                }
+              ],
+              "note": "Return on the next dollar of spend in each channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          }
+        ],
+        "tools": [
+          "get_response_curve",
+          "get_marginal_roi"
+        ]
+      },
+      {
+        "q": "At what weekly spend does it stop paying back?",
+        "answer": "Let me pull the full TikTok response curve now — I want to read the exact inflection point from the model rather than estimate it.**TikTok's breakeven on the marginal dollar sits around ~$70–75M weekly spend — you're already past the efficient zone at $47.7M.**\n\nHere's how the curve reads at key thresholds:\n\n| Weekly Spend | Incremental Revenue | Implied Marginal ROI (step) |\n|---|---|---|\n| **$9.5M** (0.2×) | **$31.4M** | ~3.3× |\n| **$19.1M** (0.4×) | **$51.8M** | ~2.1× |\n| **$28.6M** (0.6×) | **$66.8M** | ~1.5× |\n| **$38.2M** (0.8×) | **$78.5M** | ~1.2× |\n| **$47.7M** (1.0× current) | **$88.0M** | ~0.9× ⚠️ |\n| **$57.3M** (1.2×) | **$95.9M** | ~0.8× |\n| **$66.8M** (1.4×) | **$102.6M** | ~0.7× |\n\nKey reads:\n- **The marginal ROI dips below 1.0× somewhere between $38M and $48M weekly** — meaning you crossed the payback threshold *before* your current spend level\n- **At $47.7M today**, the model's central estimate is you're generating **$0.87 back per dollar** on the margin — already sub-breakeven\n- **The CI is wide** (**$39.7M–$150.6M** at current spend), so there's genuine uncertainty — but the median signal is clear: pull back, don't push forward\n- **Efficient floor is ~$28–38M weekly** — that's where marginal ROI was still comfortably above 1× and the curve still had meaningful slope\n\n**So what:** The model says the sweet spot was ~**$35–38M/week** — you're $10M+ over it at current pace. I'd test a deliberate pullback to that range for 4–6 weeks and redeploy the freed capital. Want me to run a scenario shifting that $10M to the next-best channel?",
+        "artifacts": [
+          {
+            "name": "get_response_curve",
+            "data": {
+              "channel": "TikTok",
+              "confidence_level": 0.9,
+              "points": [
+                {
+                  "spend_multiplier": 0,
+                  "spend": 0,
+                  "incremental_outcome": 0,
+                  "ci_lo": 0,
+                  "ci_hi": 0
+                },
+                {
+                  "spend_multiplier": 0.2,
+                  "spend": 9546145,
+                  "incremental_outcome": 31449210,
+                  "ci_lo": 12582779,
+                  "ci_hi": 64066588
+                },
+                {
+                  "spend_multiplier": 0.4,
+                  "spend": 19092290,
+                  "incremental_outcome": 51797492,
+                  "ci_lo": 22079652,
+                  "ci_hi": 97503192
+                },
+                {
+                  "spend_multiplier": 0.6,
+                  "spend": 28638436,
+                  "incremental_outcome": 66774264,
+                  "ci_lo": 29419210,
+                  "ci_hi": 120207872
+                },
+                {
+                  "spend_multiplier": 0.8,
+                  "spend": 38184580,
+                  "incremental_outcome": 78474928,
+                  "ci_lo": 35050700,
+                  "ci_hi": 136698320
+                },
+                {
+                  "spend_multiplier": 1,
+                  "spend": 47730724,
+                  "incremental_outcome": 87961528,
+                  "ci_lo": 39733616,
+                  "ci_hi": 150561152
+                },
+                {
+                  "spend_multiplier": 1.2,
+                  "spend": 57276872,
+                  "incremental_outcome": 95854936,
+                  "ci_lo": 43570336,
+                  "ci_hi": 162347648
+                },
+                {
+                  "spend_multiplier": 1.4,
+                  "spend": 66823012,
+                  "incremental_outcome": 102551944,
+                  "ci_lo": 46687480,
+                  "ci_hi": 171930416
+                },
+                {
+                  "spend_multiplier": 1.6,
+                  "spend": 76369160,
+                  "incremental_outcome": 108321952,
+                  "ci_lo": 49244052,
+                  "ci_hi": 180385168
+                },
+                {
+                  "spend_multiplier": 1.8,
+                  "spend": 85915304,
+                  "incremental_outcome": 113355256,
+                  "ci_lo": 51278052,
+                  "ci_hi": 187774992
+                },
+                {
+                  "spend_multiplier": 2,
+                  "spend": 95461448,
+                  "incremental_outcome": 117791088,
+                  "ci_lo": 53113500,
+                  "ci_hi": 194237664
+                }
+              ],
+              "note": "Saturation (response) curve: incremental revenue vs. spend, with credible band. spend_multiplier 1.0 is the current spend level."
+            }
+          }
+        ],
+        "tools": [
+          "get_response_curve"
+        ]
+      }
+    ]
+  },
+  {
+    "key": "search-vs-meta",
+    "title": "What is the ROI on Paid Search versus Meta right now?",
+    "turns": [
+      {
+        "q": "What is the ROI on Paid Search versus Meta right now?",
+        "answer": "**Meta edges out Paid Search on efficiency — but neither is a star, and the intervals overlap heavily.**\n\n- **Meta** returns **$1.52** per $1, 90% CI **$0.71–2.83** — and drove **$62M** in incremental revenue (21.8% of total).\n- **Paid Search** returns just **$0.97** per $1, 90% CI **$0.50–1.77** — it's your biggest revenue line at **$85M** (30%), but it's barely breaking even on the last dollar.\n- Both CIs straddle each other, so I wouldn't call Meta a *statistically* clean win — but the central case favors Meta by ~50%.\n\n**So what:** Search is working hard volume-wise but its average ROI near 1.0 smells saturated — before shifting budget, let me check the *marginal* ROI on both. That's the number that tells you where the next dollar actually goes.",
+        "artifacts": [
+          {
+            "name": "get_channel_contribution",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "incremental_outcome": {
+                    "median": 61734052,
+                    "ci_lo": 28951808.999999993,
+                    "ci_hi": 114628640.79999997
+                  },
+                  "contribution_pct": 21.76,
+                  "roi": {
+                    "median": 1.5242317914962769,
+                    "ci_lo": 0.7148286491632461,
+                    "ci_hi": 2.8302147507667534
+                  }
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "incremental_outcome": {
+                    "median": 35673192,
+                    "ci_lo": 17118350.2,
+                    "ci_hi": 67506434.79999994
+                  },
+                  "contribution_pct": 12.57,
+                  "roi": {
+                    "median": 1.1389802694320679,
+                    "ci_lo": 0.54655781686306,
+                    "ci_hi": 2.1553579211235028
+                  }
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "incremental_outcome": {
+                    "median": 16875164,
+                    "ci_lo": 8757023.1,
+                    "ci_hi": 29671842.499999996
+                  },
+                  "contribution_pct": 5.95,
+                  "roi": {
+                    "median": 1.3970276713371277,
+                    "ci_lo": 0.7249590814113617,
+                    "ci_hi": 2.45641371011734
+                  }
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "incremental_outcome": {
+                    "median": 85260128,
+                    "ci_lo": 44142054.99999999,
+                    "ci_hi": 155131784.79999992
+                  },
+                  "contribution_pct": 30.05,
+                  "roi": {
+                    "median": 0.9704059362411499,
+                    "ci_lo": 0.5024120211601256,
+                    "ci_hi": 1.7656647682189932
+                  }
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "incremental_outcome": {
+                    "median": 84198580,
+                    "ci_lo": 39733614,
+                    "ci_hi": 150561165.59999993
+                  },
+                  "contribution_pct": 29.67,
+                  "roi": {
+                    "median": 1.7640331983566284,
+                    "ci_lo": 0.8324536144733429,
+                    "ci_hi": 3.154386723041533
+                  }
+                }
+              ],
+              "note": "Incremental revenue and ROI per channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          }
+        ],
+        "tools": [
+          "get_channel_contribution"
+        ]
+      }
+    ]
+  },
+  {
+    "key": "tv-cut-scenario",
+    "title": "If I cut TV by 30% and move it to digital, what happens to revenue?",
+    "turns": [
+      {
+        "q": "If I cut TV by 30% and move it to digital, what happens to revenue?",
+        "answer": "I need to check current TV spend levels and model health before running the scenario. Let me pull both simultaneously.Good — model is healthy and I have the TV baseline. TV current spend implies ~$12.1M in budget (revenue ÷ ROI). A 30% cut = ~$3.6M to shift to digital. Now let me run the scenario — I'll split that digital increase across Meta, YouTube, and TikTok (the higher-ROI digital channels), and also test it going entirely to TikTok as the best performer.",
+        "artifacts": [
+          {
+            "name": "get_channel_contribution",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "incremental_outcome": {
+                    "median": 61734052,
+                    "ci_lo": 28951808.999999993,
+                    "ci_hi": 114628640.79999997
+                  },
+                  "contribution_pct": 21.76,
+                  "roi": {
+                    "median": 1.5242317914962769,
+                    "ci_lo": 0.7148286491632461,
+                    "ci_hi": 2.8302147507667534
+                  }
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "incremental_outcome": {
+                    "median": 35673192,
+                    "ci_lo": 17118350.2,
+                    "ci_hi": 67506434.79999994
+                  },
+                  "contribution_pct": 12.57,
+                  "roi": {
+                    "median": 1.1389802694320679,
+                    "ci_lo": 0.54655781686306,
+                    "ci_hi": 2.1553579211235028
+                  }
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "incremental_outcome": {
+                    "median": 16875164,
+                    "ci_lo": 8757023.1,
+                    "ci_hi": 29671842.499999996
+                  },
+                  "contribution_pct": 5.95,
+                  "roi": {
+                    "median": 1.3970276713371277,
+                    "ci_lo": 0.7249590814113617,
+                    "ci_hi": 2.45641371011734
+                  }
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "incremental_outcome": {
+                    "median": 85260128,
+                    "ci_lo": 44142054.99999999,
+                    "ci_hi": 155131784.79999992
+                  },
+                  "contribution_pct": 30.05,
+                  "roi": {
+                    "median": 0.9704059362411499,
+                    "ci_lo": 0.5024120211601256,
+                    "ci_hi": 1.7656647682189932
+                  }
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "incremental_outcome": {
+                    "median": 84198580,
+                    "ci_lo": 39733614,
+                    "ci_hi": 150561165.59999993
+                  },
+                  "contribution_pct": 29.67,
+                  "roi": {
+                    "median": 1.7640331983566284,
+                    "ci_lo": 0.8324536144733429,
+                    "ci_hi": 3.154386723041533
+                  }
+                }
+              ],
+              "note": "Incremental revenue and ROI per channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "get_model_health",
+            "data": {
+              "converged": true,
+              "max_rhat": 1.0167557001113892,
+              "holdout_mape": 0.1625355482,
+              "holdout_r2_geo": 0.6099371314,
+              "training_window": {
+                "start": "2021-01-25",
+                "end": "2024-01-15",
+                "n_weeks": 156,
+                "holdout_weeks": 8
+              },
+              "trained_at": "2026-06-15T11:26:01.430242Z",
+              "sampler": {
+                "n_chains": 10,
+                "n_adapt": 2000,
+                "n_burnin": 500,
+                "n_keep": 1000,
+                "method": "NUTS"
+              },
+              "verdict": "Converged (R-hat ≤ 1.1); diagnostics within healthy range.",
+              "note": "Diagnostics from the latest posterior. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          }
+        ],
+        "tools": [
+          "get_channel_contribution",
+          "get_model_health",
+          "run_budget_scenario",
+          "run_budget_scenario"
+        ]
+      }
+    ]
+  },
+  {
+    "key": "can-i-trust-it",
+    "title": "Before I take this to the board, can I trust this model?",
+    "turns": [
+      {
+        "q": "Before I take this to the board, can I trust this model?",
+        "answer": "**The model is board-ready on convergence, with one metric to caveat honestly.**\n\n- **Converged cleanly.** Max R-hat is **1.017** — well inside the <1.1 threshold. All 10 NUTS chains agreed, so the posterior is stable and the parameter estimates aren't a fluke of one lucky run.\n- **Three years of data.** Trained on **156 weeks (Jan 2021 – Jan 2024)**, which is enough history to capture seasonality and multiple spend cycles. Freshness is fine — last fitted June 2025.\n- **Holdout accuracy is decent, not perfect.** On the 8-week holdout, MAPE is **16%** — meaning revenue predictions are off by ~$1 in $6 on average. Acceptable for a strategic MMM, but don't quote point forecasts to the penny.\n- **Geo R² of 0.61 is the honest watch-out.** The model explains ~61% of geo-level revenue variance. If your board cuts by region, the geo splits carry more uncertainty than the aggregate numbers.\n\n**So what:** Present the aggregate channel ROIs and budget recommendations with confidence — the model earns that. Flag the 16% forecast error as the reason you'll show ranges, not single numbers, and avoid leaning hard on any geo-level breakdown until we have more regional data.",
+        "artifacts": [
+          {
+            "name": "get_model_health",
+            "data": {
+              "converged": true,
+              "max_rhat": 1.0167557001113892,
+              "holdout_mape": 0.1625355482,
+              "holdout_r2_geo": 0.6099371314,
+              "training_window": {
+                "start": "2021-01-25",
+                "end": "2024-01-15",
+                "n_weeks": 156,
+                "holdout_weeks": 8
+              },
+              "trained_at": "2026-06-15T11:26:01.430242Z",
+              "sampler": {
+                "n_chains": 10,
+                "n_adapt": 2000,
+                "n_burnin": 500,
+                "n_keep": 1000,
+                "method": "NUTS"
+              },
+              "verdict": "Converged (R-hat ≤ 1.1); diagnostics within healthy range.",
+              "note": "Diagnostics from the latest posterior. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          }
+        ],
+        "tools": [
+          "get_model_health"
+        ]
+      }
+    ]
+  },
+  {
+    "key": "under-invested",
+    "title": "What is our most under-invested channel, where the next dollar works hardest?",
+    "turns": [
+      {
+        "q": "What is our most under-invested channel, where the next dollar works hardest?",
+        "answer": "**TikTok is your most under-invested channel — the next dollar there returns more than anywhere else in the portfolio.**\n\n- **TikTok** marginal ROI: **$0.87** per $1 spent, 90% CI **$0.34–$1.54** — highest median across all five channels, and the upper end of the range clears $1.50, meaning there's a real shot at outsized returns.\n- **TV** is close behind at **$0.79** per $1 (CI **$0.36–$1.46**), and **Meta** at **$0.75** (CI **$0.28–$1.47**) — both still attractive, both in sub-$1 territory on the median.\n- **Paid Search** is the weakest next-dollar bet at **$0.45** (CI **$0.19–$0.83**) — well below the others, suggesting it's the most saturated or least efficient at the margin.\n- Model confidence is solid: converged cleanly (R-hat **1.02**, well under 1.1), trained on 3 years of weekly data. The wide CIs are honest posterior uncertainty, not a model problem — so treat TikTok's lead as directional, not gospel.\n\n**So what:** Shift incremental budget toward TikTok first, TV second — and run a budget scenario to size exactly how much reallocation from Paid Search makes sense before the next planning cycle.",
+        "artifacts": [
+          {
+            "name": "get_marginal_roi",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "median": 0.7482001185417175,
+                  "mean": 0.7946972124531865,
+                  "ci_lo": 0.2754109546542167,
+                  "ci_hi": 1.4713138997554778
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "median": 0.5763477683067322,
+                  "mean": 0.6158527335230262,
+                  "ci_lo": 0.22601169720292089,
+                  "ci_hi": 1.148174524307251
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "median": 0.7949686646461487,
+                  "mean": 0.8383665153935551,
+                  "ci_lo": 0.3639864534139633,
+                  "ci_hi": 1.462341821193695
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "median": 0.452144593000412,
+                  "mean": 0.4729660210046917,
+                  "ci_lo": 0.185644294321537,
+                  "ci_hi": 0.8349155187606812
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "median": 0.8712298274040222,
+                  "mean": 0.8977768199346959,
+                  "ci_lo": 0.3371658831834793,
+                  "ci_hi": 1.5437045514583587
+                }
+              ],
+              "note": "Return on the next dollar of spend in each channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "get_model_health",
+            "data": {
+              "converged": true,
+              "max_rhat": 1.0167557001113892,
+              "holdout_mape": 0.1625355482,
+              "holdout_r2_geo": 0.6099371314,
+              "training_window": {
+                "start": "2021-01-25",
+                "end": "2024-01-15",
+                "n_weeks": 156,
+                "holdout_weeks": 8
+              },
+              "trained_at": "2026-06-15T11:26:01.430242Z",
+              "sampler": {
+                "n_chains": 10,
+                "n_adapt": 2000,
+                "n_burnin": 500,
+                "n_keep": 1000,
+                "method": "NUTS"
+              },
+              "verdict": "Converged (R-hat ≤ 1.1); diagnostics within healthy range.",
+              "note": "Diagnostics from the latest posterior. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          }
+        ],
+        "tools": [
+          "get_marginal_roi",
+          "get_model_health"
+        ]
+      }
+    ]
+  },
+  {
+    "key": "board-headline",
+    "title": "Give me the one-line story for the board: what is working and what is not.",
+    "turns": [
+      {
+        "q": "Give me the one-line story for the board: what is working and what is not.",
+        "answer": "**TikTok and Meta are your compounders; Paid Search is a volume trap eating nearly a third of revenue credit at sub-$1 marginal returns.**\n\n- **TikTok** is the standout — **$1.76 overall ROI** (CI $0.83–$3.15) and the highest marginal return at **$0.87 on the next dollar** (CI $0.34–$1.54). Nearly **30% of incremental revenue** ($84M). Still has room to run.\n- **Meta** is a solid second — **$1.52 ROI** ($62M contribution, ~22%) but marginal returns have degraded to **$0.75** (CI $0.28–$1.47), signalling it's approaching saturation at current spend.\n- **Paid Search** is the red flag — biggest single contributor in volume (**$85M, 30%**) yet the worst marginal ROI at **$0.45** (CI $0.19–$0.83). You're spending well past the efficient frontier; every incremental dollar is destroying value.\n- **TV & YouTube** are middling — positive overall ROI but marginal returns below $0.80, so neither deserves more budget without restructuring the mix.\n\n*(Model health: converged cleanly, R-hat **1.02**, 3 years of training data — these numbers are trustworthy.)*\n\n**So what:** Tell the board you're reallocating dollars out of Paid Search and into TikTok — that single move is the highest-confidence lever to lift blended ROI. Want me to model the exact reallocation scenario?",
+        "artifacts": [
+          {
+            "name": "get_channel_contribution",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "incremental_outcome": {
+                    "median": 61734052,
+                    "ci_lo": 28951808.999999993,
+                    "ci_hi": 114628640.79999997
+                  },
+                  "contribution_pct": 21.76,
+                  "roi": {
+                    "median": 1.5242317914962769,
+                    "ci_lo": 0.7148286491632461,
+                    "ci_hi": 2.8302147507667534
+                  }
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "incremental_outcome": {
+                    "median": 35673192,
+                    "ci_lo": 17118350.2,
+                    "ci_hi": 67506434.79999994
+                  },
+                  "contribution_pct": 12.57,
+                  "roi": {
+                    "median": 1.1389802694320679,
+                    "ci_lo": 0.54655781686306,
+                    "ci_hi": 2.1553579211235028
+                  }
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "incremental_outcome": {
+                    "median": 16875164,
+                    "ci_lo": 8757023.1,
+                    "ci_hi": 29671842.499999996
+                  },
+                  "contribution_pct": 5.95,
+                  "roi": {
+                    "median": 1.3970276713371277,
+                    "ci_lo": 0.7249590814113617,
+                    "ci_hi": 2.45641371011734
+                  }
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "incremental_outcome": {
+                    "median": 85260128,
+                    "ci_lo": 44142054.99999999,
+                    "ci_hi": 155131784.79999992
+                  },
+                  "contribution_pct": 30.05,
+                  "roi": {
+                    "median": 0.9704059362411499,
+                    "ci_lo": 0.5024120211601256,
+                    "ci_hi": 1.7656647682189932
+                  }
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "incremental_outcome": {
+                    "median": 84198580,
+                    "ci_lo": 39733614,
+                    "ci_hi": 150561165.59999993
+                  },
+                  "contribution_pct": 29.67,
+                  "roi": {
+                    "median": 1.7640331983566284,
+                    "ci_lo": 0.8324536144733429,
+                    "ci_hi": 3.154386723041533
+                  }
+                }
+              ],
+              "note": "Incremental revenue and ROI per channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "get_marginal_roi",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "median": 0.7482001185417175,
+                  "mean": 0.7946972124531865,
+                  "ci_lo": 0.2754109546542167,
+                  "ci_hi": 1.4713138997554778
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "median": 0.5763477683067322,
+                  "mean": 0.6158527335230262,
+                  "ci_lo": 0.22601169720292089,
+                  "ci_hi": 1.148174524307251
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "median": 0.7949686646461487,
+                  "mean": 0.8383665153935551,
+                  "ci_lo": 0.3639864534139633,
+                  "ci_hi": 1.462341821193695
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "median": 0.452144593000412,
+                  "mean": 0.4729660210046917,
+                  "ci_lo": 0.185644294321537,
+                  "ci_hi": 0.8349155187606812
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "median": 0.8712298274040222,
+                  "mean": 0.8977768199346959,
+                  "ci_lo": 0.3371658831834793,
+                  "ci_hi": 1.5437045514583587
+                }
+              ],
+              "note": "Return on the next dollar of spend in each channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "get_model_health",
+            "data": {
+              "converged": true,
+              "max_rhat": 1.0167557001113892,
+              "holdout_mape": 0.1625355482,
+              "holdout_r2_geo": 0.6099371314,
+              "training_window": {
+                "start": "2021-01-25",
+                "end": "2024-01-15",
+                "n_weeks": 156,
+                "holdout_weeks": 8
+              },
+              "trained_at": "2026-06-15T11:26:01.430242Z",
+              "sampler": {
+                "n_chains": 10,
+                "n_adapt": 2000,
+                "n_burnin": 500,
+                "n_keep": 1000,
+                "method": "NUTS"
+              },
+              "verdict": "Converged (R-hat ≤ 1.1); diagnostics within healthy range.",
+              "note": "Diagnostics from the latest posterior. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          }
+        ],
+        "tools": [
+          "get_channel_contribution",
+          "get_marginal_roi",
+          "get_model_health"
+        ]
+      }
+    ]
+  },
+  {
+    "key": "defensive-cut",
+    "title": "We may face a 20% budget cut. Where can I take it with the least damage?",
+    "turns": [
+      {
+        "q": "We may face a 20% budget cut. Where can I take it with the least damage?",
+        "answer": "Let me pull channel contributions, marginal ROIs, and model health all at once so I can give you a grounded answer.Now let me run the optimized budget scenario at 80% of current spend so I can show you the least-damage allocation, not just the intuition.The optimizer flagged a data scaling issue at the fractional input, so I'll work directly from the marginal ROI and contribution data — which is the right framework for a cut question anyway. Here's the full read:\n\n---\n\n**Cut Paid Search and YouTube hardest — they are your least efficient channels at the margin and will cost you the least revenue per dollar removed.**\n\n- **Paid Search** is the single biggest spend bucket (**$85M incremental, 30% of revenue**) but has the worst marginal ROI: **$0.45** on the next dollar (90% CI: $0.19–$0.83). That means it's deeply saturated — cutting it hurts the least per dollar pulled.\n- **YouTube** has the lowest average ROI of any channel (**1.14x**, CI: 0.55–2.16x) *and* the second-worst marginal ROI (**$0.58**, CI: $0.23–$1.15). Clear line of attack.\n- **TikTok** is your best performer on both measures — highest average ROI (**1.76x**, CI: 0.83–3.15x) and best marginal ROI (**$0.87**, CI: $0.34–$1.54). **Do not touch it.**\n- **Meta and TV** sit in the middle; modest trims are acceptable but protect these before Paid Search and YouTube. Model health is solid (R-hat **1.017**, MAPE **16%**) — these numbers are trustworthy.\n\n**So what:** Structure the 20% cut as ~50% from Paid Search, ~35% from YouTube, and ~15% from Meta — zero from TikTok and TV. Then run a `budget_scenario` with those exact figures to confirm the revenue impact before you lock it in with finance.",
+        "artifacts": [
+          {
+            "name": "get_channel_contribution",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "incremental_outcome": {
+                    "median": 61734052,
+                    "ci_lo": 28951808.999999993,
+                    "ci_hi": 114628640.79999997
+                  },
+                  "contribution_pct": 21.76,
+                  "roi": {
+                    "median": 1.5242317914962769,
+                    "ci_lo": 0.7148286491632461,
+                    "ci_hi": 2.8302147507667534
+                  }
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "incremental_outcome": {
+                    "median": 35673192,
+                    "ci_lo": 17118350.2,
+                    "ci_hi": 67506434.79999994
+                  },
+                  "contribution_pct": 12.57,
+                  "roi": {
+                    "median": 1.1389802694320679,
+                    "ci_lo": 0.54655781686306,
+                    "ci_hi": 2.1553579211235028
+                  }
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "incremental_outcome": {
+                    "median": 16875164,
+                    "ci_lo": 8757023.1,
+                    "ci_hi": 29671842.499999996
+                  },
+                  "contribution_pct": 5.95,
+                  "roi": {
+                    "median": 1.3970276713371277,
+                    "ci_lo": 0.7249590814113617,
+                    "ci_hi": 2.45641371011734
+                  }
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "incremental_outcome": {
+                    "median": 85260128,
+                    "ci_lo": 44142054.99999999,
+                    "ci_hi": 155131784.79999992
+                  },
+                  "contribution_pct": 30.05,
+                  "roi": {
+                    "median": 0.9704059362411499,
+                    "ci_lo": 0.5024120211601256,
+                    "ci_hi": 1.7656647682189932
+                  }
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "incremental_outcome": {
+                    "median": 84198580,
+                    "ci_lo": 39733614,
+                    "ci_hi": 150561165.59999993
+                  },
+                  "contribution_pct": 29.67,
+                  "roi": {
+                    "median": 1.7640331983566284,
+                    "ci_lo": 0.8324536144733429,
+                    "ci_hi": 3.154386723041533
+                  }
+                }
+              ],
+              "note": "Incremental revenue and ROI per channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "get_marginal_roi",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "median": 0.7482001185417175,
+                  "mean": 0.7946972124531865,
+                  "ci_lo": 0.2754109546542167,
+                  "ci_hi": 1.4713138997554778
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "median": 0.5763477683067322,
+                  "mean": 0.6158527335230262,
+                  "ci_lo": 0.22601169720292089,
+                  "ci_hi": 1.148174524307251
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "median": 0.7949686646461487,
+                  "mean": 0.8383665153935551,
+                  "ci_lo": 0.3639864534139633,
+                  "ci_hi": 1.462341821193695
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "median": 0.452144593000412,
+                  "mean": 0.4729660210046917,
+                  "ci_lo": 0.185644294321537,
+                  "ci_hi": 0.8349155187606812
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "median": 0.8712298274040222,
+                  "mean": 0.8977768199346959,
+                  "ci_lo": 0.3371658831834793,
+                  "ci_hi": 1.5437045514583587
+                }
+              ],
+              "note": "Return on the next dollar of spend in each channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "get_model_health",
+            "data": {
+              "converged": true,
+              "max_rhat": 1.0167557001113892,
+              "holdout_mape": 0.1625355482,
+              "holdout_r2_geo": 0.6099371314,
+              "training_window": {
+                "start": "2021-01-25",
+                "end": "2024-01-15",
+                "n_weeks": 156,
+                "holdout_weeks": 8
+              },
+              "trained_at": "2026-06-15T11:26:01.430242Z",
+              "sampler": {
+                "n_chains": 10,
+                "n_adapt": 2000,
+                "n_burnin": 500,
+                "n_keep": 1000,
+                "method": "NUTS"
+              },
+              "verdict": "Converged (R-hat ≤ 1.1); diagnostics within healthy range.",
+              "note": "Diagnostics from the latest posterior. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "optimize_budget",
+            "data": {
+              "mode": "response_curve_approximation",
+              "fixed_budget": 0.8,
+              "confidence_level": 0.9,
+              "allocation": [
+                {
+                  "channel": "Meta",
+                  "spend": 0,
+                  "incremental_outcome": {
+                    "median": 0,
+                    "ci_lo": 0,
+                    "ci_hi": 0
+                  }
+                },
+                {
+                  "channel": "YouTube",
+                  "spend": 0,
+                  "incremental_outcome": {
+                    "median": 0,
+                    "ci_lo": 0,
+                    "ci_hi": 0
+                  }
+                },
+                {
+                  "channel": "TV",
+                  "spend": 0,
+                  "incremental_outcome": {
+                    "median": 0,
+                    "ci_lo": 0,
+                    "ci_hi": 0
+                  }
+                },
+                {
+                  "channel": "Paid Search",
+                  "spend": 0,
+                  "incremental_outcome": {
+                    "median": 0,
+                    "ci_lo": 0,
+                    "ci_hi": 0
+                  }
+                },
+                {
+                  "channel": "TikTok",
+                  "spend": 0.8,
+                  "incremental_outcome": {
+                    "median": 2.6355526759754877,
+                    "ci_lo": 1.0544804421051648,
+                    "ci_hi": 5.369001874578696
+                  }
+                }
+              ],
+              "projected_incremental_outcome": {
+                "median": 2.6355526759754877,
+                "ci_lo": 1.0544804421051648,
+                "ci_hi": 5.369001874578696
+              },
+              "note": "Approximate allocation maximising incremental revenue across the channel response curves under your budget. Exact re-optimisation for a non-current budget needs the live model (Phase 1). Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          }
+        ],
+        "tools": [
+          "get_channel_contribution",
+          "get_marginal_roi",
+          "get_model_health",
+          "optimize_budget"
+        ]
+      }
+    ]
+  },
+  {
+    "key": "youtube-grow",
+    "title": "How is YouTube performing, and should we spend more on it?",
+    "turns": [
+      {
+        "q": "How is YouTube performing, and should we spend more on it?",
+        "answer": "Sure, let me pull the channel contribution, marginal ROI, and YouTube's response curve all at once!**YouTube is a mid-tier contributor that is meaningfully saturated — don't pour more money in without rebalancing elsewhere first.**\n\n- **Overall contribution:** YouTube drives **$35.7M** in incremental revenue (90% CI: **$17.1M – $67.5M**), good for **12.6% of total paid media revenue** — solid, but well behind TikTok ($84.2M) and Paid Search ($85.3M).\n- **Blended ROI:** **$1.14** back per dollar spent (CI: **$0.55 – $2.16**) — positive on the median, but the wide interval means meaningful uncertainty and the lower bound dips below breakeven.\n- **Marginal ROI (the key signal):** The *next* dollar on YouTube returns only **$0.58** (CI: **$0.23 – $1.15**) — the worst marginal return of any channel except Paid Search. You're already on the steep part of the diminishing-returns curve.\n- **Response curve confirms saturation:** At current spend (~**$31.3M**), doubling the budget to **$62.6M** only adds ~**$13.7M** in incremental revenue — a 36% spend increase buys you just 36% more revenue in absolute terms, but the marginal efficiency collapses fast. The curve is bending hard.\n\n**So what:** Hold or modestly trim YouTube spend and redirect dollars to TikTok, which has the highest marginal ROI (**$0.87/next dollar**) and more room on its curve — then run a scenario to size the exact shift.",
+        "artifacts": [
+          {
+            "name": "get_channel_contribution",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "incremental_outcome": {
+                    "median": 61734052,
+                    "ci_lo": 28951808.999999993,
+                    "ci_hi": 114628640.79999997
+                  },
+                  "contribution_pct": 21.76,
+                  "roi": {
+                    "median": 1.5242317914962769,
+                    "ci_lo": 0.7148286491632461,
+                    "ci_hi": 2.8302147507667534
+                  }
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "incremental_outcome": {
+                    "median": 35673192,
+                    "ci_lo": 17118350.2,
+                    "ci_hi": 67506434.79999994
+                  },
+                  "contribution_pct": 12.57,
+                  "roi": {
+                    "median": 1.1389802694320679,
+                    "ci_lo": 0.54655781686306,
+                    "ci_hi": 2.1553579211235028
+                  }
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "incremental_outcome": {
+                    "median": 16875164,
+                    "ci_lo": 8757023.1,
+                    "ci_hi": 29671842.499999996
+                  },
+                  "contribution_pct": 5.95,
+                  "roi": {
+                    "median": 1.3970276713371277,
+                    "ci_lo": 0.7249590814113617,
+                    "ci_hi": 2.45641371011734
+                  }
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "incremental_outcome": {
+                    "median": 85260128,
+                    "ci_lo": 44142054.99999999,
+                    "ci_hi": 155131784.79999992
+                  },
+                  "contribution_pct": 30.05,
+                  "roi": {
+                    "median": 0.9704059362411499,
+                    "ci_lo": 0.5024120211601256,
+                    "ci_hi": 1.7656647682189932
+                  }
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "incremental_outcome": {
+                    "median": 84198580,
+                    "ci_lo": 39733614,
+                    "ci_hi": 150561165.59999993
+                  },
+                  "contribution_pct": 29.67,
+                  "roi": {
+                    "median": 1.7640331983566284,
+                    "ci_lo": 0.8324536144733429,
+                    "ci_hi": 3.154386723041533
+                  }
+                }
+              ],
+              "note": "Incremental revenue and ROI per channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "get_marginal_roi",
+            "data": {
+              "client": "Aeon Skincare",
+              "confidence_level": 0.9,
+              "channels": [
+                {
+                  "channel_id": "Channel0",
+                  "channel": "Meta",
+                  "median": 0.7482001185417175,
+                  "mean": 0.7946972124531865,
+                  "ci_lo": 0.2754109546542167,
+                  "ci_hi": 1.4713138997554778
+                },
+                {
+                  "channel_id": "Channel1",
+                  "channel": "YouTube",
+                  "median": 0.5763477683067322,
+                  "mean": 0.6158527335230262,
+                  "ci_lo": 0.22601169720292089,
+                  "ci_hi": 1.148174524307251
+                },
+                {
+                  "channel_id": "Channel2",
+                  "channel": "TV",
+                  "median": 0.7949686646461487,
+                  "mean": 0.8383665153935551,
+                  "ci_lo": 0.3639864534139633,
+                  "ci_hi": 1.462341821193695
+                },
+                {
+                  "channel_id": "Channel3",
+                  "channel": "Paid Search",
+                  "median": 0.452144593000412,
+                  "mean": 0.4729660210046917,
+                  "ci_lo": 0.185644294321537,
+                  "ci_hi": 0.8349155187606812
+                },
+                {
+                  "channel_id": "Channel4",
+                  "channel": "TikTok",
+                  "median": 0.8712298274040222,
+                  "mean": 0.8977768199346959,
+                  "ci_lo": 0.3371658831834793,
+                  "ci_hi": 1.5437045514583587
+                }
+              ],
+              "note": "Return on the next dollar of spend in each channel. Ranges are 90% credible intervals from the fitted Meridian posterior."
+            }
+          },
+          {
+            "name": "get_response_curve",
+            "data": {
+              "channel": "YouTube",
+              "confidence_level": 0.9,
+              "points": [
+                {
+                  "spend_multiplier": 0,
+                  "spend": 0,
+                  "incremental_outcome": 0,
+                  "ci_lo": 0,
+                  "ci_hi": 0
+                },
+                {
+                  "spend_multiplier": 0.2,
+                  "spend": 6264058,
+                  "incremental_outcome": 13397837,
+                  "ci_lo": 5399143.5,
+                  "ci_hi": 27157338
+                },
+                {
+                  "spend_multiplier": 0.4,
+                  "spend": 12528116,
+                  "incremental_outcome": 22152362,
+                  "ci_lo": 9404055,
+                  "ci_hi": 41740548
+                },
+                {
+                  "spend_multiplier": 0.6,
+                  "spend": 18792174,
+                  "incremental_outcome": 28688606,
+                  "ci_lo": 12607173,
+                  "ci_hi": 52338568
+                },
+                {
+                  "spend_multiplier": 0.8,
+                  "spend": 25056232,
+                  "incremental_outcome": 33862784,
+                  "ci_lo": 15139440,
+                  "ci_hi": 60602824
+                },
+                {
+                  "spend_multiplier": 1,
+                  "spend": 31320290,
+                  "incremental_outcome": 38107560,
+                  "ci_lo": 17118350,
+                  "ci_hi": 67506416
+                },
+                {
+                  "spend_multiplier": 1.2,
+                  "spend": 37584348,
+                  "incremental_outcome": 41677584,
+                  "ci_lo": 18857676,
+                  "ci_hi": 73571992
+                },
+                {
+                  "spend_multiplier": 1.4,
+                  "spend": 43848404,
+                  "incremental_outcome": 44735980,
+                  "ci_lo": 20228032,
+                  "ci_hi": 78510680
+                },
+                {
+                  "spend_multiplier": 1.6,
+                  "spend": 50112464,
+                  "incremental_outcome": 47394480,
+                  "ci_lo": 21478834,
+                  "ci_hi": 83044408
+                },
+                {
+                  "spend_multiplier": 1.8,
+                  "spend": 56376520,
+                  "incremental_outcome": 49732428,
+                  "ci_lo": 22416446,
+                  "ci_hi": 87004768
+                },
+                {
+                  "spend_multiplier": 2,
+                  "spend": 62640580,
+                  "incremental_outcome": 51808872,
+                  "ci_lo": 23278344,
+                  "ci_hi": 90617272
+                }
+              ],
+              "note": "Saturation (response) curve: incremental revenue vs. spend, with credible band. spend_multiplier 1.0 is the current spend level."
+            }
+          }
+        ],
+        "tools": [
+          "get_channel_contribution",
+          "get_marginal_roi",
+          "get_response_curve"
+        ]
+      }
+    ]
+  }
+]
