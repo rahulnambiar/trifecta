@@ -13,22 +13,18 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
-// Cost-aware routing: Sonnet 4.6 handles the common "call a tool, explain the
-// number" turns (cheaper + faster); Opus 4.8 is reserved for genuinely advanced
-// questions (reasoning, strategy, comparison, multi-part) where its edge pays off.
+// Routing: the fast model (Sonnet 4.6) handles every turn by default. Opus 4.8 is
+// used ONLY when the user explicitly flips the "deep reasoning" toggle — auto-
+// escalating common questions to Opus + thinking is what pushed turns past the
+// timeout and left the chat "not responding".
 const SONNET = process.env.SIGNAL_MODEL_DEFAULT || 'claude-sonnet-4-6';
 const OPUS = process.env.SIGNAL_MODEL_ADVANCED || 'claude-opus-4-8';
 const MCP_BETA = 'mcp-client-2025-11-20';
 
-// Signals that a question wants reasoning/synthesis rather than a single lookup.
-const ADVANCED_RE = /\b(why|because|recommend|recommendation|advice|advise|suggest|should\s+(i|we)|strateg|compare|comparison|versus|\bvs\b|explain|reason|trade[-\s]?off|prioriti[sz]|how\s+(should|would|do|can)\s+(i|we)|what\s+should|implication|forecast|predict|holistic|justify|defend|pros\s+and\s+cons|cut\s+and|and\s+why)\b/i;
-
-function isAdvanced(text) {
-  if (!text) return false;
-  const questions = (text.match(/\?/g) || []).length;
-  const words = text.trim().split(/\s+/).length;
-  return ADVANCED_RE.test(text) || questions >= 2 || words > 40;
-}
+// Hard ceiling for a single turn. Vercel kills the function at maxDuration (60s),
+// so we abort a little before that and send a clean message instead of letting the
+// connection die silently.
+const TURN_TIMEOUT_MS = 55_000;
 
 // Stable system prompt → cache it (prompt caching, prefix match).
 const SYSTEM = `You are Signal — the senior growth strategist for the CMO of Aeon Skincare.
@@ -67,14 +63,15 @@ export async function POST(req) {
   const { messages, deep } = await req.json();
   const client = new Anthropic({ apiKey });
 
-  const lastUser = [...messages].reverse().find((m) => m.role === 'user');
-  const advanced = deep === true || isAdvanced(typeof lastUser?.content === 'string' ? lastUser.content : '');
+  const advanced = deep === true;
   const model = advanced ? OPUS : SONNET;
 
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
       const send = (o) => controller.enqueue(encoder.encode(JSON.stringify(o) + '\n'));
+      const abort = new AbortController();
+      const timer = setTimeout(() => abort.abort(), TURN_TIMEOUT_MS);
       try {
         send({ type: 'model', model, advanced });
         const params = {
@@ -87,10 +84,11 @@ export async function POST(req) {
           betas: [MCP_BETA],
           stream: true,
         };
-        // Let Opus reason on advanced questions (thinking stays server-side; only
-        // the final answer text streams to the user).
-        if (advanced) params.thinking = { type: 'adaptive' };
-        const events = await client.beta.messages.create(params);
+        // Let Opus reason on deep questions, but cap the thinking budget so the
+        // turn stays well inside the timeout (thinking stays server-side; only the
+        // final answer text streams to the user).
+        if (advanced) params.thinking = { type: 'enabled', budget_tokens: 2048 };
+        const events = await client.beta.messages.create(params, { signal: abort.signal });
 
         const toolNames = {}; // tool_use id -> tool name
         for await (const event of events) {
@@ -117,8 +115,15 @@ export async function POST(req) {
         }
         send({ type: 'done' });
       } catch (err) {
-        send({ type: 'error', message: err?.message || String(err) });
+        const aborted = abort.signal.aborted || err?.name === 'AbortError';
+        send({
+          type: 'error',
+          message: aborted
+            ? 'That one took too long. Try a more specific question, or turn off deep reasoning for a faster answer.'
+            : (err?.message || String(err)),
+        });
       } finally {
+        clearTimeout(timer);
         controller.close();
       }
     },
