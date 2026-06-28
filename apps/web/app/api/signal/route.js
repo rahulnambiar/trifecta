@@ -84,10 +84,11 @@ export async function POST(req) {
           betas: [MCP_BETA],
           stream: true,
         };
-        // Let Opus reason on deep questions, but cap the thinking budget so the
-        // turn stays well inside the timeout (thinking stays server-side; only the
-        // final answer text streams to the user).
-        if (advanced) params.thinking = { type: 'enabled', budget_tokens: 2048 };
+        // Opus reasons on deep questions with adaptive thinking (the only mode it
+        // supports; thinking stays server-side, only the final answer streams). The
+        // 55s abort below is what bounds the turn, so a long deep question fails
+        // clean instead of hanging.
+        if (advanced) params.thinking = { type: 'adaptive' };
         const events = await client.beta.messages.create(params, { signal: abort.signal });
 
         const toolNames = {}; // tool_use id -> tool name
