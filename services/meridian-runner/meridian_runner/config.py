@@ -29,6 +29,31 @@ CHANNEL_DISPLAY_NAMES = {
     "Channel4": "TikTok",
 }
 
+# Per-client presets. Select with CLIENT_PRESET=<key>; absent = the Aeon defaults
+# baked into RunnerConfig below (so existing behaviour is unchanged). Each preset
+# overrides the data file, channels, controls, KPI and artifact paths so one
+# codebase trains any client. (Demo data is synthetic; the engine is real.)
+PRESETS: dict[str, dict] = {
+    "claritin": {
+        "client_name": "Bayer · Claritin",
+        "csv_path": "data/clients/claritin/geo_all_channels.csv",
+        "media_channels": ["walmart_connect", "amazon_ads", "linear_tv", "ctv", "meta", "tiktok", "google_search"],
+        "display_names": {
+            "walmart_connect": "Walmart Connect", "amazon_ads": "Amazon Ads",
+            "linear_tv": "Linear TV", "ctv": "CTV", "meta": "Meta",
+            "tiktok": "TikTok", "google_search": "Google Search",
+        },
+        "control_cols": ["pollen_index_control", "competitor_spend_control", "price_index_control"],
+        "organic_media_cols": ["Organic_search_impression"],
+        "organic_media_channels": ["Organic_search"],
+        "non_media_treatment_cols": ["Promo"],
+        "kpi_column": "units",
+        "revenue_per_kpi_column": "revenue_per_unit",
+        "model_artifact_path": "claritin/model.pkl",
+        "results_artifact_path": "claritin/results.json",
+    },
+}
+
 
 @dataclass
 class RunnerConfig:
@@ -82,8 +107,36 @@ class RunnerConfig:
     gcp_project: str | None = os.environ.get("GCP_PROJECT")
     client_name: str = os.environ.get("CLIENT_NAME", "Aeon Skincare")
 
+    def __post_init__(self) -> None:
+        # Default display map is the Aeon (Channel0..4) labels; a preset can replace it.
+        self._display = CHANNEL_DISPLAY_NAMES
+        preset_key = os.environ.get("CLIENT_PRESET")
+        if not preset_key:
+            return
+        preset = PRESETS.get(preset_key)
+        if not preset:
+            raise ValueError(f"Unknown CLIENT_PRESET={preset_key!r}; known: {list(PRESETS)}")
+        self._display = preset.get("display_names", CHANNEL_DISPLAY_NAMES)
+        # For fields that also have their own env var, an explicit env wins over the
+        # preset (so a Vertex job can point TRAINING_CSV at a URL, override artifact
+        # paths, etc.). Non-env fields (channels, controls...) always come from the preset.
+        env_backed = {
+            "csv_path": "TRAINING_CSV",
+            "kpi_column": "KPI_COLUMN",
+            "revenue_per_kpi_column": "REVENUE_PER_KPI_COLUMN",
+            "model_artifact_path": "MODEL_ARTIFACT_PATH",
+            "results_artifact_path": "RESULTS_ARTIFACT_PATH",
+        }
+        for key, val in preset.items():
+            if key == "display_names":
+                continue
+            envname = env_backed.get(key)
+            if envname and envname in os.environ:
+                continue  # explicit env overrides the preset
+            setattr(self, key, val)
+
     def display_name(self, channel_id: str) -> str:
-        return CHANNEL_DISPLAY_NAMES.get(channel_id, channel_id)
+        return self._display.get(channel_id, channel_id)
 
 
 def quick_smoke(cfg: RunnerConfig) -> RunnerConfig:

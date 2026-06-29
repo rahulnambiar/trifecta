@@ -1,0 +1,35 @@
+# Vertex AI CustomJob — Claritin REAL run (converging CPU sampler, notebook defaults).
+# 8 chains x (2000 adapt + 500 burn-in + 1000 keep). Publishable demo numbers with
+# 90% credible intervals. Run only AFTER the smoke job passes + cost is OK.
+# Submit:
+#   gcloud ai custom-jobs create --region=asia-southeast1 \
+#     --display-name=claritin-real --config=vertex/claritin-real-job.yaml
+workerPoolSpecs:
+  - machineSpec:
+      machineType: n1-standard-16
+    replicaCount: 1
+    containerSpec:
+      imageUri: asia-southeast1-docker.pkg.dev/trifecta-platform-498105/trifecta/meridian-runner:cpu
+      env:
+        - name: CLIENT_PRESET
+          value: "claritin"
+        - name: TRAINING_CSV
+          value: "https://raw.githubusercontent.com/rahulnambiar/trifecta/main/data/clients/claritin/geo_all_channels.csv"
+        - name: GCS_BUCKET
+          value: "trifecta-artifacts-498105"
+        - name: MODEL_ARTIFACT_PATH
+          value: "claritin/model.pkl"
+        - name: RESULTS_ARTIFACT_PATH
+          value: "claritin/results.json"
+        - name: N_CHAINS
+          value: "8"
+        - name: N_ADAPT
+          value: "2000"
+        - name: N_BURNIN
+          value: "500"
+        - name: N_KEEP
+          value: "1000"
+        - name: HOLDOUT_WEEKS
+          value: "8"
+scheduling:
+  timeout: 18000s   # 5h hard cap — cost guardrail
