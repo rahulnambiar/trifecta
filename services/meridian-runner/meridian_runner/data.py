@@ -17,9 +17,17 @@ log = logging.getLogger(__name__)
 
 
 def read_training_frame(cfg: RunnerConfig) -> "pd.DataFrame":
-    """Read the training CSV into a DataFrame (shared by the guardrails + the builder)."""
-    log.info("Reading training CSV: %s", cfg.csv_path)
-    return pd.read_csv(cfg.csv_path)
+    """Read the training CSV into a DataFrame (shared by the guardrails + the builder).
+
+    Supports a local path, an https URL (e.g. the public Meridian sample), or a
+    private gs:// URI (downloaded via the job's service account).
+    """
+    path = cfg.csv_path
+    if path.startswith("gs://"):
+        from .gcs import download_to_temp
+        path = download_to_temp(path)
+    log.info("Reading training CSV: %s", path)
+    return pd.read_csv(path)
 
 
 def load_input_data(cfg: RunnerConfig, df: "pd.DataFrame | None" = None):

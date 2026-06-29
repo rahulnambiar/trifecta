@@ -15,7 +15,7 @@ workerPoolSpecs:
         - name: CLIENT_PRESET
           value: "claritin"
         - name: TRAINING_CSV
-          value: "https://raw.githubusercontent.com/rahulnambiar/trifecta/main/data/clients/claritin/geo_all_channels.csv"
+          value: "gs://trifecta-artifacts-498105/claritin/geo_all_channels.csv"
         - name: GCS_BUCKET
           value: "trifecta-artifacts-498105"
         - name: MODEL_ARTIFACT_PATH
