@@ -297,8 +297,23 @@ def build_results(mmm, data, cfg: RunnerConfig) -> dict:
     return results
 
 
+def _json_safe(o):
+    """Recursively replace non-finite floats (inf / -inf / NaN) with None so the
+    bundle is valid JSON. Under-converged or degenerate posterior draws can yield a
+    non-finite ROI or curve value; the Results and Signal UIs already treat null as
+    "unavailable" and render the credible interval around it. Also coerces numpy
+    floats to plain Python floats."""
+    if isinstance(o, dict):
+        return {k: _json_safe(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [_json_safe(v) for v in o]
+    if isinstance(o, (float, np.floating)):
+        return float(o) if np.isfinite(o) else None
+    return o
+
+
 def write_results(results: dict, path: str) -> str:
     with open(path, "w") as f:
-        json.dump(results, f, indent=2, allow_nan=False)
+        json.dump(_json_safe(results), f, indent=2, allow_nan=False)
     log.info("Wrote results bundle to %s", path)
     return path
