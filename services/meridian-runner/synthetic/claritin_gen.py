@@ -31,8 +31,10 @@ SEED = 20260629
 rng = random.Random(SEED)
 
 # ---- time: 156 weeks (3 years), weekly ---------------------------------------
-START = date(2023, 1, 1)          # Sunday
-N_WEEKS = 156
+START = date(2023, 4, 30)         # Sunday; 156 weeks ends ~2026-04-19, so the
+N_WEEKS = 156                     # holdout (last 8 wks) lands on the spring ramp,
+                                  # not the flat winter trough (avoids a degenerate
+                                  # low-variance national holdout R²).
 WEEKS = [START + timedelta(days=7 * i) for i in range(N_WEEKS)]
 
 PRICE = 21.50                     # avg $ / unit (Claritin-ish OTC loratadine)
@@ -138,7 +140,7 @@ for gi, g in enumerate(DMAS):
     spend = {}
     for ch, p in CHANNELS.items():
         total = p["annual"] * 3.0
-        s = [max(0.0, total * geo_w[ch][gi] * week_w[ch][wk] * rng.uniform(0.82, 1.18)) for wk in range(N_WEEKS)]
+        s = [max(0.0, total * geo_w[ch][gi] * week_w[ch][wk] * rng.uniform(0.88, 1.12)) for wk in range(N_WEEKS)]
         spend[ch] = s
     adst = {ch: adstock(spend[ch], CHANNELS[ch]["adstock"]) for ch in CHANNELS}
     # per-channel saturation half-point = 3x mean adstocked spend in this geo
@@ -147,9 +149,9 @@ for gi, g in enumerate(DMAS):
     base_geo_wk = BASE_PER_CAPITA_WK * pop   # base units/week for this geo
     for wk, d in enumerate(WEEKS):
         si = seasonal_index(d, sev)
-        baseline_units = base_geo_wk * (0.55 + si) * (1.0 + 0.03 * math.sin(wk / 9.0)) * rng.uniform(0.94, 1.06)
+        baseline_units = base_geo_wk * (0.55 + si) * (1.0 + 0.03 * math.sin(wk / 9.0)) * rng.uniform(0.97, 1.03)
         # competitor pressure (Zyrtec/Allegra) - seasonal, mildly suppresses Claritin
-        competitor = (0.5 + si) * rng.uniform(0.85, 1.15)
+        competitor = (0.5 + si) * rng.uniform(0.92, 1.08)
         # promo: occasional rollback weeks lift units
         promo = 1.0 if rng.random() < 0.16 else 0.0
         promo_units = baseline_units * 0.18 * promo
@@ -167,7 +169,7 @@ for gi, g in enumerate(DMAS):
             incr_rev_tot[ch] += incr_rev
 
         comp_drag = -baseline_units * 0.04 * (competitor - 1.0)
-        units = max(0.0, baseline_units + incr_units + promo_units + comp_drag + rng.gauss(0, base_geo_wk * 0.05))
+        units = max(0.0, baseline_units + incr_units + promo_units + comp_drag + rng.gauss(0, base_geo_wk * 0.03))
         rev_per_unit = PRICE * price_index
 
         base_units_tot += baseline_units
@@ -177,8 +179,9 @@ for gi, g in enumerate(DMAS):
         for ch in CHANNEL_ORDER:
             row[f"{ch}_impression"] = round(spend[ch][wk] / CHANNELS[ch]["cpm"] * 1000.0, 1)
             row[f"{ch}_spend"] = round(spend[ch][wk], 2)
-        # organic branded search (tracks demand), a control, and a non-media treatment
-        row["Organic_search_impression"] = round(baseline_units * 35 * rng.uniform(0.9, 1.1), 1)
+        # organic branded search: tracks the demand DRIVERS (not the realized noisy
+        # target, which would leak), so it's a believable correlate, not a proxy.
+        row["Organic_search_impression"] = round(base_geo_wk * (0.5 + si) * 35 * rng.uniform(0.85, 1.15), 1)
         row["pollen_index_control"] = round(si, 4)
         row["competitor_spend_control"] = round(competitor, 4)
         row["price_index_control"] = round(price_index, 4)
