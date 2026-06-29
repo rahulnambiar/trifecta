@@ -6,10 +6,15 @@
 // so the demo always renders.
 import { NextResponse } from 'next/server';
 import bundled from '@/data/results.json';
+import claritin from '@/data/claritin-results.json';
 import { gcpConfigured, gcsReadJson } from '@/lib/gcp';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+
+// Per-client bundled posteriors — the Phase-0 fallback when a live GCS posterior
+// isn't available. Each is a genuine Meridian output on representative data.
+const BUNDLES = { aeon: bundled, claritin };
 
 export async function GET(req) {
   const slug = (new URL(req.url).searchParams.get('slug') || 'aeon').replace(/[^a-z0-9-]/gi, '');
@@ -21,5 +26,5 @@ export async function GET(req) {
       // no live posterior for this client yet → fall back to the bundle
     }
   }
-  return NextResponse.json(bundled);
+  return NextResponse.json(BUNDLES[slug] || bundled);
 }

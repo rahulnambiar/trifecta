@@ -3,6 +3,7 @@
 // Keeps the handed-off design's chart language (hand-drawn SVG, CI whiskers,
 // saturation curves, allocation bars) but every number is a genuine model output.
 import React from 'react';
+import ClaritinHero from './ClaritinHero';
 
 const COLORS = {
   Meta: '#4f6ef2', YouTube: '#7d9bff', TV: '#e6b052', 'Paid Search': '#37d39b', TikTok: '#c773d6',
@@ -393,21 +394,24 @@ export default function ResultsLive({ client }) {
   React.useEffect(() => {
     fetch('/api/results?slug=' + encodeURIComponent(client?.id || 'aeon'), { cache: 'no-store' })
       .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(setBundle)
+      .then((b) => { setBundle(b); if (b?.geo?.length) setTab('overview'); })
       .catch((e) => setErr(String(e)));
   }, []);
 
   if (err) return <div className="callout" style={{ borderColor: 'rgba(232,122,112,0.4)' }}>Could not load results — {err}</div>;
   if (!bundle) return <div className="dim mono">loading posterior…</div>;
 
-  const active = TABS.find((t) => t.id === tab);
+  // Show an Overview hero (stats + reported-vs-incremental + geo map) when the
+  // bundle carries a geo section (the Claritin demo); otherwise the standard tabs.
+  const tabs = bundle.geo?.length ? [{ id: 'overview', label: 'Overview' }, ...TABS] : TABS;
+  const active = tabs.find((t) => t.id === tab) || tabs[0];
   const m = bundle.meta || {};
   const cl = Math.round((m.confidence_level || 0.9) * 100);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div className="tabs">
-        {TABS.map((t) => (
+        {tabs.map((t) => (
           <div key={t.id} className={'tab' + (tab === t.id ? ' active' : '')} onClick={() => setTab(t.id)}>{t.label}</div>
         ))}
       </div>
@@ -416,6 +420,7 @@ export default function ResultsLive({ client }) {
           <div><h3>{active.label}</h3><div className="sub mono" style={{ fontSize: 11 }}>Latest posterior · {m.library} · trained {String(m.generated_at).slice(0, 10)}</div></div>
         </div>
         <div className="card-pad">
+          {tab === 'overview' && <ClaritinHero bundle={bundle} />}
           {tab === 'contribution' && <ContributionView bundle={bundle} />}
           {tab === 'roi' && <ROIView bundle={bundle} />}
           {tab === 'response' && <ResponseView bundle={bundle} />}

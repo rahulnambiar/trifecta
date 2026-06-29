@@ -1,0 +1,3095 @@
+{
+ "meta": {
+  "client": "Bayer \u00b7 Claritin",
+  "generated_at": "2026-06-29T10:04:13.946707Z",
+  "dataset": "gs://trifecta-artifacts-498105/claritin/geo_all_channels.csv",
+  "library": "google-meridian",
+  "sampler": {
+   "n_chains": 8,
+   "n_adapt": 2000,
+   "n_burnin": 500,
+   "n_keep": 1000,
+   "method": "NUTS"
+  },
+  "confidence_level": 0.9,
+  "channel_display_names": {
+   "walmart_connect": "Walmart Connect",
+   "amazon_ads": "Amazon Ads",
+   "linear_tv": "Linear TV",
+   "ctv": "CTV",
+   "meta": "Meta",
+   "tiktok": "TikTok",
+   "google_search": "Google Search"
+  },
+  "disclaimer": "Fictional demo client. Numbers are genuine Meridian posterior outputs trained on Google's public simulated dataset.",
+  "errors": {}
+ },
+ "channel_contribution": [
+  {
+   "channel_id": "walmart_connect",
+   "channel": "Walmart Connect",
+   "incremental_outcome": {
+    "median": 53697832.0,
+    "ci_lo": 33463741.599999998,
+    "ci_hi": 80774094.39999999
+   },
+   "contribution_pct": 21.1,
+   "roi": {
+    "median": 1.9905551075935364,
+    "ci_lo": 1.240486204624176,
+    "ci_hi": 2.9942604064941403
+   },
+   "reported_roas": 5.18
+  },
+  {
+   "channel_id": "amazon_ads",
+   "channel": "Amazon Ads",
+   "incremental_outcome": {
+    "median": 33487076.0,
+    "ci_lo": 8843066.7,
+    "ci_hi": 74548464.79999994
+   },
+   "contribution_pct": 13.16,
+   "roi": {
+    "median": 2.235010862350464,
+    "ci_lo": 0.5902083158493042,
+    "ci_hi": 4.975550127029415
+   },
+   "reported_roas": 5.36
+  },
+  {
+   "channel_id": "linear_tv",
+   "channel": "Linear TV",
+   "incremental_outcome": {
+    "median": 59767700.0,
+    "ci_lo": 22367216.0,
+    "ci_hi": 114119437.59999996
+   },
+   "contribution_pct": 23.48,
+   "roi": {
+    "median": 1.2464929223060608,
+    "ci_lo": 0.46648232489824293,
+    "ci_hi": 2.38003247976303
+   },
+   "reported_roas": 1.37
+  },
+  {
+   "channel_id": "ctv",
+   "channel": "CTV",
+   "incremental_outcome": {
+    "median": 19685975.0,
+    "ci_lo": 5353714.474999999,
+    "ci_hi": 66987426.999999985
+   },
+   "contribution_pct": 7.73,
+   "roi": {
+    "median": 0.9355142116546631,
+    "ci_lo": 0.2544184789061546,
+    "ci_hi": 3.1833673000335687
+   },
+   "reported_roas": 1.12
+  },
+  {
+   "channel_id": "meta",
+   "channel": "Meta",
+   "incremental_outcome": {
+    "median": 20675082.0,
+    "ci_lo": 5736560.249999998,
+    "ci_hi": 53947583.0
+   },
+   "contribution_pct": 8.12,
+   "roi": {
+    "median": 1.1491090655326843,
+    "ci_lo": 0.31883466988801945,
+    "ci_hi": 2.9983752250671385
+   },
+   "reported_roas": 2.3
+  },
+  {
+   "channel_id": "tiktok",
+   "channel": "TikTok",
+   "incremental_outcome": {
+    "median": 13193935.5,
+    "ci_lo": 3182788.2875,
+    "ci_hi": 40064039.79999995
+   },
+   "contribution_pct": 5.18,
+   "roi": {
+    "median": 1.4681299328804016,
+    "ci_lo": 0.35415868312120435,
+    "ci_hi": 4.458049249649043
+   },
+   "reported_roas": 3.23
+  },
+  {
+   "channel_id": "google_search",
+   "channel": "Google Search",
+   "incremental_outcome": {
+    "median": 54041718.0,
+    "ci_lo": 29675231.2,
+    "ci_hi": 89260402.39999999
+   },
+   "contribution_pct": 21.23,
+   "roi": {
+    "median": 3.0104702711105347,
+    "ci_lo": 1.653100699186325,
+    "ci_hi": 4.972376894950866
+   },
+   "reported_roas": 5.42
+  }
+ ],
+ "marginal_roi": [
+  {
+   "channel_id": "walmart_connect",
+   "channel": "Walmart Connect",
+   "median": 1.3102858662605286,
+   "mean": 1.3278796175792813,
+   "ci_lo": 0.8195197701454162,
+   "ci_hi": 1.8979065418243408
+  },
+  {
+   "channel_id": "amazon_ads",
+   "channel": "Amazon Ads",
+   "median": 1.0375444889068604,
+   "mean": 1.1046720016114413,
+   "ci_lo": 0.2423190891742706,
+   "ci_hi": 2.209677743911743
+  },
+  {
+   "channel_id": "linear_tv",
+   "channel": "Linear TV",
+   "median": 0.6138705015182495,
+   "mean": 0.6312592747376766,
+   "ci_lo": 0.20940846279263495,
+   "ci_hi": 1.1055208265781393
+  },
+  {
+   "channel_id": "ctv",
+   "channel": "CTV",
+   "median": 0.39224475622177124,
+   "mean": 0.5200055277798092,
+   "ci_lo": 0.08764500841498374,
+   "ci_hi": 1.3897934138774868
+  },
+  {
+   "channel_id": "meta",
+   "channel": "Meta",
+   "median": 0.535834550857544,
+   "mean": 0.6092840021795127,
+   "ci_lo": 0.12090173251926899,
+   "ci_hi": 1.3817616164684294
+  },
+  {
+   "channel_id": "tiktok",
+   "channel": "TikTok",
+   "median": 0.7218008637428284,
+   "mean": 0.8997699261092348,
+   "ci_lo": 0.1390090554952621,
+   "ci_hi": 2.2891616821289062
+  },
+  {
+   "channel_id": "google_search",
+   "channel": "Google Search",
+   "median": 1.7358462810516357,
+   "mean": 1.7549300520103426,
+   "ci_lo": 0.9462871044874192,
+   "ci_hi": 2.6223163723945615
+  }
+ ],
+ "response_curves": {
+  "confidence_level": 0.9,
+  "points": [
+   {
+    "spend_multiplier": 0.0,
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.0,
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 0.0,
+    "incremental_outcome": 0.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 5395262.0,
+    "incremental_outcome": 15467480.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 5395262.0,
+    "incremental_outcome": 8958343.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 5395262.0,
+    "incremental_outcome": 24451486.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 2996591.75,
+    "incremental_outcome": 13549087.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 2996591.75,
+    "incremental_outcome": 3002641.5
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 2996591.75,
+    "incremental_outcome": 31220216.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 9589738.0,
+    "incremental_outcome": 22332890.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 9589738.0,
+    "incremental_outcome": 7032958.5
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 9589738.0,
+    "incremental_outcome": 48192288.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 4208589.5,
+    "incremental_outcome": 10124943.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 4208589.5,
+    "incremental_outcome": 1798694.375
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 4208589.5,
+    "incremental_outcome": 27783166.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 3598454.5,
+    "incremental_outcome": 8971416.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 3598454.5,
+    "incremental_outcome": 1913845.5
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 3598454.5,
+    "incremental_outcome": 22647192.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 1797379.875,
+    "incremental_outcome": 5763851.5
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 1797379.875,
+    "incremental_outcome": 1057792.375
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 1797379.875,
+    "incremental_outcome": 14706338.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 3590250.75,
+    "incremental_outcome": 17604850.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 3590250.75,
+    "incremental_outcome": 8427249.0
+   },
+   {
+    "spend_multiplier": 0.2,
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 3590250.75,
+    "incremental_outcome": 31738264.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 10790524.0,
+    "incremental_outcome": 27980084.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 10790524.0,
+    "incremental_outcome": 16506803.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 10790524.0,
+    "incremental_outcome": 42960380.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 5993183.5,
+    "incremental_outcome": 22062988.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 5993183.5,
+    "incremental_outcome": 5072263.5
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 5993183.5,
+    "incremental_outcome": 48547832.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 19179476.0,
+    "incremental_outcome": 36985516.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 19179476.0,
+    "incremental_outcome": 12360257.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 19179476.0,
+    "incremental_outcome": 73336464.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 8417179.0,
+    "incremental_outcome": 16037996.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 8417179.0,
+    "incremental_outcome": 3092053.5
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 8417179.0,
+    "incremental_outcome": 42655476.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 7196909.0,
+    "incremental_outcome": 14524388.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 7196909.0,
+    "incremental_outcome": 3313476.5
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 7196909.0,
+    "incremental_outcome": 34635760.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 3594759.75,
+    "incremental_outcome": 9565895.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 3594759.75,
+    "incremental_outcome": 1817221.875
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 3594759.75,
+    "incremental_outcome": 24020638.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 7180501.5,
+    "incremental_outcome": 30654468.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 7180501.5,
+    "incremental_outcome": 15261485.0
+   },
+   {
+    "spend_multiplier": 0.4,
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 7180501.5,
+    "incremental_outcome": 52926624.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 16185787.0,
+    "incremental_outcome": 38416828.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 16185787.0,
+    "incremental_outcome": 22970776.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 16185787.0,
+    "incremental_outcome": 57798796.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 8989776.0,
+    "incremental_outcome": 28161736.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 8989776.0,
+    "incremental_outcome": 6663362.5
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 8989776.0,
+    "incremental_outcome": 59492540.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 28769214.0,
+    "incremental_outcome": 47746348.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 28769214.0,
+    "incremental_outcome": 16505396.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 28769214.0,
+    "incremental_outcome": 90357576.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 12625768.0,
+    "incremental_outcome": 20168042.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 12625768.0,
+    "incremental_outcome": 4044952.25
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 12625768.0,
+    "incremental_outcome": 53202064.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 10795364.0,
+    "incremental_outcome": 18512882.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 10795364.0,
+    "incremental_outcome": 4312650.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 10795364.0,
+    "incremental_outcome": 42340468.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 5392139.5,
+    "incremental_outcome": 12386393.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 5392139.5,
+    "incremental_outcome": 2371267.75
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 5392139.5,
+    "incremental_outcome": 30733724.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 10770753.0,
+    "incremental_outcome": 40882584.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 10770753.0,
+    "incremental_outcome": 20879748.0
+   },
+   {
+    "spend_multiplier": 0.6,
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 10770753.0,
+    "incremental_outcome": 68053176.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 21581048.0,
+    "incremental_outcome": 47308308.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 21581048.0,
+    "incremental_outcome": 28606488.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 21581048.0,
+    "incremental_outcome": 70078232.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 11986367.0,
+    "incremental_outcome": 32817688.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 11986367.0,
+    "incremental_outcome": 7850402.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 11986367.0,
+    "incremental_outcome": 68008984.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 38358952.0,
+    "incremental_outcome": 56103380.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 38358952.0,
+    "incremental_outcome": 19814350.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 38358952.0,
+    "incremental_outcome": 103734584.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 16834358.0,
+    "incremental_outcome": 23280152.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 16834358.0,
+    "incremental_outcome": 4771729.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 16834358.0,
+    "incremental_outcome": 61087204.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 14393818.0,
+    "incremental_outcome": 21572892.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 14393818.0,
+    "incremental_outcome": 5091339.5
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 14393818.0,
+    "incremental_outcome": 48878292.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 7189519.5,
+    "incremental_outcome": 14595786.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 7189519.5,
+    "incremental_outcome": 2816479.5
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 7189519.5,
+    "incremental_outcome": 35858420.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 14361003.0,
+    "incremental_outcome": 49181344.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 14361003.0,
+    "incremental_outcome": 25703930.0
+   },
+   {
+    "spend_multiplier": 0.8,
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 14361003.0,
+    "incremental_outcome": 79793696.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 26976310.0,
+    "incremental_outcome": 55005536.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 26976310.0,
+    "incremental_outcome": 33463742.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 26976310.0,
+    "incremental_outcome": 80774096.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 14982959.0,
+    "incremental_outcome": 36517872.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 14982959.0,
+    "incremental_outcome": 8843067.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 14982959.0,
+    "incremental_outcome": 74548448.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 47948688.0,
+    "incremental_outcome": 62830996.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 47948688.0,
+    "incremental_outcome": 22367216.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 47948688.0,
+    "incremental_outcome": 114119432.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 21042946.0,
+    "incremental_outcome": 25734234.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 21042946.0,
+    "incremental_outcome": 5353714.5
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 21042946.0,
+    "incremental_outcome": 66987424.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 17992272.0,
+    "incremental_outcome": 24017218.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 17992272.0,
+    "incremental_outcome": 5736560.5
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 17992272.0,
+    "incremental_outcome": 53947584.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 8986899.0,
+    "incremental_outcome": 16386971.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 8986899.0,
+    "incremental_outcome": 3182788.25
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 8986899.0,
+    "incremental_outcome": 40064028.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 17951254.0,
+    "incremental_outcome": 56081768.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 17951254.0,
+    "incremental_outcome": 29675232.0
+   },
+   {
+    "spend_multiplier": 1.0,
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 17951254.0,
+    "incremental_outcome": 89260400.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 32371574.0,
+    "incremental_outcome": 61752688.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 32371574.0,
+    "incremental_outcome": 37704616.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 32371574.0,
+    "incremental_outcome": 90124216.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 17979552.0,
+    "incremental_outcome": 39543480.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 17979552.0,
+    "incremental_outcome": 9576818.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 17979552.0,
+    "incremental_outcome": 79872960.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 57538428.0,
+    "incremental_outcome": 68387608.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 57538428.0,
+    "incremental_outcome": 24523248.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 57538428.0,
+    "incremental_outcome": 122900048.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 25251536.0,
+    "incremental_outcome": 27730314.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 25251536.0,
+    "incremental_outcome": 5799435.5
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 25251536.0,
+    "incremental_outcome": 72166792.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 21590728.0,
+    "incremental_outcome": 26025332.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 21590728.0,
+    "incremental_outcome": 6284045.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 21590728.0,
+    "incremental_outcome": 57946940.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 10784279.0,
+    "incremental_outcome": 17875212.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 10784279.0,
+    "incremental_outcome": 3474319.75
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 10784279.0,
+    "incremental_outcome": 43818048.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 21541506.0,
+    "incremental_outcome": 61927664.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 21541506.0,
+    "incremental_outcome": 33127814.0
+   },
+   {
+    "spend_multiplier": 1.2,
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 21541506.0,
+    "incremental_outcome": 97168048.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 37766832.0,
+    "incremental_outcome": 67728376.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 37766832.0,
+    "incremental_outcome": 41671764.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 37766832.0,
+    "incremental_outcome": 98578656.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 20976142.0,
+    "incremental_outcome": 42070964.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 20976142.0,
+    "incremental_outcome": 10129402.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 20976142.0,
+    "incremental_outcome": 84502984.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 67128160.0,
+    "incremental_outcome": 73067976.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 67128160.0,
+    "incremental_outcome": 26312544.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 67128160.0,
+    "incremental_outcome": 130050920.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 29460124.0,
+    "incremental_outcome": 29391880.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 29460124.0,
+    "incremental_outcome": 6213026.5
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 29460124.0,
+    "incremental_outcome": 76276376.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 25189180.0,
+    "incremental_outcome": 27710118.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 25189180.0,
+    "incremental_outcome": 6697542.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 25189180.0,
+    "incremental_outcome": 61445892.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 12581658.0,
+    "incremental_outcome": 19134970.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 12581658.0,
+    "incremental_outcome": 3700759.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 12581658.0,
+    "incremental_outcome": 47193436.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 25131756.0,
+    "incremental_outcome": 66953296.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 25131756.0,
+    "incremental_outcome": 36153580.0
+   },
+   {
+    "spend_multiplier": 1.4,
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 25131756.0,
+    "incremental_outcome": 103783936.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 43162096.0,
+    "incremental_outcome": 73066640.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 43162096.0,
+    "incremental_outcome": 45055056.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 43162096.0,
+    "incremental_outcome": 105941968.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 23972734.0,
+    "incremental_outcome": 44218728.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 23972734.0,
+    "incremental_outcome": 10608157.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 23972734.0,
+    "incremental_outcome": 88470688.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 76717904.0,
+    "incremental_outcome": 77072112.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 76717904.0,
+    "incremental_outcome": 27982780.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 76717904.0,
+    "incremental_outcome": 135967952.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 33668716.0,
+    "incremental_outcome": 30799958.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 33668716.0,
+    "incremental_outcome": 6508250.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 33668716.0,
+    "incremental_outcome": 79760600.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 28787636.0,
+    "incremental_outcome": 29147236.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 28787636.0,
+    "incremental_outcome": 7067533.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 28787636.0,
+    "incremental_outcome": 64525564.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 14379039.0,
+    "incremental_outcome": 20217224.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 14379039.0,
+    "incremental_outcome": 3897664.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 14379039.0,
+    "incremental_outcome": 49505692.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 28722006.0,
+    "incremental_outcome": 71327088.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 28722006.0,
+    "incremental_outcome": 38803484.0
+   },
+   {
+    "spend_multiplier": 1.6,
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 28722006.0,
+    "incremental_outcome": 109860512.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 48557356.0,
+    "incremental_outcome": 77870416.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 48557356.0,
+    "incremental_outcome": 48143032.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 48557356.0,
+    "incremental_outcome": 112498728.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 26969326.0,
+    "incremental_outcome": 46068636.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 26969326.0,
+    "incremental_outcome": 11075472.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 26969326.0,
+    "incremental_outcome": 91758408.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 86307640.0,
+    "incremental_outcome": 80541384.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 86307640.0,
+    "incremental_outcome": 29335720.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 86307640.0,
+    "incremental_outcome": 141185280.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 37877300.0,
+    "incremental_outcome": 32010488.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 37877300.0,
+    "incremental_outcome": 6781038.5
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 37877300.0,
+    "incremental_outcome": 82713184.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 32386088.0,
+    "incremental_outcome": 30389484.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 32386088.0,
+    "incremental_outcome": 7322345.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 32386088.0,
+    "incremental_outcome": 66752952.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 16176418.0,
+    "incremental_outcome": 21158414.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 16176418.0,
+    "incremental_outcome": 4076216.75
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 16176418.0,
+    "incremental_outcome": 51593604.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 32312256.0,
+    "incremental_outcome": 75171920.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 32312256.0,
+    "incremental_outcome": 41151288.0
+   },
+   {
+    "spend_multiplier": 1.8,
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 32312256.0,
+    "incremental_outcome": 114787552.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 53952620.0,
+    "incremental_outcome": 82220400.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 53952620.0,
+    "incremental_outcome": 50885156.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 53952620.0,
+    "incremental_outcome": 118573792.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 29965918.0,
+    "incremental_outcome": 47680656.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 29965918.0,
+    "incremental_outcome": 11486814.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 29965918.0,
+    "incremental_outcome": 94533864.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 95897376.0,
+    "incremental_outcome": 83579440.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 95897376.0,
+    "incremental_outcome": 30577938.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 95897376.0,
+    "incremental_outcome": 146076432.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 42085892.0,
+    "incremental_outcome": 33063622.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 42085892.0,
+    "incremental_outcome": 6980784.5
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 42085892.0,
+    "incremental_outcome": 85091976.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 35984544.0,
+    "incremental_outcome": 31475192.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 35984544.0,
+    "incremental_outcome": 7581491.5
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 35984544.0,
+    "incremental_outcome": 69128616.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 17973798.0,
+    "incremental_outcome": 21985190.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 17973798.0,
+    "incremental_outcome": 4214823.5
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 17973798.0,
+    "incremental_outcome": 53761320.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 35902508.0,
+    "incremental_outcome": 78581416.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 35902508.0,
+    "incremental_outcome": 43345956.0
+   },
+   {
+    "spend_multiplier": 2.0,
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 35902508.0,
+    "incremental_outcome": 119552104.0
+   }
+  ]
+ },
+ "budget_optimization": {
+  "fixed_budget": true,
+  "budget": null,
+  "confidence_level": 0.9,
+  "optimized": [
+   {
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 35100000.0,
+    "pct_of_spend": 0.2251443233,
+    "incremental_outcome": 64861736.0,
+    "effectiveness": 0.0221749786,
+    "roi": 1.8479126692,
+    "mroi": 1.1016607285,
+    "cpik": 0.581199646
+   },
+   {
+    "channel": "walmart_connect",
+    "metric": "median",
+    "spend": 35100000.0,
+    "pct_of_spend": 0.2251443233,
+    "incremental_outcome": 63449852.0,
+    "effectiveness": 0.0216922872,
+    "roi": 1.8076879978,
+    "mroi": 1.0865869522,
+    "cpik": 0.5531927347
+   },
+   {
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 35100000.0,
+    "pct_of_spend": 0.2251443233,
+    "incremental_outcome": 39726636.0,
+    "effectiveness": 0.0135817742,
+    "roi": 1.1318130493,
+    "mroi": 0.6699293256,
+    "cpik": 0.371450305
+   },
+   {
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 35100000.0,
+    "pct_of_spend": 0.2251443233,
+    "incremental_outcome": 94494456.0,
+    "effectiveness": 0.0323058404,
+    "roi": 2.6921498775,
+    "mroi": 1.5873342752,
+    "cpik": 0.8835381866
+   },
+   {
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 19500000.0,
+    "pct_of_spend": 0.1250801796,
+    "incremental_outcome": 40879732.0,
+    "effectiveness": 0.0230603516,
+    "roi": 2.0963947773,
+    "mroi": 0.8361856937,
+    "cpik": 0.7370989323
+   },
+   {
+    "channel": "amazon_ads",
+    "metric": "median",
+    "spend": 19500000.0,
+    "pct_of_spend": 0.1250801796,
+    "incremental_outcome": 37808696.0,
+    "effectiveness": 0.0213280134,
+    "roi": 1.9389075041,
+    "mroi": 0.7802768946,
+    "cpik": 0.5157543421
+   },
+   {
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 19500000.0,
+    "pct_of_spend": 0.1250801796,
+    "incremental_outcome": 9863975.0,
+    "effectiveness": 0.0055643017,
+    "roi": 0.5058448911,
+    "mroi": 0.1763841063,
+    "cpik": 0.2373657376
+   },
+   {
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 19500000.0,
+    "pct_of_spend": 0.1250801796,
+    "incremental_outcome": 82151696.0,
+    "effectiveness": 0.0463420488,
+    "roi": 4.2129073143,
+    "mroi": 1.7100567818,
+    "cpik": 1.976890564
+   },
+   {
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 38600000.0,
+    "pct_of_spend": 0.2475946119,
+    "incremental_outcome": 56290052.0,
+    "effectiveness": 0.0262491181,
+    "roi": 1.4582897425,
+    "mroi": 0.7690129876,
+    "cpik": 0.8939478993
+   },
+   {
+    "channel": "linear_tv",
+    "metric": "median",
+    "spend": 38600000.0,
+    "pct_of_spend": 0.2475946119,
+    "incremental_outcome": 52865436.0,
+    "effectiveness": 0.0246521793,
+    "roi": 1.3695709705,
+    "mroi": 0.7509378195,
+    "cpik": 0.7301557064
+   },
+   {
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 38600000.0,
+    "pct_of_spend": 0.2475946119,
+    "incremental_outcome": 19878900.0,
+    "effectiveness": 0.0092699165,
+    "roi": 0.5149973631,
+    "mroi": 0.2643526196,
+    "cpik": 0.3709495664
+   },
+   {
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 38600000.0,
+    "pct_of_spend": 0.2475946119,
+    "incremental_outcome": 104057264.0,
+    "effectiveness": 0.0485239252,
+    "roi": 2.6957840919,
+    "mroi": 1.3327316046,
+    "cpik": 1.9417573214
+   },
+   {
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 14700000.0,
+    "pct_of_spend": 0.0942912123,
+    "incremental_outcome": 21801434.0,
+    "effectiveness": 0.0504249819,
+    "roi": 1.4830924273,
+    "mroi": 0.7341914773,
+    "cpik": 1.2552828789
+   },
+   {
+    "channel": "ctv",
+    "metric": "median",
+    "spend": 14700000.0,
+    "pct_of_spend": 0.0942912123,
+    "incremental_outcome": 16550042.0,
+    "effectiveness": 0.0382788852,
+    "roi": 1.1258530617,
+    "mroi": 0.5611564517,
+    "cpik": 0.8882153034
+   },
+   {
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 14700000.0,
+    "pct_of_spend": 0.0942912123,
+    "incremental_outcome": 4435437.5,
+    "effectiveness": 0.0102588031,
+    "roi": 0.301730454,
+    "mroi": 0.1374568045,
+    "cpik": 0.2567860782
+   },
+   {
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 14700000.0,
+    "pct_of_spend": 0.0942912123,
+    "incremental_outcome": 57246084.0,
+    "effectiveness": 0.1324054897,
+    "roi": 3.8942916393,
+    "mroi": 1.9179953337,
+    "cpik": 3.3142163754
+   },
+   {
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 14000000.0,
+    "pct_of_spend": 0.0898011546,
+    "incremental_outcome": 21272222.0,
+    "effectiveness": 0.013674912,
+    "roi": 1.5194423199,
+    "mroi": 0.769723475,
+    "cpik": 1.0639061928
+   },
+   {
+    "channel": "meta",
+    "metric": "median",
+    "spend": 14000000.0,
+    "pct_of_spend": 0.0898011546,
+    "incremental_outcome": 18013032.0,
+    "effectiveness": 0.0115797753,
+    "roi": 1.286645174,
+    "mroi": 0.6822464466,
+    "cpik": 0.7772150636
+   },
+   {
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 14000000.0,
+    "pct_of_spend": 0.0898011546,
+    "incremental_outcome": 5020283.0,
+    "effectiveness": 0.0032273163,
+    "roi": 0.358591646,
+    "mroi": 0.162481606,
+    "cpik": 0.2902598083
+   },
+   {
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 14000000.0,
+    "pct_of_spend": 0.0898011546,
+    "incremental_outcome": 48232668.0,
+    "effectiveness": 0.0310066324,
+    "roi": 3.4451904297,
+    "mroi": 1.7219470739,
+    "cpik": 2.7886872292
+   },
+   {
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 10600000.0,
+    "pct_of_spend": 0.0679923028,
+    "incremental_outcome": 17734194.0,
+    "effectiveness": 0.0117112417,
+    "roi": 1.6730343103,
+    "mroi": 0.7681323886,
+    "cpik": 1.0897526741
+   },
+   {
+    "channel": "tiktok",
+    "metric": "median",
+    "spend": 10600000.0,
+    "pct_of_spend": 0.0679923028,
+    "incremental_outcome": 14361828.0,
+    "effectiveness": 0.0094842138,
+    "roi": 1.3548893929,
+    "mroi": 0.6120942831,
+    "cpik": 0.738067627
+   },
+   {
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 10600000.0,
+    "pct_of_spend": 0.0679923028,
+    "incremental_outcome": 3443748.0,
+    "effectiveness": 0.0022741703,
+    "roi": 0.3248819113,
+    "mroi": 0.1123445183,
+    "cpik": 0.2442048788
+   },
+   {
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 10600000.0,
+    "pct_of_spend": 0.0679923028,
+    "incremental_outcome": 43406168.0,
+    "effectiveness": 0.028664412,
+    "roi": 4.0949215889,
+    "mroi": 1.9713679552,
+    "cpik": 3.0780415535
+   },
+   {
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 23400000.0,
+    "pct_of_spend": 0.1500962155,
+    "incremental_outcome": 64619664.0,
+    "effectiveness": 0.2209225595,
+    "roi": 2.761521101,
+    "mroi": 1.387878418,
+    "cpik": 0.407014221
+   },
+   {
+    "channel": "google_search",
+    "metric": "median",
+    "spend": 23400000.0,
+    "pct_of_spend": 0.1500962155,
+    "incremental_outcome": 62696336.0,
+    "effectiveness": 0.214346379,
+    "roi": 2.6793305874,
+    "mroi": 1.3698632717,
+    "cpik": 0.3732275367
+   },
+   {
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 23400000.0,
+    "pct_of_spend": 0.1500962155,
+    "incremental_outcome": 34777792.0,
+    "effectiveness": 0.1188983917,
+    "roi": 1.4862303734,
+    "mroi": 0.733825624,
+    "cpik": 0.2327155173
+   },
+   {
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 23400000.0,
+    "pct_of_spend": 0.1500962155,
+    "incremental_outcome": 100551952.0,
+    "effectiveness": 0.3437672257,
+    "roi": 4.2970924377,
+    "mroi": 2.1014888287,
+    "cpik": 0.6728430986
+   }
+  ],
+  "nonoptimized": [
+   {
+    "channel": "walmart_connect",
+    "metric": "mean",
+    "spend": 27000000.0,
+    "pct_of_spend": 0.173187941,
+    "incremental_outcome": 55037100.0,
+    "effectiveness": 0.0244609024,
+    "roi": 2.0384042263,
+    "mroi": 1.3271090984,
+    "cpik": 0.528387785
+   },
+   {
+    "channel": "walmart_connect",
+    "metric": "median",
+    "spend": 27000000.0,
+    "pct_of_spend": 0.173187941,
+    "incremental_outcome": 53730464.0,
+    "effectiveness": 0.0238802712,
+    "roi": 1.9900171757,
+    "mroi": 1.3095924854,
+    "cpik": 0.5025082231
+   },
+   {
+    "channel": "walmart_connect",
+    "metric": "ci_lo",
+    "spend": 27000000.0,
+    "pct_of_spend": 0.173187941,
+    "incremental_outcome": 33477336.0,
+    "effectiveness": 0.0148788551,
+    "roi": 1.2399013042,
+    "mroi": 0.8189800382,
+    "cpik": 0.3340907693
+   },
+   {
+    "channel": "walmart_connect",
+    "metric": "ci_hi",
+    "spend": 27000000.0,
+    "pct_of_spend": 0.173187941,
+    "incremental_outcome": 80816360.0,
+    "effectiveness": 0.0359184779,
+    "roi": 2.9931983948,
+    "mroi": 1.8966236115,
+    "cpik": 0.8065157533
+   },
+   {
+    "channel": "amazon_ads",
+    "metric": "mean",
+    "spend": 15000000.0,
+    "pct_of_spend": 0.0962155228,
+    "incremental_outcome": 36536820.0,
+    "effectiveness": 0.0267937593,
+    "roi": 2.4357876778,
+    "mroi": 1.1034096479,
+    "cpik": 0.6377548575
+   },
+   {
+    "channel": "amazon_ads",
+    "metric": "median",
+    "spend": 15000000.0,
+    "pct_of_spend": 0.0962155228,
+    "incremental_outcome": 33505558.0,
+    "effectiveness": 0.0245707799,
+    "roi": 2.2337038517,
+    "mroi": 1.0363667011,
+    "cpik": 0.4476869106
+   },
+   {
+    "channel": "amazon_ads",
+    "metric": "ci_lo",
+    "spend": 15000000.0,
+    "pct_of_spend": 0.0962155228,
+    "incremental_outcome": 8849020.0,
+    "effectiveness": 0.0064892909,
+    "roi": 0.5899346471,
+    "mroi": 0.2420968413,
+    "cpik": 0.2011230141
+   },
+   {
+    "channel": "amazon_ads",
+    "metric": "ci_hi",
+    "spend": 15000000.0,
+    "pct_of_spend": 0.0962155228,
+    "incremental_outcome": 74581208.0,
+    "effectiveness": 0.0546929687,
+    "roi": 4.9720802307,
+    "mroi": 2.2074000835,
+    "cpik": 1.6951029301
+   },
+   {
+    "channel": "linear_tv",
+    "metric": "mean",
+    "spend": 47900000.0,
+    "pct_of_spend": 0.307248236,
+    "incremental_outcome": 62799896.0,
+    "effectiveness": 0.0235990472,
+    "roi": 1.3110622168,
+    "mroi": 0.631873548,
+    "cpik": 0.986908257
+   },
+   {
+    "channel": "linear_tv",
+    "metric": "median",
+    "spend": 47900000.0,
+    "pct_of_spend": 0.307248236,
+    "incremental_outcome": 59738960.0,
+    "effectiveness": 0.0224487931,
+    "roi": 1.2471599579,
+    "mroi": 0.6144342422,
+    "cpik": 0.8018218279
+   },
+   {
+    "channel": "linear_tv",
+    "metric": "ci_lo",
+    "spend": 47900000.0,
+    "pct_of_spend": 0.307248236,
+    "incremental_outcome": 22359718.0,
+    "effectiveness": 0.0084023681,
+    "roi": 0.4667999744,
+    "mroi": 0.2096615881,
+    "cpik": 0.4199323654
+   },
+   {
+    "channel": "linear_tv",
+    "metric": "ci_hi",
+    "spend": 47900000.0,
+    "pct_of_spend": 0.307248236,
+    "incremental_outcome": 114065984.0,
+    "effectiveness": 0.0428638831,
+    "roi": 2.3813357353,
+    "mroi": 1.1068222523,
+    "cpik": 2.1422452927
+   },
+   {
+    "channel": "ctv",
+    "metric": "mean",
+    "spend": 21000000.0,
+    "pct_of_spend": 0.1347017319,
+    "incremental_outcome": 25711670.0,
+    "effectiveness": 0.0416283607,
+    "roi": 1.2243670225,
+    "mroi": 0.5211019516,
+    "cpik": 1.4986685514
+   },
+   {
+    "channel": "ctv",
+    "metric": "median",
+    "spend": 21000000.0,
+    "pct_of_spend": 0.1347017319,
+    "incremental_outcome": 19663238.0,
+    "effectiveness": 0.0318356454,
+    "roi": 0.9363446236,
+    "mroi": 0.3931214213,
+    "cpik": 1.0679827929
+   },
+   {
+    "channel": "ctv",
+    "metric": "ci_lo",
+    "spend": 21000000.0,
+    "pct_of_spend": 0.1347017319,
+    "incremental_outcome": 5348253.0,
+    "effectiveness": 0.0086590555,
+    "roi": 0.2546786964,
+    "mroi": 0.0879490525,
+    "cpik": 0.3137066066
+   },
+   {
+    "channel": "ctv",
+    "metric": "ci_hi",
+    "spend": 21000000.0,
+    "pct_of_spend": 0.1347017319,
+    "incremental_outcome": 66941524.0,
+    "effectiveness": 0.1083812639,
+    "roi": 3.1876916885,
+    "mroi": 1.3931273222,
+    "cpik": 3.9265155792
+   },
+   {
+    "channel": "meta",
+    "metric": "mean",
+    "spend": 18000000.0,
+    "pct_of_spend": 0.1154586273,
+    "incremental_outcome": 24021986.0,
+    "effectiveness": 0.0120109962,
+    "roi": 1.3345544338,
+    "mroi": 0.6090287566,
+    "cpik": 1.2024184465
+   },
+   {
+    "channel": "meta",
+    "metric": "median",
+    "spend": 18000000.0,
+    "pct_of_spend": 0.1154586273,
+    "incremental_outcome": 20680172.0,
+    "effectiveness": 0.0103400834,
+    "roi": 1.1488983631,
+    "mroi": 0.5356222391,
+    "cpik": 0.8703989983
+   },
+   {
+    "channel": "meta",
+    "metric": "ci_lo",
+    "spend": 18000000.0,
+    "pct_of_spend": 0.1154586273,
+    "incremental_outcome": 5737434.0,
+    "effectiveness": 0.0028687159,
+    "roi": 0.3187463284,
+    "mroi": 0.1208552793,
+    "cpik": 0.3336021304
+   },
+   {
+    "channel": "meta",
+    "metric": "ci_hi",
+    "spend": 18000000.0,
+    "pct_of_spend": 0.1154586273,
+    "incremental_outcome": 53956488.0,
+    "effectiveness": 0.0269782357,
+    "roi": 2.997582674,
+    "mroi": 1.3811733723,
+    "cpik": 3.1372914314
+   },
+   {
+    "channel": "tiktok",
+    "metric": "mean",
+    "spend": 9000000.0,
+    "pct_of_spend": 0.0577293137,
+    "incremental_outcome": 16398820.0,
+    "effectiveness": 0.0127546405,
+    "roi": 1.82208848,
+    "mroi": 0.8985550404,
+    "cpik": 1.0003839731
+   },
+   {
+    "channel": "tiktok",
+    "metric": "median",
+    "spend": 9000000.0,
+    "pct_of_spend": 0.0577293137,
+    "incremental_outcome": 13203589.0,
+    "effectiveness": 0.0102694575,
+    "roi": 1.4670653343,
+    "mroi": 0.7207833529,
+    "cpik": 0.6816328764
+   },
+   {
+    "channel": "tiktok",
+    "metric": "ci_lo",
+    "spend": 9000000.0,
+    "pct_of_spend": 0.0577293137,
+    "incremental_outcome": 3184753.75,
+    "effectiveness": 0.0024770307,
+    "roi": 0.3538615406,
+    "mroi": 0.138835147,
+    "cpik": 0.2244269401
+   },
+   {
+    "channel": "tiktok",
+    "metric": "ci_hi",
+    "spend": 9000000.0,
+    "pct_of_spend": 0.0577293137,
+    "incremental_outcome": 40102132.0,
+    "effectiveness": 0.0311905462,
+    "roi": 4.4557924271,
+    "mroi": 2.2866566181,
+    "cpik": 2.825963974
+   },
+   {
+    "channel": "google_search",
+    "metric": "mean",
+    "spend": 18000000.0,
+    "pct_of_spend": 0.1154586273,
+    "incremental_outcome": 56167796.0,
+    "effectiveness": 0.249633953,
+    "roi": 3.1204276085,
+    "mroi": 1.7509845495,
+    "cpik": 0.3624892831
+   },
+   {
+    "channel": "google_search",
+    "metric": "median",
+    "spend": 18000000.0,
+    "pct_of_spend": 0.1154586273,
+    "incremental_outcome": 54133488.0,
+    "effectiveness": 0.2405931652,
+    "roi": 3.0074160099,
+    "mroi": 1.7316222191,
+    "cpik": 0.3325113654
+   },
+   {
+    "channel": "google_search",
+    "metric": "ci_lo",
+    "spend": 18000000.0,
+    "pct_of_spend": 0.1154586273,
+    "incremental_outcome": 29722086.0,
+    "effectiveness": 0.1320980936,
+    "roi": 1.6512271166,
+    "mroi": 0.9441422224,
+    "cpik": 0.2013738304
+   },
+   {
+    "channel": "google_search",
+    "metric": "ci_hi",
+    "spend": 18000000.0,
+    "pct_of_spend": 0.1154586273,
+    "incremental_outcome": 89385992.0,
+    "effectiveness": 0.3972708881,
+    "roi": 4.9658885002,
+    "mroi": 2.6164109707,
+    "cpik": 0.6056101918
+   }
+  ],
+  "total_incremental_lift": {
+   "optimized": 287459034.0,
+   "current": 276674088.0,
+   "delta": 10784946.0,
+   "delta_pct": 3.9
+  }
+ },
+ "model_health": {
+  "confidence_level": 0.9,
+  "rhat": [
+   {
+    "param": "alpha_m",
+    "n_params": 7.0,
+    "avg_rhat": 1.0003350973,
+    "max_rhat": 1.0013543367,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "alpha_om",
+    "n_params": 1.0,
+    "avg_rhat": 0.9996572137,
+    "max_rhat": 0.9996572137,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "beta_gm",
+    "n_params": 182.0,
+    "avg_rhat": 1.0003660917,
+    "max_rhat": 1.0029319525,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "beta_gom",
+    "n_params": 26.0,
+    "avg_rhat": 1.0012443066,
+    "max_rhat": 1.0028165579,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "beta_m",
+    "n_params": 7.0,
+    "avg_rhat": 1.0003213882,
+    "max_rhat": 1.0012376308,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "beta_om",
+    "n_params": 1.0,
+    "avg_rhat": 1.0015904903,
+    "max_rhat": 1.0015904903,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "contribution_n",
+    "n_params": 1.0,
+    "avg_rhat": 0.9994201064,
+    "max_rhat": 0.9994201064,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "contribution_om",
+    "n_params": 1.0,
+    "avg_rhat": 1.0011011362,
+    "max_rhat": 1.0011011362,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "ec_m",
+    "n_params": 7.0,
+    "avg_rhat": 1.0006226301,
+    "max_rhat": 1.0024291277,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "ec_om",
+    "n_params": 1.0,
+    "avg_rhat": 1.0004810095,
+    "max_rhat": 1.0004810095,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "eta_m",
+    "n_params": 7.0,
+    "avg_rhat": 1.0007265806,
+    "max_rhat": 1.0020213127,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "eta_om",
+    "n_params": 1.0,
+    "avg_rhat": 0.9992358088,
+    "max_rhat": 0.9992358088,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "gamma_c",
+    "n_params": 3.0,
+    "avg_rhat": 1.0003539324,
+    "max_rhat": 1.0013127327,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "gamma_gc",
+    "n_params": 78.0,
+    "avg_rhat": 1.0005353689,
+    "max_rhat": 1.002461791,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "gamma_gn",
+    "n_params": 26.0,
+    "avg_rhat": 0.9999784827,
+    "max_rhat": 1.0015809536,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "gamma_n",
+    "n_params": 1.0,
+    "avg_rhat": 0.9992898107,
+    "max_rhat": 0.9992898107,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "knot_values",
+    "n_params": 69.0,
+    "avg_rhat": 1.0202065706,
+    "max_rhat": 1.0230107307,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "mu_t",
+    "n_params": 156.0,
+    "avg_rhat": 1.0205017328,
+    "max_rhat": 1.0230107307,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "roi_m",
+    "n_params": 7.0,
+    "avg_rhat": 1.0016092062,
+    "max_rhat": 1.0042040348,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "sigma",
+    "n_params": 1.0,
+    "avg_rhat": 0.9996122718,
+    "max_rhat": 0.9996122718,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "tau_g",
+    "n_params": 26.0,
+    "avg_rhat": 1.0023026466,
+    "max_rhat": 1.0062321424,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "xi_c",
+    "n_params": 3.0,
+    "avg_rhat": 1.0031996965,
+    "max_rhat": 1.0050501823,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   },
+   {
+    "param": "xi_n",
+    "n_params": 1.0,
+    "avg_rhat": 1.0041309595,
+    "max_rhat": 1.0041309595,
+    "percent_bad_rhat": 0.0,
+    "row_idx_bad_rhat": [],
+    "col_idx_bad_rhat": []
+   }
+  ],
+  "max_rhat": 1.020501732826233,
+  "predictive_accuracy": [
+   {
+    "metric": "R_Squared",
+    "geo_granularity": "geo",
+    "evaluation_set": "Train",
+    "value": 0.9984679222
+   },
+   {
+    "metric": "R_Squared",
+    "geo_granularity": "geo",
+    "evaluation_set": "Test",
+    "value": 0.9196535349
+   },
+   {
+    "metric": "R_Squared",
+    "geo_granularity": "geo",
+    "evaluation_set": "All Data",
+    "value": 0.9927631021
+   },
+   {
+    "metric": "R_Squared",
+    "geo_granularity": "national",
+    "evaluation_set": "Train",
+    "value": 0.9986464977
+   },
+   {
+    "metric": "R_Squared",
+    "geo_granularity": "national",
+    "evaluation_set": "Test",
+    "value": -2.2947006226
+   },
+   {
+    "metric": "R_Squared",
+    "geo_granularity": "national",
+    "evaluation_set": "All Data",
+    "value": 0.906101346
+   },
+   {
+    "metric": "MAPE",
+    "geo_granularity": "geo",
+    "evaluation_set": "Train",
+    "value": 0.0214483477
+   },
+   {
+    "metric": "MAPE",
+    "geo_granularity": "geo",
+    "evaluation_set": "Test",
+    "value": 0.1727414429
+   },
+   {
+    "metric": "MAPE",
+    "geo_granularity": "geo",
+    "evaluation_set": "All Data",
+    "value": 0.0292069707
+   },
+   {
+    "metric": "MAPE",
+    "geo_granularity": "national",
+    "evaluation_set": "Train",
+    "value": 0.0048697367
+   },
+   {
+    "metric": "MAPE",
+    "geo_granularity": "national",
+    "evaluation_set": "Test",
+    "value": 0.1741469949
+   },
+   {
+    "metric": "MAPE",
+    "geo_granularity": "national",
+    "evaluation_set": "All Data",
+    "value": 0.0135506205
+   },
+   {
+    "metric": "wMAPE",
+    "geo_granularity": "geo",
+    "evaluation_set": "Train",
+    "value": 0.0212664567
+   },
+   {
+    "metric": "wMAPE",
+    "geo_granularity": "geo",
+    "evaluation_set": "Test",
+    "value": 0.1764050275
+   },
+   {
+    "metric": "wMAPE",
+    "geo_granularity": "geo",
+    "evaluation_set": "All Data",
+    "value": 0.0309322439
+   },
+   {
+    "metric": "wMAPE",
+    "geo_granularity": "national",
+    "evaluation_set": "Train",
+    "value": 0.0047098934
+   },
+   {
+    "metric": "wMAPE",
+    "geo_granularity": "national",
+    "evaluation_set": "Test",
+    "value": 0.1764050573
+   },
+   {
+    "metric": "wMAPE",
+    "geo_granularity": "national",
+    "evaluation_set": "All Data",
+    "value": 0.0154072242
+   }
+  ],
+  "mape": 0.1741469949,
+  "r_squared": -2.2947006226,
+  "training_window": {
+   "start": "2023-04-30",
+   "end": "2026-04-19",
+   "n_weeks": 156,
+   "holdout_weeks": 8
+  }
+ },
+ "data_guardrails": {
+  "manifest": {
+   "rows": 4056,
+   "geos": 26,
+   "weeks": 156,
+   "channels_in_config": 7,
+   "channels_modelled": 7,
+   "channels": [
+    {
+     "channel": "Walmart Connect",
+     "id": "walmart_connect",
+     "in_data": true,
+     "spend_total": 26976288.150000002,
+     "nonzero_weeks": 156
+    },
+    {
+     "channel": "Amazon Ads",
+     "id": "amazon_ads",
+     "in_data": true,
+     "spend_total": 14982940.58,
+     "nonzero_weeks": 156
+    },
+    {
+     "channel": "Linear TV",
+     "id": "linear_tv",
+     "in_data": true,
+     "spend_total": 47948820.72,
+     "nonzero_weeks": 156
+    },
+    {
+     "channel": "CTV",
+     "id": "ctv",
+     "in_data": true,
+     "spend_total": 21042986.97,
+     "nonzero_weeks": 156
+    },
+    {
+     "channel": "Meta",
+     "id": "meta",
+     "in_data": true,
+     "spend_total": 17992306.82,
+     "nonzero_weeks": 156
+    },
+    {
+     "channel": "TikTok",
+     "id": "tiktok",
+     "in_data": true,
+     "spend_total": 8986901.379999999,
+     "nonzero_weeks": 156
+    },
+    {
+     "channel": "Google Search",
+     "id": "google_search",
+     "in_data": true,
+     "spend_total": 17951266.06,
+     "nonzero_weeks": 156
+    }
+   ]
+  },
+  "violations": [],
+  "passed": true,
+  "thresholds": {
+   "min_geos": 1,
+   "min_weeks": 52,
+   "min_nonzero_weeks_per_channel": 4
+  }
+ },
+ "geo": [
+  {
+   "dma": "New York",
+   "lat": 40.71,
+   "lng": -74.01,
+   "population": 20100000,
+   "units": 7843211,
+   "annual_units": 2614404,
+   "per_capita_index": 91.1
+  },
+  {
+   "dma": "Los Angeles",
+   "lat": 34.05,
+   "lng": -118.24,
+   "population": 13200000,
+   "units": 5241992,
+   "annual_units": 1747331,
+   "per_capita_index": 92.7
+  },
+  {
+   "dma": "Chicago",
+   "lat": 41.88,
+   "lng": -87.63,
+   "population": 9400000,
+   "units": 3706645,
+   "annual_units": 1235548,
+   "per_capita_index": 92.0
+  },
+  {
+   "dma": "Dallas-Ft. Worth",
+   "lat": 32.78,
+   "lng": -96.8,
+   "population": 7700000,
+   "units": 3184832,
+   "annual_units": 1061611,
+   "per_capita_index": 96.5
+  },
+  {
+   "dma": "Houston",
+   "lat": 29.76,
+   "lng": -95.37,
+   "population": 7100000,
+   "units": 2910330,
+   "annual_units": 970110,
+   "per_capita_index": 95.7
+  },
+  {
+   "dma": "Atlanta",
+   "lat": 33.75,
+   "lng": -84.39,
+   "population": 6100000,
+   "units": 2546148,
+   "annual_units": 848716,
+   "per_capita_index": 97.4
+  },
+  {
+   "dma": "Washington DC",
+   "lat": 38.91,
+   "lng": -77.04,
+   "population": 6300000,
+   "units": 2514431,
+   "annual_units": 838144,
+   "per_capita_index": 93.1
+  },
+  {
+   "dma": "Philadelphia",
+   "lat": 39.95,
+   "lng": -75.17,
+   "population": 6200000,
+   "units": 2469189,
+   "annual_units": 823063,
+   "per_capita_index": 92.9
+  },
+  {
+   "dma": "Phoenix",
+   "lat": 33.45,
+   "lng": -112.07,
+   "population": 5000000,
+   "units": 1976136,
+   "annual_units": 658712,
+   "per_capita_index": 92.2
+  },
+  {
+   "dma": "Miami",
+   "lat": 25.76,
+   "lng": -80.19,
+   "population": 4500000,
+   "units": 1816973,
+   "annual_units": 605658,
+   "per_capita_index": 94.2
+  },
+  {
+   "dma": "Detroit",
+   "lat": 42.33,
+   "lng": -83.05,
+   "population": 4300000,
+   "units": 1704931,
+   "annual_units": 568310,
+   "per_capita_index": 92.5
+  },
+  {
+   "dma": "Seattle",
+   "lat": 47.61,
+   "lng": -122.33,
+   "population": 4000000,
+   "units": 1567698,
+   "annual_units": 522566,
+   "per_capita_index": 91.5
+  },
+  {
+   "dma": "Minneapolis",
+   "lat": 44.98,
+   "lng": -93.27,
+   "population": 3700000,
+   "units": 1463827,
+   "annual_units": 487942,
+   "per_capita_index": 92.3
+  },
+  {
+   "dma": "Tampa",
+   "lat": 27.95,
+   "lng": -82.46,
+   "population": 3200000,
+   "units": 1312302,
+   "annual_units": 437434,
+   "per_capita_index": 95.7
+  },
+  {
+   "dma": "Charlotte",
+   "lat": 35.23,
+   "lng": -80.84,
+   "population": 2900000,
+   "units": 1200497,
+   "annual_units": 400166,
+   "per_capita_index": 96.6
+  },
+  {
+   "dma": "Denver",
+   "lat": 39.74,
+   "lng": -104.99,
+   "population": 3000000,
+   "units": 1188807,
+   "annual_units": 396269,
+   "per_capita_index": 92.5
+  },
+  {
+   "dma": "San Antonio",
+   "lat": 29.42,
+   "lng": -98.49,
+   "population": 2600000,
+   "units": 1075808,
+   "annual_units": 358603,
+   "per_capita_index": 96.6
+  },
+  {
+   "dma": "St. Louis",
+   "lat": 38.63,
+   "lng": -90.2,
+   "population": 2600000,
+   "units": 1064013,
+   "annual_units": 354671,
+   "per_capita_index": 95.5
+  },
+  {
+   "dma": "Nashville",
+   "lat": 36.16,
+   "lng": -86.78,
+   "population": 2300000,
+   "units": 947132,
+   "annual_units": 315711,
+   "per_capita_index": 96.1
+  },
+  {
+   "dma": "Kansas City",
+   "lat": 39.1,
+   "lng": -94.58,
+   "population": 2200000,
+   "units": 911108,
+   "annual_units": 303703,
+   "per_capita_index": 96.6
+  },
+  {
+   "dma": "Oklahoma City",
+   "lat": 35.47,
+   "lng": -97.52,
+   "population": 1500000,
+   "units": 638766,
+   "annual_units": 212922,
+   "per_capita_index": 99.4
+  },
+  {
+   "dma": "New Orleans",
+   "lat": 29.95,
+   "lng": -90.07,
+   "population": 1400000,
+   "units": 591545,
+   "annual_units": 197182,
+   "per_capita_index": 98.6
+  },
+  {
+   "dma": "Memphis",
+   "lat": 35.15,
+   "lng": -90.05,
+   "population": 1400000,
+   "units": 589101,
+   "annual_units": 196367,
+   "per_capita_index": 98.2
+  },
+  {
+   "dma": "Richmond",
+   "lat": 37.54,
+   "lng": -77.44,
+   "population": 1300000,
+   "units": 538080,
+   "annual_units": 179360,
+   "per_capita_index": 96.6
+  },
+  {
+   "dma": "Tulsa",
+   "lat": 36.15,
+   "lng": -95.99,
+   "population": 1000000,
+   "units": 420227,
+   "annual_units": 140076,
+   "per_capita_index": 98.1
+  },
+  {
+   "dma": "Wichita",
+   "lat": 37.69,
+   "lng": -97.34,
+   "population": 700000,
+   "units": 299983,
+   "annual_units": 99994,
+   "per_capita_index": 100.0
+  }
+ ],
+ "hero": {
+  "annual_revenue_usd": 356000000,
+  "media_spend_usd": 52000000,
+  "baseline_share_pct": 76,
+  "media_driven_share_pct": 22,
+  "n_markets": 26,
+  "n_weeks": 156,
+  "optimizer_lift_pct": 3.9
+ }
+}
