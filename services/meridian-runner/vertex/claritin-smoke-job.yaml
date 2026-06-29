@@ -1,0 +1,26 @@
+# Vertex AI CustomJob — Claritin SMOKE run (tiny sampler, NOT publishable).
+# Validates the 7-channel retail-media pipeline end to end and that
+# claritin/results.json is produced. ~minutes, cheap. Run this BEFORE the real job.
+# Submit:
+#   gcloud ai custom-jobs create --region=asia-southeast1 \
+#     --display-name=claritin-smoke --config=vertex/claritin-smoke-job.yaml
+workerPoolSpecs:
+  - machineSpec:
+      machineType: n1-standard-8
+    replicaCount: 1
+    containerSpec:
+      imageUri: asia-southeast1-docker.pkg.dev/trifecta-platform-498105/trifecta/meridian-runner:cpu
+      args: ["--smoke"]
+      env:
+        - name: CLIENT_PRESET
+          value: "claritin"
+        - name: TRAINING_CSV
+          value: "https://raw.githubusercontent.com/rahulnambiar/trifecta/main/data/clients/claritin/geo_all_channels.csv"
+        - name: GCS_BUCKET
+          value: "trifecta-artifacts-498105"
+        - name: MODEL_ARTIFACT_PATH
+          value: "claritin/model.pkl"
+        - name: RESULTS_ARTIFACT_PATH
+          value: "claritin/results.json"
+scheduling:
+  timeout: 3600s   # 1h hard cap
