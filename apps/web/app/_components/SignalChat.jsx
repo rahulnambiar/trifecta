@@ -20,7 +20,10 @@ const TOOL_LABELS = {
   get_response_curve: 'response curve', run_budget_scenario: 'budget scenario',
   optimize_budget: 'budget optimiser', get_model_health: 'model health',
 };
-const MODEL_LABELS = { 'claude-sonnet-4-6': 'Sonnet 4.6', 'claude-opus-4-8': 'Opus 4.8' };
+const MODEL_LABELS = {
+  'claude-sonnet-4-6': 'Sonnet 4.6', 'claude-opus-4-8': 'Opus 4.8',
+  'glm-4.7': 'GLM-4.7', 'glm-5': 'GLM-5', 'glm-5.1': 'GLM-5.1',
+};
 
 function getRecognition() {
   if (typeof window === 'undefined') return null;
@@ -34,7 +37,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
   const [messages, setMessages] = React.useState([]);
   const [input, setInput] = React.useState('');
   const [busy, setBusy] = React.useState(false);
-  const [deep, setDeep] = React.useState(false);
+  const [model, setModel] = React.useState('claude-sonnet-4-6');
   const [provenance, setProvenance] = React.useState(null);
   const [listening, setListening] = React.useState(false);
   const [followups, setFollowups] = React.useState([]);
@@ -140,7 +143,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
     try {
       const res = await fetch('/api/signal', {
         method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ messages: [...history, { role: 'user', content: q }], deep }),
+        body: JSON.stringify({ messages: [...history, { role: 'user', content: q }], model }),
       });
       if (!res.ok || !res.body) throw new Error('HTTP ' + res.status);
       const reader = res.body.getReader();
@@ -271,17 +274,26 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
         </div>
 
         <div className="signal-foot">
-          {!cmo ? (
-            <div className="between" style={{ marginBottom: 8, gap: 8, flexWrap: 'wrap' }}>
-              <div className="row-h" style={{ gap: 6, flexWrap: 'wrap' }}>
-                {SUGGESTIONS.map((s) => <button key={s} className="btn ghost small" onClick={() => ask(s)} disabled={busy}>{s}</button>)}
-              </div>
-              <label className="row-h" style={{ gap: 6, cursor: 'pointer', whiteSpace: 'nowrap' }} title="Force Claude Opus 4.8 for deeper reasoning">
-                <span className={'tog' + (deep ? ' on' : '')} onClick={() => setDeep((v) => !v)} role="switch" aria-checked={deep} />
-                <span className="faint mono" style={{ fontSize: 10 }}>DEEP · OPUS</span>
-              </label>
+          <div className="between" style={{ marginBottom: 8, gap: 8, flexWrap: 'wrap' }}>
+            <div className="row-h" style={{ gap: 6, flexWrap: 'wrap' }}>
+              {!cmo ? SUGGESTIONS.map((s) => <button key={s} className="btn ghost small" onClick={() => ask(s)} disabled={busy}>{s}</button>) : null}
             </div>
-          ) : null}
+            <label className="row-h" style={{ gap: 6, whiteSpace: 'nowrap' }} title="Model used to answer (all grounded in the Meridian model)">
+              <span className="faint mono" style={{ fontSize: 9.5 }}>MODEL</span>
+              <select value={model} onChange={(e) => setModel(e.target.value)} disabled={busy}
+                style={{ fontSize: 11, padding: '3px 6px', borderRadius: 6, border: '1px solid var(--line)', background: 'var(--panel)', color: 'var(--text)' }}>
+                <optgroup label="Claude">
+                  <option value="claude-sonnet-4-6">Claude Sonnet 4.6</option>
+                  <option value="claude-opus-4-8">Claude Opus 4.8</option>
+                </optgroup>
+                <optgroup label="GLM · Z.ai">
+                  <option value="glm-4.7">GLM-4.7</option>
+                  <option value="glm-5">GLM-5</option>
+                  <option value="glm-5.1">GLM-5.1</option>
+                </optgroup>
+              </select>
+            </label>
+          </div>
           <form className="signal-input" onSubmit={(e) => { e.preventDefault(); ask(); }}>
             {micSupported ? (
               <button type="button" className={'signal-icon-btn' + (listening ? ' on' : '')} onClick={toggleMic}
