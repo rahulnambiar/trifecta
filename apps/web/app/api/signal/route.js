@@ -83,11 +83,32 @@ function runTool(name, input, bundle) {
 
 // Generic tool loop — works with any Anthropic-compatible client (Claude via the
 // Anthropic API, or GLM via Z.ai's Anthropic-compatible endpoint).
+// Put a cache breakpoint on the last block of the conversation, so the growing
+// system+tools+history prefix is cached and re-read across turns and across the
+// user's successive questions. (No effect until the prefix exceeds the model's
+// cache minimum — Sonnet 2048 / Opus 4096 tokens — so short single-tool queries
+// don't benefit, but long conversations do.) Both Anthropic and Z.ai honor it.
+function cacheLastBlock(messages) {
+  if (!messages.length) return messages;
+  const out = messages.slice();
+  const i = out.length - 1;
+  const m = out[i];
+  const cc = { type: 'ephemeral' };
+  if (typeof m.content === 'string') {
+    out[i] = { ...m, content: [{ type: 'text', text: m.content, cache_control: cc }] };
+  } else if (Array.isArray(m.content) && m.content.length) {
+    const c = m.content.slice();
+    c[c.length - 1] = { ...c[c.length - 1], cache_control: cc };
+    out[i] = { ...m, content: c };
+  }
+  return out;
+}
+
 async function runLocalTools({ api, model, messages, send, signal, bundle }) {
-  const system = systemFor(bundle);
+  const system = [{ type: 'text', text: systemFor(bundle), cache_control: { type: 'ephemeral' } }];
   const convo = [...messages];
   for (let step = 0; step < 6; step++) {
-    const resp = await api.messages.create({ model, max_tokens: 2048, system, messages: convo, tools: TOOLS }, { signal });
+    const resp = await api.messages.create({ model, max_tokens: 2048, system, messages: cacheLastBlock(convo), tools: TOOLS }, { signal });
     const toolUses = (resp.content || []).filter((b) => b.type === 'tool_use');
     if (resp.stop_reason === 'tool_use' && toolUses.length) {
       const results = [];
