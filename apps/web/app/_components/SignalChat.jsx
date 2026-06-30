@@ -22,7 +22,7 @@ const TOOL_LABELS = {
 };
 const MODEL_LABELS = {
   'claude-sonnet-4-6': 'Sonnet 4.6', 'claude-opus-4-8': 'Opus 4.8',
-  'glm-4.7': 'GLM-4.7', 'glm-5': 'GLM-5', 'glm-5.1': 'GLM-5.1',
+  'glm-4.7': 'GLM-4.7', 'glm-5': 'GLM-5', 'glm-5.1': 'GLM-5.1', 'glm-5.2': 'GLM-5.2',
 };
 
 function getRecognition() {
@@ -143,7 +143,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
     try {
       const res = await fetch('/api/signal', {
         method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ messages: [...history, { role: 'user', content: q }], model }),
+        body: JSON.stringify({ messages: [...history, { role: 'user', content: q }], model, client: client?.id }),
       });
       if (!res.ok || !res.body) throw new Error('HTTP ' + res.status);
       const reader = res.body.getReader();
@@ -290,6 +290,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
                   <option value="glm-4.7">GLM-4.7</option>
                   <option value="glm-5">GLM-5</option>
                   <option value="glm-5.1">GLM-5.1</option>
+                  <option value="glm-5.2">GLM-5.2</option>
                 </optgroup>
               </select>
             </label>
