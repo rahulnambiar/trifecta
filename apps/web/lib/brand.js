@@ -18,7 +18,7 @@ export const BRANDS = {
     name: 'NeuGenM',
     logoSrc: '/neugenm-logo.svg',
     eyebrow: null,
-    poweredBy: 'Powered by NeuGenM · model-grounded answers · demo data.',
+    poweredBy: 'Powered by Trifecta · model-grounded answers · demo data.',
   },
 };
 
