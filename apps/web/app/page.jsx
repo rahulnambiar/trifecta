@@ -5,6 +5,8 @@
 // modules are concatenated in load order; window.* exports and the standalone
 // ReactDOM bootstrap are stripped (Next renders <App/> as the route).
 import React from 'react';
+import { usePathname } from 'next/navigation';
+import { BrandContext, useBrand, brandFromPath } from '../lib/brand';
 import ResultsLive from './_components/ResultsLive';
 import SignalChat from './_components/SignalChat';
 import TeamAccess from './_components/TeamAccess';
@@ -2677,20 +2679,30 @@ const Login = ({ onSignIn }) => {
     }
   };
 
+  const b = useBrand();
   const inputStyle = { flex: 1, background: 'transparent', border: 'none', outline: 'none', color: 'var(--text)', font: 'inherit' };
 
   return (
     <div className="login-bg">
       <form className="login-card" onSubmit={submit}>
         <div className="row-h" style={{ gap: 10, marginBottom: 4 }}>
-          <Logo size={26} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 3, lineHeight: 1 }}>
-            <div className="display" style={{ fontWeight: 800, letterSpacing: '0.06em', fontSize: 18, lineHeight: 1 }}>TRIFECTA</div>
-            <div className="mono" style={{ fontSize: 9, letterSpacing: '0.12em', color: 'var(--faint)', textTransform: 'uppercase', lineHeight: 1 }}>Part of <b style={{ color: 'var(--text)', fontWeight: 700 }}>Midpoint Global</b></div>
-          </div>
+          {b.logoSrc ? (
+            <>
+              <img src={b.logoSrc} alt={b.name} style={{ height: 34, width: 'auto', borderRadius: 8 }} />
+              <div className="display" style={{ fontWeight: 800, letterSpacing: '0.01em', fontSize: 20, lineHeight: 1 }}>{b.name}</div>
+            </>
+          ) : (
+            <>
+              <Logo size={26} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 3, lineHeight: 1 }}>
+                <div className="display" style={{ fontWeight: 800, letterSpacing: '0.06em', fontSize: 18, lineHeight: 1 }}>TRIFECTA</div>
+                <div className="mono" style={{ fontSize: 9, letterSpacing: '0.12em', color: 'var(--faint)', textTransform: 'uppercase', lineHeight: 1 }}>Part of <b style={{ color: 'var(--text)', fontWeight: 700 }}>Midpoint Global</b></div>
+              </div>
+            </>
+          )}
         </div>
         <div>
-          <div className="display" style={{ fontWeight: 700, fontSize: 22, letterSpacing: '-0.02em' }}>Operator Console</div>
+          <div className="display" style={{ fontWeight: 700, fontSize: 22, letterSpacing: '-0.02em' }}>{b.key === 'neugenm' ? 'Marketing Intelligence' : 'Operator Console'}</div>
           <div className="dim" style={{ fontSize: 13, marginTop: 4 }}>Sign in to continue.</div>
         </div>
 
@@ -3721,6 +3733,7 @@ const ACCESS = {
 const accessFor = (role) => ACCESS[role] || ACCESS.in_house;
 
 const Sidebar = ({ screen, go, activeClient, clients, setActiveClient, allowed, userEmail }) => {
+  const b = useBrand();
   const [open, setOpen] = React.useState(false);
   const can = (id) => !allowed || allowed.includes(id);
   const ws = NAV.workspace.filter(n => can(n.id));
@@ -3738,11 +3751,20 @@ const Sidebar = ({ screen, go, activeClient, clients, setActiveClient, allowed, 
   return (
     <aside className="sidebar">
       <div className="brand">
-        <Logo size={22} />
-        <div className="brand-lockup">
-          <span className="wordmark">TRIFECTA</span>
-          <span className="partof-mini">Part of <b>Midpoint Global</b></span>
-        </div>
+        {b.logoSrc ? (
+          <>
+            <img src={b.logoSrc} alt={b.name} style={{ height: 24, width: 'auto', borderRadius: 6 }} />
+            <div className="brand-lockup"><span className="wordmark">{b.name}</span></div>
+          </>
+        ) : (
+          <>
+            <Logo size={22} />
+            <div className="brand-lockup">
+              <span className="wordmark">TRIFECTA</span>
+              <span className="partof-mini">Part of <b>Midpoint Global</b></span>
+            </div>
+          </>
+        )}
       </div>
       <div className="scroll">
         {ws.length ? (
@@ -3881,7 +3903,7 @@ function CMOSignalShell({ client, email, theme, setTheme, onSignOut }) {
   );
 }
 
-function App() {
+function AppInner() {
   const [authed, setAuthed] = React.useState(false);
   const [authReady, setAuthReady] = React.useState(!isSupabaseConfigured());
   // userType drives which surfaces are reachable. With Supabase unconfigured (the
@@ -4088,4 +4110,12 @@ function App() {
 }
 
 
-export default App;
+// Wrap the app in the brand context, resolved from the URL path (/neugenm → NeuGenM).
+export default function App() {
+  const brand = brandFromPath(usePathname());
+  return (
+    <BrandContext.Provider value={brand}>
+      <AppInner />
+    </BrandContext.Provider>
+  );
+}

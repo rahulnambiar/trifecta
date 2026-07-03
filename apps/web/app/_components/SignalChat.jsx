@@ -8,6 +8,7 @@ import remarkGfm from 'remark-gfm';
 import SignalArtifact from './SignalArtifact';
 import SignalOverview from './SignalOverview';
 import { formatAsOf, ciLabel } from '../../lib/exportIntegrity';
+import { useBrand } from '../../lib/brand';
 
 const SUGGESTIONS = [
   'Which channels drive revenue?',
@@ -33,6 +34,10 @@ function getRecognition() {
 
 export default function SignalChat({ client, surface = 'operator', email, theme, setTheme, onSignOut }) {
   const cmo = surface === 'cmo';
+  const brand = useBrand();
+  const BrandMark = ({ size }) => brand.logoSrc
+    ? <img src={brand.logoSrc} alt={brand.name} style={{ width: size, height: size, borderRadius: size * 0.24, objectFit: 'contain' }} />
+    : <span className="logomark" style={{ width: size, height: size, flexBasis: size }} />;
   const clientName = client?.name || 'Aeon Skincare';
   const [messages, setMessages] = React.useState([]);
   const [input, setInput] = React.useState('');
@@ -202,9 +207,9 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
           <>
             <header className="signal-header">
               <div className="signal-brand">
-                <span className="logomark" style={{ width: 26, height: 26, flexBasis: 26 }} />
+                <BrandMark size={26} />
                 <div className="signal-brand-text">
-                  <div className="bn">Trifecta</div>
+                  <div className="bn">{brand.name}</div>
                   <div className="bf">Signal · {clientName}</div>
                 </div>
               </div>
@@ -221,7 +226,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
           </>
         ) : (
           <div className="card-head">
-            <span className="logomark" style={{ width: 18, height: 18, flexBasis: 18 }} />
+            <BrandMark size={18} />
             <div>
               <h3>Signal · {clientName}</h3>
               <div className="sub">Grounded in the latest Meridian model · answers carry {ciLabel(provenance?.confidenceLevel) || '90% CI'}</div>
@@ -323,7 +328,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
               style={{ width: 'min(440px, 100%)', background: 'var(--panel)', border: '1px solid var(--line, rgba(140,150,170,0.22))', borderRadius: 16, padding: '22px 22px 18px', boxShadow: '0 24px 60px rgba(0,0,0,0.32)' }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                <span className="logomark" style={{ width: 22, height: 22, flexBasis: 22 }} />
+                <BrandMark size={22} />
                 <div className="display" style={{ fontSize: 17, color: 'var(--text)' }}>Welcome to Signal</div>
               </div>
               <div className="dim" style={{ fontSize: 12.5, marginBottom: 16, lineHeight: 1.5 }}>
@@ -386,7 +391,7 @@ export default function SignalChat({ client, surface = 'operator', email, theme,
       </div>
       {!cmo ? (
         <div className="faint mono signal-hide-sm" style={{ fontSize: 10.5 }}>
-          Powered by Claude + the Trifecta MCP server · genuine Meridian outputs · fictional demo data.
+          {brand.poweredBy}
         </div>
       ) : null}
     </div>
